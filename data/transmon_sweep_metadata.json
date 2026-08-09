@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-04",
+  "qubit": "Transmon",
+  "sweep": "EJ [1,80]x40  x  EC [0.1,2.0]x20  = 800 points",
+  "fixed_params": {
+    "ncut": 30,
+    "Q_cap": 1000000.0,
+    "A_ng": 0.0001,
+    "A_cc": 1e-07
+  },
+  "ng_runs": {
+    "sweet_spot": 0.0,
+    "off_sweet_spot": 0.25
+  },
+  "noise_channels": [
+    "t1_capacitive",
+    "tphi_1_over_f_ng",
+    "tphi_1_over_f_cc"
+  ],
+  "units": "coherence times in microseconds (scqubits returns ns; multiply by 1e-3)",
+  "files": [
+    "data/transmon_full_sweep.csv",
+    "data/transmon_sweep_ng025.csv"
+  ]
+}

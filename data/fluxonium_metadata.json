@@ -1,0 +1,29 @@
+{
+  "date": "2026-08-04",
+  "qubit": "Fluxonium",
+  "nominal_design": {
+    "EJ": 8.9,
+    "EC": 2.5,
+    "EL": 0.5,
+    "cutoff": 110
+  },
+  "flux_sweep": "flux 0.30 -> 0.50, 101 points",
+  "noise_params": {
+    "Q_cap": 1000000.0,
+    "A_flux": 1e-06,
+    "A_cc": 1e-07
+  },
+  "T1_channels": [
+    "t1_capacitive",
+    "t1_quasiparticle_tunneling"
+  ],
+  "Tphi_channels": [
+    "tphi_1_over_f_flux",
+    "tphi_1_over_f_cc"
+  ],
+  "units": "microseconds (scqubits returns ns; *1e-3)",
+  "files": [
+    "data/fluxonium_flux_sweep.csv",
+    "data/fluxonium_design_sweep.csv"
+  ]
+}

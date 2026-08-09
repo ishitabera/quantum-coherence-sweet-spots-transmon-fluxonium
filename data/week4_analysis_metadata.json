@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-04",
+  "stage": "Week 4 analysis",
+  "monte_carlo_N": 60,
+  "ranges": {
+    "Q_cap": "1e5-1e7",
+    "A_flux": "1e-6-1e-5",
+    "A_cc": "1e-7-1e-6",
+    "A_ng": "1e-4-1e-3"
+  },
+  "figures": [
+    "q3_bias_sensitivity.png",
+    "q3_robustness_hist.png",
+    "fluxonium_scaling.png"
+  ]
+}

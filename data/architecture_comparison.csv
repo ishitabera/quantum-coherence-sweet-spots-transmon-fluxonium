@@ -1,0 +1,6 @@
+Metric,Transmon,Fluxonium
+Best T2 (real regime),187 us,5578 us
+Bias-knob sensitivity (T2 max/min),1.01x,528x
+Dominant noise channel,dielectric relaxation,flux noise off spot; relaxation at 0.5
+Sweet-spot scaling,flat (no sharp knob),T2 ~ detuning^-0.68
+Practical character,"simple, forgiving","delicate, must hold flux=0.5"

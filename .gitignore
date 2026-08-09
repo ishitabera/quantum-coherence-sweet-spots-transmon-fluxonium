@@ -1,0 +1,16 @@
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Keep data/ and figures/ tracked - they are the study's results.
+# Ignore only scratch outputs:
+results/scratch/

@@ -1,0 +1,7 @@
+scqubits
+qutip
+numpy
+scipy
+matplotlib
+pandas
+jupyterlab
