@@ -14,3 +14,6 @@ venv/
 # Keep data/ and figures/ tracked - they are the study's results.
 # Ignore only scratch outputs:
 results/scratch/
+
+# Local JupyterLab / Jupyter server state (machine-specific)
+.jupyter/
