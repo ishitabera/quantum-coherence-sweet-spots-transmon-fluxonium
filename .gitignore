@@ -17,3 +17,4 @@ results/scratch/
 
 # Local JupyterLab / Jupyter server state (machine-specific)
 .jupyter/
+data/
