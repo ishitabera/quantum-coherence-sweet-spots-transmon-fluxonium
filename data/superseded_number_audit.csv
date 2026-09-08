@@ -1,10 +1,10 @@
 file,line,kind,superseded,text
-README.md,62,correction note,best fluxonium T2 = 5578 us,"> **Superseded.** Earlier versions of this README reported ""best T2 = 5578 µs"", ""bias sensitivi"
-README.md,63,correction note,Monte Carlo median advantage 216x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
-README.md,63,correction note,fluxonium bias sensitivity 528x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
-README.md,63,correction note,T2 ~ (detuning)^-0.68,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
-README.md,65,correction note,best fluxonium T2 = 5578 us,> `05_summary.ipynb` §4. In particular 5578 µs was a first-order-only value at a grid-edge desi
-README.md,66,correction note,Monte Carlo median advantage 216x,"> at 75 MHz with n̄_th = 3.7, and the 216× comparison used an 18.9 GHz ""transmon"" held at its"
+README.md,71,correction note,best fluxonium T2 = 5578 us,"> **Superseded.** Earlier versions of this README reported ""best T2 = 5578 µs"", ""bias sensitivi"
+README.md,72,correction note,Monte Carlo median advantage 216x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,72,correction note,fluxonium bias sensitivity 528x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,72,correction note,T2 ~ (detuning)^-0.68,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,74,correction note,best fluxonium T2 = 5578 us,> `05_summary.ipynb` §4. In particular 5578 µs was a first-order-only value at a grid-edge desi
+README.md,75,correction note,Monte Carlo median advantage 216x,"> at 75 MHz with n̄_th = 3.7, and the 216× comparison used an 18.9 GHz ""transmon"" held at its"
 docs/Week5_Findings_Worksheet.md,15,superseded region (kept for the record),best fluxonium T2 = 5578 us,"At their respective best case designs, the fluxonium reaches T2 ≈ 5578 µs (5.6 ms) versus the t"
 docs/Week5_Findings_Worksheet.md,27,superseded region (kept for the record),fluxonium bias sensitivity 528x,"As each qubit's bias knob is swept across its full range, transmon T2 changes by only 1.01× whi"
 docs/Week5_Findings_Worksheet.md,49,superseded region (kept for the record),T2 ~ (detuning)^-0.68,"Near Φ = 0.5, fluxonium T2 falls off as (flux detuning)^−0.68, dropping 10× within just 0.002 f"

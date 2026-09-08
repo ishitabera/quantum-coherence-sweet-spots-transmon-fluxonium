@@ -2,8 +2,8 @@
   "notebook": "notebooks/04_analysis.ipynb",
   "purpose": "Q3 cross-architecture comparison (transmon vs fluxonium) and robustness",
   "provenance": {
-    "date": "2026-09-07T22:40:33",
-    "git_revision": "5ad31aa-dirty",
+    "date": "2026-09-07T23:30:04",
+    "git_revision": "81dc9c6-dirty",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",
@@ -41,7 +41,7 @@
       "data/fluxonium_metadata.json",
       "data/transmon_sweep_metadata.json"
     ],
-    "fluxonium_metadata_git_revision": "5ad31aa-dirty"
+    "fluxonium_metadata_git_revision": "81dc9c6-dirty"
   },
   "validated_against": {
     "transmon_nominal_T2_us": 54.35208346332045,
@@ -143,6 +143,34 @@
         "1.0": 1.3674096856959408,
         "2.0": 1.0650395161752526
       }
+    },
+    "gate_count_simulated": {
+      "method": "lab-frame Schrodinger, no RWA, 6 levels, charge drive, Gaussian envelope; amplitude + DRAG + Stark detuning calibrated at each duration; average gate fidelity on the computational subspace so leakage counts as error",
+      "error_target": 0.001,
+      "T_gate_ns": {
+        "transmon": 8.0,
+        "fluxonium": 3.0
+      },
+      "T_gate_bracket_ns": {
+        "transmon": [
+          6.0,
+          8.0
+        ],
+        "fluxonium": [
+          2.5,
+          3.0
+        ]
+      },
+      "N_gates": {
+        "transmon": 7803.050696367827,
+        "fluxonium": 376570.7510878758
+      },
+      "ratio": 48.259426439861834,
+      "ratio_bracket": [
+        36.19456982989637,
+        57.911311727834196
+      ],
+      "caveat": "coarse 3-parameter calibration with a fixed Gaussian shape, so T_gate is an UPPER bound; optimal control would shorten both, not necessarily equally. The optimiser is not reliably converged at the shortest durations."
     }
   },
   "matched_frequency": [

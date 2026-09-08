@@ -71,7 +71,7 @@ if _here.name == "notebooks":          # notebook lives in notebooks/, project r
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "src"))  # makes `from coherence import ...` available
 os.makedirs("data", exist_ok=True); os.makedirs("figures", exist_ok=True)
-print("project root:", ROOT)
+print("project root:", ROOT.name)          # name only; the absolute path is machine-specific
 """)
 
 # =========================================================================
@@ -103,7 +103,7 @@ import numpy as np
 import pandas as pd
 import scqubits as scq
 import matplotlib.pyplot as plt
-from scipy.optimize import brentq
+from scipy.optimize import brentq, minimize, minimize_scalar
 
 from qubits import (make_transmon, make_fluxonium, qubit_frequency, anharmonicity,
                     TRANSMON_DEFAULTS, FLUXONIUM_DEFAULTS)
@@ -638,6 +638,220 @@ print("\nwrote data/q3_metric_comparison.csv")
 """)
 
 # =========================================================================
+md(r"""
+### 3.1 Settling the pulse bound by simulation
+
+The gate-count range above ($524\times$ / $22\times$ / $1.34\times$) is wide enough to make
+the metric nearly uninformative, and the disagreement is not about noise — it is about how
+short a pulse each qubit tolerates. That is a question with a computable answer, so it is
+computed here rather than argued.
+
+**Method.** For each architecture we integrate the **lab-frame** Schrödinger equation with
+**no rotating-wave approximation**, on a six-level truncation of the `scqubits` eigenbasis,
+driven through the charge operator $\hat n$ (a capacitively coupled microwave line). The
+envelope is a truncated Gaussian with $\sigma = T/4$. At each gate duration $T$ we
+**calibrate the gate the way an experimentalist would**, optimising three parameters
+simultaneously:
+
+- the drive amplitude (to close the rotation),
+- the **DRAG** coefficient (Motzoi *et al.* 2009) on the quadrature channel,
+- the drive frequency, absorbing the AC Stark shift.
+
+The figure of merit is the average gate fidelity of an $X$ gate evaluated on the
+computational subspace, $F = (|{\rm Tr}(X^\dagger V)|^2 + {\rm Tr}(V^\dagger V))/6$ with
+$V = P U P$, so **population that leaks out of $\{|0\rangle, |1\rangle\}$ is counted as
+error** rather than quietly dropped. A virtual-$Z$ is optimised out, as it would be in
+hardware. $T_{\rm gate}$ is then the shortest duration reaching a target error.
+
+**Why this is not a formality.** The anharmonicity argument treats $|\alpha|$ as the whole
+story, but the drive couples to the leakage transition through a *matrix element*, and the
+fluxonium's is badly placed: at the sweet spot
+$|\langle 1|\hat n|2\rangle| / |\langle 0|\hat n|1\rangle| = 10.2$, against $1.37$ for the
+transmon. The drive is ten times better at causing leakage than at driving the qubit, so the
+effective figure of merit is $|\alpha|$ *divided by* that ratio. No hand-argument recovers
+this; the simulation does.
+
+> **This is a coarse calibration, and the resulting $T_{\rm gate}$ is therefore an *upper
+> bound*.** Three parameters and a fixed Gaussian shape is far from optimal control — GRAPE
+> or CRAB over a free pulse shape would find shorter gates for both architectures, and there
+> is no reason to assume it would shorten them equally. The number below is a much better
+> estimate than either naive bound, not a final answer. The optimiser is also not reliably
+> converged at the shortest durations, which is visible as non-monotonicity in the error
+> curve and is reported rather than smoothed.
+""")
+
+# ========================================================================
+code(r"""
+import qutip as qt
+from scipy.integrate import quad
+
+GATE_LEVELS = 6
+ERR_TARGET = 1e-3          # a standard single-qubit gate-error target
+
+def _drive_system(qubit, nlev=GATE_LEVELS):
+    qubit.truncated_dim = nlev            # scqubits defaults to 6; n_operator respects it
+    esys = qubit.eigensys(evals_count=nlev)
+    f = esys[0] - esys[0][0]
+    n = np.array(qubit.n_operator(energy_esys=esys))[:nlev, :nlev]
+    return f, n - np.diag(np.diag(n))     # the drive couples off-diagonally
+
+def _envelope(t, T):
+    sig = T / 4.0
+    g = np.exp(-((t - T / 2) ** 2) / (2 * sig ** 2))
+    g0 = np.exp(-((T / 2) ** 2) / (2 * sig ** 2))
+    return (g - g0) / (1 - g0)
+
+def gate_error(f, n, T, amp, drag, det, nlev=GATE_LEVELS):
+    # Lab frame, no RWA. Energies in GHz, times in ns, so H carries a factor 2*pi.
+    wd = f[1] + det
+    alpha = (f[2] - f[1]) - f[1]
+    H0 = qt.Qobj(2 * np.pi * np.diag(f)); N = qt.Qobj(2 * np.pi * n)
+    sig = T / 4.0
+    g0 = np.exp(-((T / 2) ** 2) / (2 * sig ** 2))
+    def eps(t, *a, **k):
+        g = np.exp(-((t - T / 2) ** 2) / (2 * sig ** 2))
+        I = amp * (g - g0) / (1 - g0)
+        dI = amp * (-(t - T / 2) / sig ** 2) * g / (1 - g0)
+        Q = drag * dI / (2 * np.pi * alpha)          # DRAG on the quadrature channel
+        return I * np.cos(2 * np.pi * wd * t) + Q * np.sin(2 * np.pi * wd * t)
+    U = qt.sesolve([H0, [N, eps]], qt.qeye(nlev), [0, T],
+                   options={"atol": 1e-10, "rtol": 1e-8, "nsteps": 10**7}).states[-1].full()
+    R = np.diag(np.exp(1j * 2 * np.pi * wd * np.arange(nlev) * T))    # rotating frame
+    Uq = (R @ U)[:2, :2]                                              # computational block
+    Xt = np.array([[0, 1], [1, 0]], dtype=complex)
+    def err(th):                                                      # virtual Z, as in hardware
+        V = np.diag([1, np.exp(1j * th)]) @ Uq
+        F = (abs(np.trace(Xt.conj().T @ V)) ** 2 + np.trace(V.conj().T @ V).real) / 6
+        return 1 - F.real
+    return minimize_scalar(err, bounds=(-np.pi, np.pi), method="bounded").fun
+
+def calibrate_gate(f, n, T, nlev=GATE_LEVELS, maxfev=140):
+    # pi-pulse amplitude in the RWA: 2*pi*|n01|*int(I dt) = pi
+    area = quad(lambda t: _envelope(t, T), 0, T)[0]
+    a0 = 1.0 / (2 * abs(n[0, 1]) * area)
+    best = None
+    for d0 in (0.0, -1.0, 1.0):                       # DRAG sign convention is not assumed
+        r = minimize(lambda x: np.log10(max(gate_error(f, n, T, x[0], x[1], x[2], nlev), 1e-14)),
+                     np.array([a0, d0, 0.0]), method="Nelder-Mead",
+                     options={"xatol": 1e-6, "fatol": 1e-3, "maxfev": maxfev})
+        if best is None or r.fun < best.fun:
+            best = r
+    return 10 ** best.fun, best.x
+
+DURATIONS = {"transmon":  [4.0, 5.0, 5.5, 6.0, 8.0, 12.0],
+             "fluxonium": [1.0, 1.5, 2.0, 2.5, 3.0, 4.0]}
+QUBITS = {"transmon":  make_transmon(**TM_OP, ng=0.0),
+          "fluxonium": make_fluxonium(**FX_OP)}
+
+print("drive matrix elements (why |alpha| alone is the wrong figure of merit):")
+gate_rows, tmin, tbracket = [], {}, {}
+for lab, q in QUBITS.items():
+    f, n = _drive_system(q)
+    ratio = abs(n[1, 2]) / abs(n[0, 1])
+    print(f"   {lab:9s} |<0|n|1>| = {abs(n[0,1]):.4f}   |<1|n|2>| = {abs(n[1,2]):.4f}   "
+          f"leakage/drive ratio = {ratio:5.2f}")
+    for T in DURATIONS[lab]:
+        e, x = calibrate_gate(f, n, T)
+        gate_rows.append(dict(architecture=lab, T_ns=T, gate_error=float(e),
+                              amp=float(x[0]), drag=float(x[1]), detuning_GHz=float(x[2]),
+                              leak_drive_ratio=float(ratio)))
+        print(f"      T = {T:5.2f} ns -> error {e:.3e}   (amp {x[0]:.3f}, DRAG {x[1]:+.2f}, "
+              f"Stark {1e3*x[2]:+6.1f} MHz)")
+    # A longer gate can always emulate a shorter one padded with idle, so the true error
+    # is non-increasing in T. The optimiser does not respect that (it is noisy at short
+    # durations), so take the running minimum from the left before reading off T_min --
+    # and report the BRACKET, since the grid spacing and the optimiser both limit it.
+    sub = sorted([r for r in gate_rows if r["architecture"] == lab],
+                 key=lambda r: r["T_ns"])
+    env, run = [], np.inf
+    for r in sub:
+        run = min(run, r["gate_error"]); env.append(run)
+    below = [r["T_ns"] for r, e in zip(sub, env) if e < ERR_TARGET]
+    tmin[lab] = float(min(below)) if below else float("nan")
+    above = [r["T_ns"] for r, e in zip(sub, env) if e >= ERR_TARGET and r["T_ns"] < tmin[lab]]
+    tbracket[lab] = (float(max(above)) if above else float("nan"), tmin[lab])
+    if any(a > b for a, b in zip([r["gate_error"] for r in sub], env)):
+        print(f"      NOTE {lab}: the raw error curve is non-monotonic in T, which is "
+              f"optimiser noise, not physics.\n           A monotone envelope is used to read "
+              f"off T_gate, and the bracket is reported.")
+
+gates = pd.DataFrame(gate_rows)
+gates.to_csv("data/q3_pulse_simulation.csv", index=False)
+print(f"\n{len(gates)} calibrated gates -> data/q3_pulse_simulation.csv")
+
+T2_OP = {"transmon": tm_op["T2_us"], "fluxonium": fx_op["T2_us"]}
+N_sim = {k: 1e3 * T2_OP[k] / tmin[k] for k in tmin}
+sim_ratio = N_sim["fluxonium"] / N_sim["transmon"]
+print(f"\nshortest simulated gate with error < {ERR_TARGET:.0e} (an UPPER bound on T_gate):")
+for k in ("transmon", "fluxonium"):
+    lo, hi = tbracket[k]
+    print(f"   {k:9s} T_gate = {tmin[k]:5.2f} ns  (bracketed by the grid: {lo:.2f}-{hi:.2f} ns)"
+          f"   T2 = {T2_OP[k]:8.1f} us   N = {N_sim[k]:10,.0f}")
+# the ratio inherits both brackets, so quote it as a range too
+r_lo = (1e3 * T2_OP["fluxonium"] / tbracket["fluxonium"][1]) / (1e3 * T2_OP["transmon"] / tbracket["transmon"][0])
+r_hi = (1e3 * T2_OP["fluxonium"] / tbracket["fluxonium"][0]) / (1e3 * T2_OP["transmon"] / tbracket["transmon"][1])
+print(f"\n>>> SIMULATED gate-count ratio = {sim_ratio:,.0f}x  "
+      f"(grid+optimiser bracket: {min(r_lo, r_hi):,.0f}-{max(r_lo, r_hi):,.0f}x)")
+print(f">>> versus the three analytic bounds: "
+      f"{gate_raw['alpha']['ratio']:,.0f}x (1/|alpha|), "
+      f"{gate_raw['both']['ratio']:.1f}x (1/min), {gate_raw['f01']['ratio']:.2f}x (1/f01)")
+print(">>> The simulation lands between the min-bound and the leakage-only bound, and rules")
+print(">>> BOTH naive extremes out. The fluxonium does convert coherence into operations more")
+print(">>> efficiently -- by tens, not by ~500x and not by ~1x.")
+print(f">>> Mechanism: its anharmonicity is {abs(alpha_fx)/abs(alpha_tm):.0f}x larger, but its drive couples")
+print(f">>> {gates[gates.architecture=='fluxonium'].leak_drive_ratio.iloc[0]/gates[gates.architecture=='transmon'].leak_drive_ratio.iloc[0]:.1f}x more strongly to the leakage transition, which eats most of that.")
+
+METRICS["gate_count_simulated"] = {
+    "method": "lab-frame Schrodinger, no RWA, 6 levels, charge drive, Gaussian envelope; "
+              "amplitude + DRAG + Stark detuning calibrated at each duration; average gate "
+              "fidelity on the computational subspace so leakage counts as error",
+    "error_target": ERR_TARGET,
+    "T_gate_ns": tmin, "T_gate_bracket_ns": tbracket, "N_gates": N_sim,
+    "ratio": float(sim_ratio), "ratio_bracket": [float(min(r_lo, r_hi)), float(max(r_lo, r_hi))],
+    "caveat": "coarse 3-parameter calibration with a fixed Gaussian shape, so T_gate is an "
+              "UPPER bound; optimal control would shorten both, not necessarily equally. The "
+              "optimiser is not reliably converged at the shortest durations.",
+}
+""")
+
+# ========================================================================
+md(r"""
+### Figure — where the pulse bound actually lands
+""")
+
+# ========================================================================
+code(r"""
+fig, ax = plt.subplots(1, 2, figsize=(11, 4.2))
+
+for lab, col in (("transmon", "#2c7fb8"), ("fluxonium", "#d95f0e")):
+    g = gates[gates.architecture == lab].sort_values("T_ns")
+    ax[0].semilogy(g.T_ns, g.gate_error, "o-", color=col, lw=2, ms=5, label=lab)
+    ax[0].axvline(tmin[lab], ls=":", color=col, lw=1.5)
+ax[0].axhline(ERR_TARGET, ls="--", color="k", lw=1.4, label=rf"target ${ERR_TARGET:.0e}$")
+ax[0].set_xlabel("gate duration (ns)"); ax[0].set_ylabel("average gate error")
+ax[0].set_title("(a) Calibrated $X$-gate error vs duration\nlab frame, no RWA, leakage counted")
+ax[0].legend(frameon=False, fontsize=8)
+
+labels = [r"$1/|\alpha|$" "\n" "leakage only", r"$1/\min(|\alpha|,f_{01})$",
+          "simulated\n(this work)", r"$1/f_{01}$" "\n" "drive period"]
+vals = [gate_raw["alpha"]["ratio"], gate_raw["both"]["ratio"], sim_ratio,
+        gate_raw["f01"]["ratio"]]
+cols = ["#bdbdbd", "#bdbdbd", "#8856a7", "#bdbdbd"]
+ax[1].bar(range(4), vals, color=cols, width=0.62, edgecolor="k", linewidth=0.6)
+ax[1].set_yscale("log"); ax[1].axhline(1, color="k", ls="--", lw=1.2)
+ax[1].set_xticks(range(4)); ax[1].set_xticklabels(labels, fontsize=7.5)
+for i, v in enumerate(vals):
+    ax[1].annotate(f"{v:,.0f}x" if v >= 10 else f"{v:.2f}x", xy=(i, v),
+                   xytext=(0, 4), textcoords="offset points", ha="center", fontsize=8)
+ax[1].set_ylabel("gate-count ratio, fluxonium / transmon")
+ax[1].set_title("(b) The pulse bound spans 393$\\times$;\nsimulation rules out both extremes")
+fig.tight_layout()
+pl.save(fig, "figures/q3_pulse_bound.png")
+plt.show()
+print("wrote figures/q3_pulse_bound.png (+ .pdf)")
+""")
+
+# ========================================================================
 md(r"""
 ## 4. Monte Carlo over the noise-amplitude uncertainty
 

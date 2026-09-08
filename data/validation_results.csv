@@ -28,6 +28,7 @@ section,check,value,reference,deviation,units,passed,basis
 5 fluxonium,f03 at Phi=0 is STRONGLY hybridised with the array mode (g > detuning),-1.4828012195384668,,-1.483e+00 <= -1.0e+00,g/|detuning|,True,"g/|D| = 1.5-3.7 under every published set: perturbation theory fails, the bare model cannot apply"
 5 fluxonium,0->2 is parity-forbidden at Phi_ext=0 (matrix element vanishes),1.1017851418728902e-14,,|1.102e-14| <= 1.0e-09,phi_zpf,True,"so the digitized f02 comes from the theory curve, not from a measured peak"
 5 fluxonium,one parameter set reproduces ALL SIX digitized lines,0.010189966450553724,0.0,1.019e-02 (tol 3.0e-02),GHz (RMS),True,"MEASURED DATA: EJ=8.94, EC=2.53, EL=0.525, bias 0.0422; independently recovers the 0.042 flux offset"
+5 fluxonium,omitted array modes shift f01 by <1% AT THE FLUX SWEET SPOT,0.4290103087119635,0.0,4.290e-01 (tol 1.0e+00),% of f01,True,"0.43% at half flux vs 16% at Phi_ext=0: the omission is a Phi=0 effect, and it is now BOUNDED where this project works"
 6 pipeline,transmon T2 <= 2*T1,-1.689465078050965,,-1.689e+00 <= 1.0e-09,us,True,rates add; T2 can never exceed the 2*T1 ceiling
 6 pipeline,fluxonium T2 <= 2*T1,-412.51169680087787,,-4.125e+02 <= 1.0e-09,us,True,rates add; T2 can never exceed the 2*T1 ceiling
 6 pipeline,transmon T2 strictly below 2*T1 (crit-current channel alive),1.0310837224701994,1.031,0.008% (tol 2%),-,True,Tphi_cc = 1803 us

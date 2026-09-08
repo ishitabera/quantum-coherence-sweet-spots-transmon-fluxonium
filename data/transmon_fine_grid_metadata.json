@@ -2,7 +2,7 @@
   "notebook": "notebooks/02_transmon_sweep.ipynb (section 6.1)",
   "purpose": "test whether the gate-count optimum is interior or pinned to the transmon-regime threshold, and fix the adopted design envelope",
   "provenance": {
-    "date": "2026-09-07T22:09:40",
+    "date": "2026-09-07T23:27:54",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",

@@ -57,7 +57,7 @@ if _here.name == "notebooks":          # notebook lives in notebooks/, project r
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "src"))  # makes `from coherence import ...` available
 os.makedirs("data", exist_ok=True); os.makedirs("figures", exist_ok=True)
-print("project root:", ROOT)
+print("project root:", ROOT.name)          # name only; the absolute path is machine-specific
 """)
 
 # ========================================================================

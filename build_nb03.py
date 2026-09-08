@@ -69,7 +69,7 @@ if _here.name == "notebooks":          # notebook lives in notebooks/, project r
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "src"))  # makes `from coherence import ...` available
 os.makedirs("data", exist_ok=True); os.makedirs("figures", exist_ok=True)
-print("project root:", ROOT)
+print("project root:", ROOT.name)          # name only; the absolute path is machine-specific
 """)
 
 # =========================================================================
@@ -1357,10 +1357,11 @@ What this model does **not** include, in rough order of expected impact:
    carry *collective modes* — Manucharyan 2009's 43-junction device has them at 8.18 and
    10.78 GHz — and `01_validation.ipynb` §9.2(iii) shows that hybridization with the 10.78 GHz
    mode is what stops the bare model reproducing $f_{03}$ at $\Phi_{ext}=0$ ($g/|\Delta| =
-   1.5$–$3.7$). Their effect on $f_{01}$ *at the flux sweet spot* is **not bounded by this
-   study**: it depends on the array mode structure of the specific device, and a naive dispersive
-   estimate comes out the same size as the transition frequency, i.e. outside its own regime of
-   validity. This is the least-quantified omission in the model.
+   1.5$–$3.7$). That notebook's §5 step (iv) **bounds** the cost by explicit
+   diagonalization with both of Manucharyan's array modes: $f_{01}$ shifts $-16\%$ at
+   $\Phi_{ext}=0$ but only $-0.43\%$ at the flux sweet spot, where every coherence number here
+   is evaluated. The ideal-superinductance approximation is therefore a sub-percent effect on
+   these results — smaller than the 9.5% spread across Manucharyan's own parameter sets.
 5. **Upward thermal transitions are only partly handled.** scqubits' `t1_*` methods include both
    directions, but the qubit is assumed to start in $|1\rangle$; at $\bar n_{\rm th} = 0.455$
    (nominal) and 3.7 (unconstrained optimum) the two-level treatment itself is strained.

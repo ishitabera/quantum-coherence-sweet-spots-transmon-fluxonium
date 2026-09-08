@@ -75,8 +75,18 @@ heuristic, and `T_gate` is set by whatever bounds the pulse bandwidth. For a tra
 **24× its own** f01 = 0.363 GHz, so the bound decides the answer: the fluxonium/transmon ratio is
 **524× under 1/|α|, 22.0× under 1/min(|α|, f01), and 1.34× under 1/f01** — and only the first two
 survive the noise band (the drive-period bound gives median 0.83×, 40% win rate). Quoting 524×
-alone assumes a gate 24× shorter than one period of the transition being driven. All three are in
-`04_analysis.ipynb` §3, the Monte Carlo and the ledger. Never quote one without its bound.
+alone assumes a gate 24× shorter than one period of the transition being driven.
+
+**`04_analysis.ipynb` §3.1 settles it: 48×, bracketed 36–58×**, from a lab-frame no-RWA pulse
+simulation with amplitude, DRAG and Stark detuning calibrated at each duration and leakage counted
+in the fidelity. Both naive bounds are excluded. The mechanism they miss is the drive matrix
+element: the fluxonium's |⟨1|n̂|2⟩|/|⟨0|n̂|1⟩| = 10.2 against the transmon's 1.37, so the drive is
+ten times better at causing leakage than at driving the qubit, which eats most of the
+anharmonicity advantage. **The simulated durations are UPPER bounds** — the calibration is coarse
+(3 parameters, fixed Gaussian) and the optimiser is not converged at short durations, which shows
+as non-monotonicity in the error curve; a monotone envelope is used to read off T_gate and the
+bracket is reported. Optimal control would shorten both architectures, not necessarily equally.
+All four numbers are in the ledger. Never quote one without its bound.
 
 **The transmon design envelope is Krantz 2019 §II A**: f01 ∈ [3, 6] GHz, |α| ∈ [100, 300] MHz,
 EJ/EC ≥ 50. Check any transmon operating point against all three axes before using it — the
@@ -134,7 +144,7 @@ provenance ledger and the superseded-number audit. **If a regression test fails,
 `data/` and `figures/` is invalidated** — regenerate them deliberately rather than relaxing the
 test.
 
-**Every headline number must survive the ledger.** `05_summary.ipynb` §2 recomputes **28**
+**Every headline number must survive the ledger.** `05_summary.ipynb` §2 recomputes **32**
 quoted values from their named file and filter and asserts each one, so a number that drifts from
 its artefact fails a cell rather than reaching the paper. If you add a headline number anywhere,
 add it to that ledger; `tests/test_regression.py` fails if the ledger shrinks below 28 rows.
@@ -189,10 +199,12 @@ puts at ω₂/2π = 10.78 GHz: g₀₃ ≈ 0.53 GHz against a detuning of 0.14�
 The bare Hamiltonian cannot reproduce that line, which is why the paper needed the extended model.
 Do not re-add f03 to the spectrum-validation claim.
 
-**The model has no junction-array modes, and their effect at the flux sweet spot is unbounded.**
-The superinductance is ideal. That is fine for everything in `data/` — nothing there claims to
-include array modes — but it is the least-quantified omission in the model, and a naive dispersive
-estimate at the sweet spot is the same size as the transition frequency, so do not quote one.
+**The model has no junction-array modes, and the cost is bounded at sub-percent.** The
+superinductance is ideal. `01_validation.ipynb` §5 step (iv) diagonalises the fluxonium coupled to
+both of Manucharyan's array modes: f01 shifts −16% at Φ_ext=0 but only **−0.43%** at the flux
+sweet spot, where every coherence number here is evaluated. Do not quote the naive g²/Δ estimate at
+the sweet spot — it comes out the same size as the transition frequency and is outside its own
+regime of validity.
 
 ## Writing about results
 

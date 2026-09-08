@@ -2,7 +2,7 @@
   "notebook": "notebooks/01_validation.ipynb",
   "purpose": "Week-1 pipeline validation prior to production sweeps",
   "provenance": {
-    "date": "2026-09-07T22:38:15",
+    "date": "2026-09-07T23:27:38",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "scqubits": "4.3.1",
@@ -29,8 +29,8 @@
     },
     "units": "frequencies in GHz; all coherence times in microseconds (scqubits returns ns)"
   },
-  "n_checks": 43,
-  "n_passed": 43,
+  "n_checks": 44,
+  "n_passed": 44,
   "criteria": {
     "exact symmetries": "machine precision, tol 1e-10 GHz",
     "convergence": "|df01| < 1e-6 GHz vs largest basis",
@@ -41,7 +41,7 @@
   "known_limitations": [
     "1/f dephasing formulas are first order in df01/dlambda and therefore return unphysically large Tphi AT a sweet spot; sweet-spot Tphi values must not be quoted as predictions (see Section 6 and 9.4c).",
     "t1_* methods return the total (excitation + relaxation) rate at the scqubits default temperature, not the downward rate alone.",
-    "The superinductance is modelled as ideal, so qubit-array-mode hybridisation is absent. Section 9.2(iii) shows this is what makes the bare model miss f03 at Phi_ext=0 in Manucharyan's device (their array mode at 10.78 GHz couples to the 0-3 transition with g/|detuning| = 1.5-3.7). The effect on f01 AT THE FLUX SWEET SPOT is not bounded by this study and would require the array mode structure of the device being modelled; a naive dispersive estimate is the same size as the transition frequency itself and is therefore outside its own regime of validity.",
+    "The superinductance is modelled as ideal, so qubit-array-mode hybridisation is absent. Section 9.2(iii) shows this is what makes the bare model miss f03 at Phi_ext=0 in Manucharyan's device (their 10.78 GHz array mode couples to the 0-3 transition with g/|detuning| = 1.5-3.7). Section 5 step (iv) BOUNDS the cost by explicit diagonalisation with both of their array modes: f01 shifts -16% at Phi_ext=0 but only -0.43% at the flux sweet spot, where every coherence number here is evaluated. A sub-percent effect on this study's results.",
     "Coherence values are model-based estimates under assumed noise amplitudes; vs Nguyen 2019 Table I the model is optimistic on absolute T1/T2 by a median 2.0x (T1) and 2.6x (T2), worst case 5.7x, measured device-by-device at the nine published devices' own parameters in 03_fluxonium_sweep.ipynb section 7. The wider 3-11x quoted in section 9.3 is a DIFFERENT comparison (our one nominal design against the range their nine devices span) and reflects the design-regime mismatch, not extra model error. Contributing causes: assumed Q_cap=1e6 flat vs measured tan(delta_C)=(2.0-3.6)e-6 at 6 GHz; assumed A_flux=1e-6 vs measured 1.8e-6."
   ],
   "references": [
@@ -52,6 +52,86 @@
     "L. B. Nguyen et al., Phys. Rev. X 9, 041041 (2019) - high-coherence fluxonium",
     "G. Ithier et al., Phys. Rev. B 72, 134519 (2005) - decoherence channels"
   ],
+  "manucharyan_f03": {
+    "array_mode_bound": {
+      "Manucharyan device, Phi_ext = 0": {
+        "bare_GHz": 9.060494552732997,
+        "dressed_GHz": 7.605182104855716,
+        "shift_GHz": -1.4553124478772812,
+        "rel": -16.06217452488068
+      },
+      "Manucharyan device, sweet spot": {
+        "bare_GHz": 0.3300562591075086,
+        "dressed_GHz": 0.3286241254624789,
+        "shift_GHz": -0.0014321336450296984,
+        "rel": -0.43390591922185373
+      },
+      "this project's nominal, sweet spot": {
+        "bare_GHz": 0.3634213672006896,
+        "dressed_GHz": 0.3618622520713367,
+        "shift_GHz": -0.001559115129352917,
+        "rel": -0.4290103087119635
+      }
+    },
+    "assignment": {
+      "measured_dispersion_GHz": 0.04600000000000115,
+      "model_dispersion_by_candidate": {
+        "main text (9.00, 2.50, 0.52)": {
+          "f03": 0.07471003941039278,
+          "f04": -0.10836278666296195,
+          "two-photon 0-4": -0.054181393331480976,
+          "f05/2": 0.013498424448082247
+        },
+        "Table 1 junction (8.93, 2.39, 0.52)": {
+          "f03": 0.09974255833544632,
+          "f04": -0.10999911844772114,
+          "two-photon 0-4": -0.05499955922386057,
+          "f05/2": 0.011233604122660168
+        },
+        "Table 1 extended (8.97, 2.47, 0.52)": {
+          "f03": 0.08135095104643675,
+          "f04": -0.10859811462004743,
+          "two-photon 0-4": -0.05429905731002371,
+          "f05/2": 0.012849185711019118
+        }
+      }
+    },
+    "dEC_sensitivity_GHz_per_GHz": {
+      "f01": -0.19242448708371995,
+      "f02": -0.09931169373276205,
+      "f03": 1.7144425475821734
+    },
+    "array_mode_hybridisation": {
+      "main text (9.00, 2.50, 0.52)": {
+        "f03": 11.143875431332688,
+        "detuning": 0.36387543133268885,
+        "g3": 0.5395549333401967,
+        "ratio": 1.4828012195384668,
+        "two_level_upper": 11.531341665840236
+      },
+      "Table 1 junction (8.93, 2.39, 0.52)": {
+        "f03": 10.922634236180798,
+        "detuning": 0.14263423618079862,
+        "g3": 0.5272410111801509,
+        "ratio": 3.696454829483133,
+        "two_level_upper": 11.383359611884822
+      },
+      "Table 1 extended (8.97, 2.47, 0.52)": {
+        "f03": 11.07837457727126,
+        "detuning": 0.29837457727126093,
+        "g3": 0.5345677908357603,
+        "ratio": 1.7915996588066192,
+        "two_level_upper": 11.484182396802789
+      }
+    },
+    "joint_fit": {
+      "EJ": 8.937534527022738,
+      "EC": 2.5293174367624163,
+      "EL": 0.5245794570747006,
+      "flux_bias": 0.04218100425325893,
+      "rms_GHz": 0.010189966450553724
+    }
+  },
   "outputs": [
     "data/validation_results.csv",
     "figures/validation_spectra.png"

@@ -27,3 +27,7 @@ Transmon f01 at the operating point,4.925,src/coherence.py,"EJ=13.0, EC=0.26, ng
 "Q3 gate-count ratio, own op. points, 1/f01 drive-period bound",1.336,data/q3_analysis_metadata.json,"metrics.gate_count_by_pulse_bound, bound='f01'",1.3354467031337856,04,True
 "Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound",624.8,data/q3_metric_comparison.csv,"f01_target == 2.0, bound='alpha'",624.8055973472166,04,True
 "Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound",1708.6,data/q3_metric_comparison.csv,"f01_target == 0.5, bound='alpha'",1708.6453046807803,04,True
+"Q3 gate-count ratio, pulse simulation (settles the bound)",48.259426439861834,data/q3_pulse_simulation.csv,shortest calibrated gate with error < 1e-03,48.259426439861834,04,True
+"Simulated minimum gate time, transmon",8.0,data/q3_pulse_simulation.csv,argmin T_ns with gate_error < target,8.0,04,True
+"Simulated minimum gate time, fluxonium",3.0,data/q3_pulse_simulation.csv,argmin T_ns with gate_error < target,3.0,04,True
+Array-mode shift in f01 at the flux sweet spot,-0.43,notebooks/01_validation.ipynb,"section 5 step (iv), explicit diagonalisation",-0.4290103087119635,01,True

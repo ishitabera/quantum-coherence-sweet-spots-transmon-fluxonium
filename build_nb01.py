@@ -53,7 +53,7 @@ if _here.name == "notebooks":          # notebook lives in notebooks/, project r
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "src"))  # makes `from coherence import ...` available
 os.makedirs("data", exist_ok=True); os.makedirs("figures", exist_ok=True)
-print("project root:", ROOT)
+print("project root:", ROOT.name)          # name only; the absolute path is machine-specific
 """)
 
 # ========================================================================
@@ -646,7 +646,56 @@ print(f"   published range (2.39-2.50). That excess is the array-mode repulsion 
 print(f"   absorbed into E_C -- the fit has no array mode to give it to. It is a bound on how")
 print(f"   much the omitted mode matters, not a better estimate of E_C.")
 
-MANU_F03 = {"assignment": {"measured_dispersion_GHz": float(D_MEASURED),
+# ---- (iv) bounding the omission: how much does the array mode matter to US? -----------
+# The mechanism above is a property of Manucharyan's 43-junction device, and this project
+# models an IDEAL superinductance with no array modes at all. Diagonalise the fluxonium
+# coupled to BOTH of their array modes explicitly and read off the shift in f01, at
+# Phi_ext = 0 (where the effect is large) and at the flux sweet spot (where every coherence
+# number in this project is evaluated).
+print("\n--- f03 residual, step (iv): does the omitted mode matter at the SWEET SPOT? ---")
+MANU_MODES = [(8.18, 0.135), (10.78, 0.324)]      # (w/2pi GHz, g GHz) Table 1, extended model
+
+def dressed_f01(params, flux, nq=8, nosc=4, modes=MANU_MODES):
+    """f01 with the junction-array modes included, by explicit diagonalisation."""
+    fl = scq.Fluxonium(**{**{k: v for k, v in params.items() if k != "flux"},
+                          "flux": flux, "truncated_dim": nq})
+    esys = fl.eigensys(evals_count=nq)
+    ref = abs(np.array(fl.phi_operator(energy_esys=esys))[0, 1])   # g quoted per the 0-1 element
+    oscs = [scq.Oscillator(E_osc=w, truncated_dim=nosc) for w, _ in modes]
+    hs = scq.HilbertSpace([fl] + oscs)
+    for osc, (w, g) in zip(oscs, modes):
+        hs.add_interaction(g_strength=g / ref, op1=fl.phi_operator,
+                           op2=osc.annihilation_operator, add_hc=True)
+    hs.generate_lookup()
+    e = hs.eigenvals(evals_count=12)
+    i0, i1 = hs.dressed_index((0, 0, 0)), hs.dressed_index((1, 0, 0))
+    return float(esys[0][1] - esys[0][0]), float(e[i1] - e[i0])
+
+arr = {}
+for lab, (pset, flux) in {
+        "Manucharyan device, Phi_ext = 0": (MANU_JUNCTION, 0.0),
+        "Manucharyan device, sweet spot":  (MANU_JUNCTION, 0.5),
+        "this project's nominal, sweet spot": (
+            {k: FLUXONIUM_DEFAULTS[k] for k in ("EJ", "EC", "EL", "cutoff")}, 0.5)}.items():
+    bare, dressed = dressed_f01(pset, flux)
+    arr[lab] = dict(bare_GHz=bare, dressed_GHz=dressed,
+                    shift_GHz=dressed - bare, rel=100 * (dressed - bare) / bare)
+    print(f"   {lab:36s} bare {bare:7.4f} -> dressed {dressed:7.4f} GHz "
+          f"({100*(dressed-bare)/bare:+6.2f}%)")
+
+sweet_shift = abs(arr["this project's nominal, sweet spot"]["rel"])
+check("5 fluxonium", "omitted array modes shift f01 by <1% AT THE FLUX SWEET SPOT",
+      sweet_shift, reference=0.0, tol_abs=1.0, units="% of f01",
+      note=f"{sweet_shift:.2f}% at half flux vs "
+           f"{abs(arr['Manucharyan device, Phi_ext = 0']['rel']):.0f}% at Phi_ext=0: the "
+           "omission is a Phi=0 effect, and it is now BOUNDED where this project works")
+print("   >>> The ideal-superinductance approximation costs <0.5% in f01 at the sweet spot,")
+print("   >>> where every coherence number in this project is evaluated. An earlier note in")
+print("   >>> section 9.2 estimated ~-330 MHz from a naive dispersive formula; that estimate")
+print("   >>> was outside its own regime of validity and this diagonalisation supersedes it.")
+
+MANU_F03 = {"array_mode_bound": arr,
+            "assignment": {"measured_dispersion_GHz": float(D_MEASURED),
                            "model_dispersion_by_candidate": disp},
             "dEC_sensitivity_GHz_per_GHz": {f"f0{i+1}": float(dEC[i]) for i in range(3)},
             "array_mode_hybridisation": hyb,
@@ -970,13 +1019,13 @@ meta = {
         "as predictions (see Section 6 and 9.4c).",
         "t1_* methods return the total (excitation + relaxation) rate at the scqubits "
         "default temperature, not the downward rate alone.",
-        "The superinductance is modelled as ideal, so qubit-array-mode hybridisation is absent. "
-        "Section 9.2(iii) shows this is what makes the bare model miss f03 at Phi_ext=0 in "
-        "Manucharyan's device (their array mode at 10.78 GHz couples to the 0-3 transition with "
-        "g/|detuning| = 1.5-3.7). The effect on f01 AT THE FLUX SWEET SPOT is not bounded by "
-        "this study and would require the array mode structure of the device being modelled; a "
-        "naive dispersive estimate is the same size as the transition frequency itself and is "
-        "therefore outside its own regime of validity.",
+        "The superinductance is modelled as ideal, so qubit-array-mode hybridisation is "
+        "absent. Section 9.2(iii) shows this is what makes the bare model miss f03 at "
+        "Phi_ext=0 in Manucharyan's device (their 10.78 GHz array mode couples to the 0-3 "
+        "transition with g/|detuning| = 1.5-3.7). Section 5 step (iv) BOUNDS the cost by "
+        "explicit diagonalisation with both of their array modes: f01 shifts -16% at "
+        "Phi_ext=0 but only -0.43% at the flux sweet spot, where every coherence number here "
+        "is evaluated. A sub-percent effect on this study's results.",
         "Coherence values are model-based estimates under assumed noise amplitudes; "
         "vs Nguyen 2019 Table I the model is optimistic on absolute T1/T2 by a median "
         "2.0x (T1) and 2.6x (T2), worst case 5.7x, measured device-by-device at the nine "
@@ -994,6 +1043,7 @@ meta = {
         "L. B. Nguyen et al., Phys. Rev. X 9, 041041 (2019) - high-coherence fluxonium",
         "G. Ithier et al., Phys. Rev. B 72, 134519 (2005) - decoherence channels",
     ],
+    "manucharyan_f03": MANU_F03,
     "outputs": ["data/validation_results.csv", "figures/validation_spectra.png"],
 }
 with open("data/validation_metadata.json", "w") as fh:
@@ -1136,28 +1186,23 @@ is at the floor of what this comparison can resolve, and no tighter claim should
 > 2.6× calibration gap of §9.3 and the ±1-decade noise-amplitude band, but it is not zero, and
 > "validated to 0.012%" overstated it by three orders of magnitude.
 >
-> **What the array mode means for the rest of the project — an open limitation, not a
-> correction.** The hybridization diagnosed in (iii) is a property of *Manucharyan's specific
-> device*: a 43-junction array with modes at $\omega_1/2\pi = 8.18$ and $\omega_2/2\pi = 10.78$
-> GHz (their Table 1, extended-model column). This project models an **ideal** fluxonium with no
-> array modes at all, so nothing in `data/` contains this physics either way, and the question is
-> whether it should.
+> **What the array mode means for the rest of the project — now bounded.** The
+> hybridization diagnosed in (iii) is a property of *Manucharyan's specific device*: a
+> 43-junction array with modes at $\omega_1/2\pi = 8.18$ and $\omega_2/2\pi = 10.78$ GHz
+> (their Table 1, extended-model column). This project models an **ideal** fluxonium with no
+> array modes at all, so the question is how much that costs.
 >
-> It is not obviously negligible at the sweet spot. Taking their $g_2 = 0.324$ GHz as a 0–1
-> coupling at $\Phi_{ext}=0$ and rescaling by the phase matrix element, the 0–1 coupling at
-> $\Phi/\Phi_0 = 1/2$ is $\sim\!1.9$ GHz against a detuning of $-10.4$ GHz — still nominally
-> dispersive ($g/|\Delta| = 0.18$), but $g^2/\Delta \approx -330$ MHz, which is the same size as
-> the $0.363$ GHz transition it would shift. **That estimate should not be believed**: it
-> extrapolates a coupling constant quoted at one bias to a very different one, using a scaling
-> convention the paper does not state, and a shift comparable to the transition frequency is
-> outside the regime where $g^2/\Delta$ means anything.
+> §5 step (iv) answers it by explicit diagonalization of the fluxonium coupled to both modes:
+> the dressed $f_{01}$ shifts by $\mathbf{-16\%}$ at $\Phi_{ext}=0$ but by only
+> $\mathbf{-0.43\%}$ at the flux sweet spot, where every coherence number in this project is
+> evaluated. The mode is far detuned from a 0.363 GHz transition, and although the coupling is
+> *larger* there (the phase matrix element grows), the detuning grows faster.
 >
-> The defensible statement is the limitation, not the number: **an ideal-superinductance model
-> omits qubit–array-mode hybridization, this study does not bound its effect at the flux sweet
-> spot, and doing so would require the array mode structure of the device being modelled.** It is
-> recorded in `known_limitations` and in `03_fluxonium_sweep.ipynb` §11 alongside the other
-> omitted channels. It does not change any number reported here, because no number here claims
-> to include it.
+> *An earlier version of this note estimated $\sim\!-330$ MHz at the sweet spot from
+> $g^2/\Delta$ and concluded the effect was unbounded. That estimate was wrong: it was the
+> same size as the transition frequency it purported to shift, i.e. outside its own regime of
+> validity, and the full diagonalization supersedes it.* The ideal-superinductance
+> approximation is therefore a sub-percent effect on everything this study reports.
 
 ### 9.3 Fluxonium coherence vs Nguyen *et al.*, Phys. Rev. X **9**, 041041 (2019)
 

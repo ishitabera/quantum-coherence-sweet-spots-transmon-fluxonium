@@ -2,8 +2,8 @@
   "notebook": "notebooks/03_fluxonium_sweep.ipynb",
   "purpose": "Q2 dominant channel vs flux at the nominal design",
   "provenance": {
-    "date": "2026-09-07T22:38:41",
-    "git_revision": "5ad31aa-dirty",
+    "date": "2026-09-07T23:28:03",
+    "git_revision": "81dc9c6-dirty",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",

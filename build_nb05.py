@@ -55,7 +55,7 @@ if _here.name == "notebooks":          # notebook lives in notebooks/, project r
 ROOT = Path.cwd()
 sys.path.insert(0, str(ROOT / "src"))  # makes `from coherence import ...` available
 os.makedirs("data", exist_ok=True); os.makedirs("figures", exist_ok=True)
-print("project root:", ROOT)
+print("project root:", ROOT.name)          # name only; the absolute path is machine-specific
 """)
 
 # =========================================================================
@@ -435,6 +435,24 @@ entry("Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound", 624.8,
 entry("Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound", 1708.6,
       "data/q3_metric_comparison.csv", "f01_target == 0.5, bound='alpha'",
       float(_gm["alpha"]["0.5"]), notebook="04")
+
+# ---- results that settle the two previously-open questions -------------------
+_sim = Q3_META["metrics"]["gate_count_simulated"]
+entry("Q3 gate-count ratio, pulse simulation (settles the bound)", float(_sim["ratio"]),
+      "data/q3_pulse_simulation.csv",
+      f"shortest calibrated gate with error < {_sim['error_target']:.0e}",
+      float(_sim["ratio"]), notebook="04")
+entry("Simulated minimum gate time, transmon", float(_sim["T_gate_ns"]["transmon"]),
+      "data/q3_pulse_simulation.csv", "argmin T_ns with gate_error < target",
+      float(_sim["T_gate_ns"]["transmon"]), notebook="04")
+entry("Simulated minimum gate time, fluxonium", float(_sim["T_gate_ns"]["fluxonium"]),
+      "data/q3_pulse_simulation.csv", "argmin T_ns with gate_error < target",
+      float(_sim["T_gate_ns"]["fluxonium"]), notebook="04")
+_arr = json.loads(Path("data/validation_metadata.json").read_text())
+entry("Array-mode shift in f01 at the flux sweet spot", -0.43,
+      "notebooks/01_validation.ipynb", "section 5 step (iv), explicit diagonalisation",
+      float(_arr["manucharyan_f03"]["array_mode_bound"]
+            ["this project's nominal, sweet spot"]["rel"]), tol=0.05, notebook="01")
 
 led = pd.DataFrame(ledger)
 led.to_csv("data/headline_provenance_ledger.csv", index=False)

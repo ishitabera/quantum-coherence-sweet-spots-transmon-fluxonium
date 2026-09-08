@@ -46,6 +46,7 @@ bootstrap:
 | Gate count, own op. points, 1/\|α\| bound | 524× | 326× [104, 611] | 100% |
 | Gate count, own op. points, 1/min(\|α\|,f01) | 22.0× | 13.7× [4.4, 25.6] | 100% |
 | **Gate count, own op. points, 1/f01 bound** | **1.34×** | **0.83× [0.26, 1.56]** | **40%** |
+| **Gate count, pulse simulation** | **48×** [36–58] | — | — |
 | **Gate count, matched f01, 1/f01 bound** | 1.07–2.14× | **0.86× [0.27, 1.58]** | **42%** |
 
 The raw coherence advantage is **substantially a frequency effect**: control for f01 and the T2
@@ -55,8 +56,16 @@ extent that anharmonicity, rather than the qubit's own transition frequency, set
 pulse can be. The fluxonium's \|α\| = 8.7 GHz is 24× its 0.363 GHz transition frequency, so the
 1/\|α\| bound assumes a gate 24× shorter than one period of the transition being driven. Bound it
 instead by the drive period and the advantage falls to 1.34×, and does not survive the noise band
-(40% win rate). **This model does not settle the bound**; `04_analysis.ipynb` §3 computes all
-three and the paper must quote the bound alongside the number. The price, on every metric, is
+(40% win rate).
+
+**§3.1 settles it by simulation.** Integrating the lab-frame Schrödinger equation with no RWA
+and calibrating amplitude, DRAG and Stark detuning at each duration gives a shortest
+error-<10⁻³ gate of 8 ns (transmon, bracketed 6–8) and 3 ns (fluxonium, bracketed 2.5–3), so
+**N = T₂/T_gate gives 48×, bracketed 36–58×** — decisively between the two naive bounds and
+excluding both. The mechanism the α-only argument misses: the fluxonium's drive couples 10.2×
+more strongly to its leakage transition than to the qubit transition (transmon: 1.37×), which
+eats most of its 29× anharmonicity advantage. Durations are upper bounds — the calibration is
+coarse, so optimal control would shorten both, not necessarily equally. The price, on every metric, is
 operating-point precision.
 
 > **Superseded.** Earlier versions of this README reported "best T2 = 5578 µs", "bias sensitivity
@@ -101,7 +110,7 @@ conda activate qubits
 jupyter lab
 ```
 
-Check the pipeline first — `pytest tests/ -q` (30 tests, ~3 s) verifies the units, rate-addition
+Check the pipeline first — `pytest tests/ -q` (32 tests, ~2 s) verifies the units, rate-addition
 and channel conventions, pins the validated anchor values, and gates the published-number anchors
 (Nguyen's second-order flux bound, Manucharyan's three parameter sets, the gate-count pulse bound). Then run the notebooks in order
 `01 → 05`. Each notebook begins with a bootstrap cell that
@@ -144,6 +153,11 @@ A_Φ = 1.8 µΦ₀, it gives Tφ⁽²⁾ = 15–804 ms, clearing their stated bo
 ## Limitations
 
 These are model-based estimates using literature noise amplitudes, not measurements.
+
+**Array modes.** The superinductance is ideal, so junction-array modes are absent. Explicit
+diagonalization against Manucharyan's two modes (8.18 and 10.78 GHz) bounds the cost: f01 shifts
+−16% at Φ_ext = 0 but only **−0.43%** at the flux sweet spot, where every coherence number here is
+computed — smaller than the 9.5% spread across their own published parameter sets.
 
 **Spectrum.** Against Manucharyan et al. (2009) the model reproduces f01 and f02 at Φ_ext = 0 to
 better than 0.7% under *every* one of the paper's three published parameter sets (main text
