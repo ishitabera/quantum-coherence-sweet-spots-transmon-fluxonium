@@ -35,42 +35,43 @@ superseded-number audit in `05_summary.ipynb` §4 scans `README.md` and `docs/` 
 
 ## Status
 
-**Compiles clean. Content-complete. Not submittable until the three items below are closed.**
+**Submission-ready except for the author voice pass.**
 
-8 pages, IEEEtran journal mode, 16 references, 5 figures, 3 tables. Zero overfull boxes;
-six underfull (loose interword spacing in justified two-column text), one severe. All
-citations and cross-references resolve. Every headline number appears in the PDF and
-matches `data/headline_provenance_ledger.csv`.
+Formatted for **IEEE Transactions on Quantum Engineering** (IEEEtran, journal mode) —
+confirmed by the author. 8 pages, 16 references, 5 vector figures, 3 tables.
 
-### Must fix before submission
+Compile and compliance, all verified against the built PDF:
 
-1. **Affiliation is a placeholder.** `\thanks{Affiliation to be completed}` — I left it
-   unstated rather than guess your institution. Fill it in.
-2. **Venue is a default, not a decision.** Formatted for IEEE Transactions on Quantum
-   Engineering (IEEEtran journal mode) because the paper runs past the 6-page limit typical
-   of IEEE conferences. Phys. Rev. Applied also suits the content but needs conversion to
-   REVTeX 4.2 — a real rewrite of the preamble, floats and bibliography style, not a
-   one-line change.
-3. **Author voice pass.** The prose is drafted, not written by you. The physics and the
-   numbers are checked; the sentences are not yours.
+| | |
+|---|---|
+| overfull boxes | 0 |
+| underfull boxes | 5 (loose interword spacing; cosmetic) |
+| unresolved citations / cross-refs | 0 |
+| abstract | 245 words, single paragraph (IEEE norm 150–250) |
+| Index Terms | present |
+| affiliation | independent researcher, self-directed project |
+| AI-use disclosure | present, cites IEEE policy |
+| Reproducibility and Data Availability | present, merged (was duplicated) |
+| headline numbers matching the ledger | 28 / 28 |
 
-### Known limits of the science, stated in the paper itself
+### The one thing left
 
-- **Novelty is argued, not proven.** §II-A locates the two closest works (McRae *et al.* on
-  experimental reproducibility of coherence comparisons; Lange *et al.* on controlled
-  transmon/fluxonium comparison for cross-talk rather than coherence) and §II-B claims only
-  "we are not aware of", with the survey's incompleteness stated in the text. A referee may
-  know a paper I did not find.
+**Author voice pass.** The prose was drafted from the committed artifacts, not written by
+the author. The physics and every number are checked; the sentences are not yours yet. Read
+it line by line before submitting — for a single-author paper this is an authorship matter,
+not a style preference.
+
+### Limits stated in the paper itself, not hidden here
+
+- **Novelty is argued, not proven.** §II-A locates the two closest works — McRae *et al.* on
+  experimental reproducibility of coherence comparisons, and Lange *et al.* on controlled
+  transmon/fluxonium comparison for cross-talk rather than coherence — and §II-B claims only
+  "we are not aware of", stating the survey's incompleteness in the body text.
 - **The 48× gate-count result rests on a coarse calibration.** Three parameters over a fixed
   Gaussian; durations are upper bounds; the optimiser is not converged at the shortest
-  durations. GRAPE/CRAB is the obvious next step and §XI says so.
-- **Frequency matching is necessary but not sufficient** as a control — geometry and surface
-  participation also set dielectric loss and a Hamiltonian-level model does not capture them.
-  Stated as a caveat on our own method in §II-C.
-
-### AI-use disclosure
-
-The Acknowledgements carry a disclosure that a large language model assisted with the
-notebook interpretation sections and the manuscript draft, working from the committed
-numerical artifacts. Check the wording against your target venue's specific policy — IEEE
-and APS both now require disclosure, but the required form differs.
+  durations. §XI names GRAPE/CRAB as the next step.
+- **Frequency matching is necessary but not sufficient** as a control: geometry and surface
+  participation also set dielectric loss, and a Hamiltonian-level model does not capture
+  them. Stated in §II-C as a caveat on our own method.
+- **Model-based throughout.** No new measurement; the calibration set is nine devices from
+  one 2019 paper, and §IX notes the field has since moved past them.
