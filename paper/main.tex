@@ -1,20 +1,32 @@
 %% Coherence sweet spots across superconducting qubit architectures
-%% IEEE two-column. Build:  latexmk -pdf main.tex
+%%
+%% VENUE: formatted for IEEE Transactions on Quantum Engineering (IEEEtran, journal
+%% mode). This is a DEFAULT, not a decision -- the content also suits Phys. Rev.
+%% Applied, which would require converting to REVTeX 4.2. Journal mode is used
+%% because the paper runs past the 6-page limit typical of IEEE conferences.
+%%
+%% Build:  tectonic -X compile main.tex     (or: latexmk -pdf main.tex)
 %%
 %% EVERY number in this paper is traceable to data/headline_provenance_ledger.csv,
 %% which 05_summary.ipynb regenerates and asserts. If you change a number here,
 %% change it there first and let the ledger verify it.
-\documentclass[conference]{IEEEtran}
+\documentclass[journal]{IEEEtran}
 \usepackage{amsmath,amssymb,booktabs,graphicx,siunitx,url}
 \usepackage[hidelinks]{hyperref}
+\usepackage{xurl}   % break long URLs; without it the repo link forces badness-10000 lines
 
 \begin{document}
 
 \title{Coherence Sweet Spots Are Frequency Minima in Disguise:\\
-A Metric-Sensitivity Study of Transmon and Fluxonium Qubits}
+Metric Sensitivity in Transmon and Fluxonium Design Spaces}
 
-\author{\IEEEauthorblockN{Ishita Bera}
-\IEEEauthorblockA{\texttt{ishitabera4@gmail.com}}}
+%% TODO(author): AFFILIATION IS A PLACEHOLDER. It is left unstated rather than
+%% guessed -- fill in your institution, department and postal address, or state
+%% "independent researcher" if that is accurate. Do not submit as-is.
+\author{Ishita~Bera%
+\thanks{Affiliation to be completed. E-mail: ishitabera4@gmail.com}%
+\thanks{Code, data and figures:
+\url{https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium}}}
 
 \maketitle
 
@@ -95,35 +107,65 @@ draws; orange marks the metrics in which the fluxonium wins fewer than 90\% of s
 
 \section{Related Work and Contribution}
 
+\subsection{What is already established}
+
 The frequency scaling we build on is not new. Dielectric loss from two-level-system defects at
-surfaces and interfaces is the dominant relaxation channel in transmons, and the relaxation
-rate is approximately proportional to the surface participation
-ratio~\cite{wang2015}; at fixed quality factor the rate grows with $\omega_{01}$, so a
-lower-frequency qubit relaxes more slowly. That much is standard.
+surfaces and interfaces is the dominant relaxation channel in transmons, with the relaxation
+rate approximately proportional to the surface participation ratio~\cite{wang2015}; at fixed
+quality factor the rate grows with $\omega_{01}$, so a lower-frequency qubit relaxes more
+slowly. Design-space optimisation under noise models is likewise established: Papi\v{c}
+\emph{et al.} identify optimal transmon parameter ranges through comprehensive noise modelling
+including charge-parity effects~\cite{papic2024}, and Ram \emph{et al.} give a staged framework
+spanning circuit design, spectral analysis and calibration for both
+architectures~\cite{ram2025}. Experimentally, fluxonium coherence has advanced well past the
+devices we calibrate against: Somoroff \emph{et al.} report $T_2 = 1.43$\,ms with average gate
+fidelity $0.99991$~\cite{somoroff2023}.
 
-Design-space optimisation under noise models is also established. Papi\v{c} \emph{et al.}
-identify optimal transmon parameter ranges through comprehensive noise modelling including
-charge-parity effects~\cite{papic2024}, and Ram \emph{et al.} give a staged framework spanning
-circuit design, spectral analysis and calibration for both
-architectures~\cite{ram2025}. On the experimental side, fluxonium coherence has advanced
-rapidly: Somoroff \emph{et al.} report $T_2 = 1.43$\,ms with average gate fidelity
-$0.99991$~\cite{somoroff2023}, well beyond the devices we calibrate against~\cite{nguyen2019}.
+Two works are close enough to this one to be worth locating precisely.
 
-\textbf{Our contribution is not the scaling but its consequence for how these studies are
-read.} Specifically: (i) we quantify the frequency confound as a near-complete rank
-deficiency of the design plane in both architectures ($|r| > 0.99$), so that a raw optimum is
-a statement about where the sweep stopped; (ii) we show the transmon optimum is pinned to
-whatever regime threshold is imposed, across eight thresholds; (iii) we show that including
-second-order $1/f$ flux dephasing creates an interior fluxonium optimum that a first-order
-model does not see; and (iv) we show the architecture comparison spans two orders of magnitude
-across metrics, and settle the widest of those metrics by pulse simulation. We are not aware
-of a study that reports the metric sensitivity of this comparison explicitly, though we note
-that our literature survey is not exhaustive and the individual ingredients are all known.
+McRae \emph{et al.}~\cite{mcrae2021} argue that coherence metrics cannot currently be compared
+across measurements, devices and laboratories, because temporal fluctuation, TLS dynamics and
+unreported experimental detail dominate the differences being claimed. Their concern is
+\emph{experimental} reproducibility. The present paper makes the modelling analogue of that
+argument: a comparison drawn from a swept design space is equally unreliable unless the
+control variable and the figure of merit are stated with the number.
 
-\textbf{A caveat on our own control.} Matching $f_{01}$ removes the dominant confound but not
-all of it: dielectric loss also depends on geometry and surface participation, which differ
-between architectures and which a Hamiltonian-level model does not
-capture~\cite{wang2015}. Frequency matching is necessary, not sufficient.
+Lange \emph{et al.}~\cite{lange2025} compare transmon and fluxonium lattices directly, and---
+importantly---do so under an explicit control, designing each architecture for similar gate
+speed and fidelity before comparing. Their figures of merit are residual $ZZ$ cross-talk and
+state localisation; \emph{coherence is not among them}. Our work is complementary: same
+instinct about controlled comparison, different quantity.
+
+\subsection{Contribution}
+
+Our contribution is not the frequency scaling but its consequence for how design studies are
+read:
+
+\begin{enumerate}
+\item We quantify the confound as a near-complete rank deficiency of the design plane in
+      \emph{both} architectures ($|r| > 0.99$), so that a raw $T_2$ optimum is a statement
+      about where the sweep stopped rather than about a design.
+\item We show the transmon optimum is pinned to whatever regime threshold is imposed, across
+      eight thresholds spanning $E_J/E_C = 15$--$60$, so the threshold and not the
+      optimisation is the substantive choice.
+\item We show that including second-order $1/f$ flux dephasing creates an interior fluxonium
+      optimum that a first-order model---the standard tooling default---does not see at all.
+\item We show the architecture comparison spans two orders of magnitude across defensible
+      metrics, and settle the widest of those metrics by direct pulse simulation.
+\end{enumerate}
+
+We are not aware of a study reporting the metric sensitivity of the transmon--fluxonium
+coherence comparison explicitly. That statement rests on the survey above, which is not
+exhaustive; the individual ingredients are all known, and the claim is about their combination.
+
+\subsection{A caveat on our own control}
+
+Matching $f_{01}$ removes the dominant confound but not all of it. Dielectric loss also depends
+on geometry and surface participation, which differ between architectures and which a
+Hamiltonian-level model does not capture~\cite{wang2015}, and real devices fluctuate in ways
+no static model represents~\cite{mcrae2021}. Frequency matching is necessary, not sufficient,
+and our matched-frequency numbers should be read as removing one large confound rather than
+as a fully controlled experiment.
 
 \section{Model and Conventions}
 
@@ -592,6 +634,26 @@ More generally, we suggest that architecture comparisons in this field should st
 metric, the control variable and the uncertainty band together. A single ratio between two
 architectures at their own operating points is not a comparison between architectures.
 
+\section{Outlook}
+
+Two extensions would sharpen the results most. The gate-count metric is currently settled by a
+coarse calibration; optimal control over a free pulse shape (GRAPE or CRAB) would tighten the
+$36$--$58\times$ bracket and, more interestingly, would test whether the fluxonium's
+unfavourable leakage matrix element can be shaped around---the anharmonicity is genuinely
+there, and a pulse that exploits it without driving $|1\rangle \to |2\rangle$ would move the
+number back toward the leakage-only bound. Second, the interior fluxonium optimum we find is
+thermally inaccessible at \SI{15}{\milli\kelvin}, but that is a statement about temperature as
+much as about design; the same analysis at lower base temperature, or with active
+initialisation modelled, would establish whether it is inaccessible in principle or merely
+inconvenient.
+
+A broader point follows from the metric sensitivity. If a single architecture comparison can
+span two orders of magnitude depending on choices that are all defensible, then comparisons
+reported as single ratios carry less information than they appear to. We would encourage the
+practice McRae \emph{et al.}~\cite{mcrae2021} advocate for experimental coherence
+numbers---report the conditions with the number---to be extended to modelled design
+comparisons: state the control variable, state the figure of merit, and give the spread.
+
 \section*{Reproducibility}
 
 All results are generated by five notebooks run in order, from a single validated pipeline;
@@ -602,6 +664,23 @@ provenance ledger of 32 entries, which fails rather than warns if a number drift
 artifact. A test suite of 32 checks pins the conventions and the validated anchors. Code,
 data and figures are available at
 \url{https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium}.
+
+\section*{Acknowledgements}
+
+%% TODO(author): add funding, institutional support and personal acknowledgements.
+The interpretation sections of the underlying notebooks, and the first draft of this
+manuscript, were prepared with the assistance of a large language model (Claude, Anthropic)
+working from the committed numerical artifacts; all physics, numerical results and final
+claims are the author's responsibility. This disclosure is made in line with the AI-use
+policies now standard at IEEE and APS journals.
+
+\section*{Data Availability}
+
+All code, generated data and figures are openly available at
+\url{https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium}.
+The five notebooks regenerate every number in this paper from a single validated pipeline;
+\texttt{data/headline\_provenance\_ledger.csv} maps each quoted value to the file and filter
+that produced it and asserts agreement on every run.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}

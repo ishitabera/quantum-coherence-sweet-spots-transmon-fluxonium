@@ -35,24 +35,42 @@ superseded-number audit in `05_summary.ipynb` §4 scans `README.md` and `docs/` 
 
 ## Status
 
-Complete draft, not submitted. Known gaps:
+**Compiles clean. Content-complete. Not submittable until the three items below are closed.**
 
-- **Novelty is not established.** §II states the contribution against the literature I did
-  survey, but that survey is not exhaustive and I say so in the text. The frequency scaling
-  itself is standard; the claim is about its consequence for design-space studies. Before
-  submitting, do a proper search — if someone has already published the metric-sensitivity
-  point, the framing needs to change.
-- **Venue not chosen.** `IEEEtran` conference class was inherited from the project
-  convention, not from a decision. At 7 pages this exceeds a typical 6-page conference
-  limit; a journal (PRApplied, IEEE TQE) is probably the better fit and would want a
-  different class file.
-- **Voice pass.** Sections drafted with Claude from the committed artifacts, at the
-  author's request, mirroring the notebook interpretation sections. The physics and the
-  numbers are checked; the prose has not had an author pass.
-- **Author list, affiliation and acknowledgements** are placeholders.
-- The pulse-simulation section reports a coarse three-parameter calibration over a fixed
-  Gaussian shape, so the gate durations it reports are **upper bounds** and the resulting
-  gate-count ratio is an estimate, not a settled value. The optimiser is not reliably
-  converged at the shortest durations. A GRAPE/CRAB optimal-control treatment over a free
-  pulse shape is the obvious next step, and would shorten both architectures' gates — not
-  necessarily equally, which is precisely why it matters.
+8 pages, IEEEtran journal mode, 16 references, 5 figures, 3 tables. Zero overfull boxes;
+six underfull (loose interword spacing in justified two-column text), one severe. All
+citations and cross-references resolve. Every headline number appears in the PDF and
+matches `data/headline_provenance_ledger.csv`.
+
+### Must fix before submission
+
+1. **Affiliation is a placeholder.** `\thanks{Affiliation to be completed}` — I left it
+   unstated rather than guess your institution. Fill it in.
+2. **Venue is a default, not a decision.** Formatted for IEEE Transactions on Quantum
+   Engineering (IEEEtran journal mode) because the paper runs past the 6-page limit typical
+   of IEEE conferences. Phys. Rev. Applied also suits the content but needs conversion to
+   REVTeX 4.2 — a real rewrite of the preamble, floats and bibliography style, not a
+   one-line change.
+3. **Author voice pass.** The prose is drafted, not written by you. The physics and the
+   numbers are checked; the sentences are not yours.
+
+### Known limits of the science, stated in the paper itself
+
+- **Novelty is argued, not proven.** §II-A locates the two closest works (McRae *et al.* on
+  experimental reproducibility of coherence comparisons; Lange *et al.* on controlled
+  transmon/fluxonium comparison for cross-talk rather than coherence) and §II-B claims only
+  "we are not aware of", with the survey's incompleteness stated in the text. A referee may
+  know a paper I did not find.
+- **The 48× gate-count result rests on a coarse calibration.** Three parameters over a fixed
+  Gaussian; durations are upper bounds; the optimiser is not converged at the shortest
+  durations. GRAPE/CRAB is the obvious next step and §XI says so.
+- **Frequency matching is necessary but not sufficient** as a control — geometry and surface
+  participation also set dielectric loss and a Hamiltonian-level model does not capture them.
+  Stated as a caveat on our own method in §II-C.
+
+### AI-use disclosure
+
+The Acknowledgements carry a disclosure that a large language model assisted with the
+notebook interpretation sections and the manuscript draft, working from the committed
+numerical artifacts. Check the wording against your target venue's specific policy — IEEE
+and APS both now require disclosure, but the required form differs.
