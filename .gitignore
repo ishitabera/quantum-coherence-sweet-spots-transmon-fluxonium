@@ -20,3 +20,11 @@ results/scratch/
 
 # Local-only docs (not published)
 docs/
+
+# LaTeX build intermediates (paper/main.pdf IS tracked)
+paper/*.aux
+paper/*.log
+paper/*.blg
+paper/*.bbl
+paper/*.out
+paper/*.synctex.gz

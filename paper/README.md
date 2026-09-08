@@ -4,16 +4,18 @@ IEEE two-column draft of the study. `main.tex` + `refs.bib`.
 
 ## Build
 
-No LaTeX toolchain is installed in the `qubits` environment, so this has **not been
-compiled**. To build:
-
 ```bash
-# macOS: brew install --cask mactex-no-gui   (or basictex + tlmgr install ieeetran siunitx)
-cd paper && latexmk -pdf main.tex
+brew install tectonic          # one-time; self-contained, fetches packages on demand
+cd paper && tectonic -X compile main.tex
 ```
 
-`IEEEtran.cls` ships with TeX Live/MacTeX. `siunitx`, `booktabs` and `hyperref` are also
-required.
+Compiles clean to **7 pages**: no overfull boxes, all 14 citations resolved, all cross-
+references resolved. Four underfull boxes remain (loose interword spacing in justified
+two-column text) — cosmetic. `latexmk -pdf main.tex` also works if you have MacTeX.
+
+`main.pdf` is committed. Build intermediates are gitignored. Figures are copied into
+`paper/figures/` so the directory is self-contained for submission; regenerate them with
+`cp ../figures/*.pdf figures/` after re-running the notebooks.
 
 ## Rules for editing this paper
 
@@ -35,10 +37,15 @@ superseded-number audit in `05_summary.ipynb` §4 scans `README.md` and `docs/` 
 
 Complete draft, not submitted. Known gaps:
 
-- Figures are included by relative path from `../figures/` (the `.pdf` siblings that
-  `src/plotting.save` writes alongside every PNG): `summary_figure`, `transmon_tradeoff`,
-  `fluxonium_interior_optimum`, `q3_robustness`, `q3_pulse_bound`. If you move this file,
-  fix the paths or copy the PDFs in.
+- **Novelty is not established.** §II states the contribution against the literature I did
+  survey, but that survey is not exhaustive and I say so in the text. The frequency scaling
+  itself is standard; the claim is about its consequence for design-space studies. Before
+  submitting, do a proper search — if someone has already published the metric-sensitivity
+  point, the framing needs to change.
+- **Venue not chosen.** `IEEEtran` conference class was inherited from the project
+  convention, not from a decision. At 7 pages this exceeds a typical 6-page conference
+  limit; a journal (PRApplied, IEEE TQE) is probably the better fit and would want a
+  different class file.
 - **Voice pass.** Sections drafted with Claude from the committed artifacts, at the
   author's request, mirroring the notebook interpretation sections. The physics and the
   numbers are checked; the prose has not had an author pass.
