@@ -1,0 +1,44 @@
+section,check,value,reference,deviation,units,passed,basis
+1 convergence,transmon f01 converged at production ncut=30,5.682575677294973,5.6825756772949765,3.553e-15 (tol 1.0e-06),GHz,True,vs ncut=60
+1 convergence,fluxonium f01 converged at production cutoff=110,0.36342136720072704,0.36342136720041696,3.101e-13 (tol 1.0e-06),GHz,True,vs cutoff=140
+2 symmetry,transmon f01 even in ng about ng=0,0.0,,|0.000e+00| <= 1.0e-10,GHz,True,ng=+/-0.17
+2 symmetry,transmon f01 periodic in ng (period 1),-3.375077994860476e-14,,|-3.375e-14| <= 1.0e-10,GHz,True,ng=0.17 vs 1.17
+2 symmetry,fluxonium f01 even in flux about 0.5,-1.3322676295501878e-15,,|-1.332e-15| <= 1.0e-10,GHz,True,flux=0.5+/-0.17
+2 symmetry,fluxonium f01 periodic in flux (period 1),6.17284001691587e-14,,|6.173e-14| <= 1.0e-10,GHz,True,flux=0.67 vs 1.67
+3 transmon,f01 vs sqrt(8 EJ EC) - EC at nominal design,5.682563788205584,5.7,0.306% (tol 1%),GHz,True,"Koch Eq. (2.12); EJ=15, EC=0.3 (EJ/EC=50)"
+3 transmon,absolute anharmonicity vs -EC at nominal design,-0.3443763389929435,-0.3,14.792% (tol 20%),GHz,True,"Koch Eq. (2.12), Fig. 5(b); leading order only"
+3 transmon,relative anharmonicity vs -(8 EJ/EC)^-1/2 at nominal design,-0.06060228302367886,-0.05,21.205% (tol 30%),-,True,"Koch Eq. (2.12), Fig. 5(a); leading order only"
+3 transmon,f01 deviation decreases monotonically with EJ/EC,-0.03534653219937202,,-3.535e-02 <= 0.0e+00,%-points,True,largest step must be negative: numerics approach the asymptotic form
+3 transmon,anharmonicity deviation decreases monotonically with EJ/EC,-0.42774045177192654,,-4.277e-01 <= 0.0e+00,%-points,True,largest step must be negative: numerics approach the asymptotic form
+3 transmon,relative anharmonicity deviation decreases monotonically with EJ/EC,-2.924179203503906,,-2.924e+00 <= 0.0e+00,%-points,True,largest step must be negative: numerics approach the asymptotic form
+4 charge dispersion,dispersion spans >= 4 decades over the swept EJ/EC,4.665655127480282,5.0,6.687% (tol 35%),decades,True,"exponential suppression is resolved, not lost in noise"
+4 charge dispersion,numeric/Koch ratio is O(1) and below 1,0.8659283175149857,0.87,0.468% (tol 25%),-,True,Koch Eq. (2.5) is asymptotic; ratio -> 1 from below
+4 charge dispersion,numeric/Koch ratio increases monotonically toward 1,-0.014979015576702004,,-1.498e-02 <= 1.0e-12,-,True,every step in the ratio must be non-negative
+4 charge dispersion,T2 vs Koch Sec. V worked example (~8 s),8.751616585283793,8.0,9.395% (tol 25%),s,True,"PUBLISHED NUMBER: same params, same A=1e-4; Koch quotes 1 sig fig"
+5 fluxonium,df01/dPhi vanishes at flux=0.5 (first-order insensitive),-4.718447854656915e-12,,|-4.718e-12| <= 1.0e-08,GHz/Phi0,True,"central difference, h=1e-3"
+5 fluxonium,curvature positive at flux=0.5 (frequency minimum),-886.3008721704535,-886.3,0.000% (tol 5%),GHz/Phi0^2,True,sign and magnitude of the second-order response
+5 fluxonium,f01 matches Manucharyan's MAIN-TEXT parameter set,0.36342136720072704,0.36337767188310865,0.012% (tol 0.5%),GHz,True,ours (8.9/2.5/0.5) vs the ROUNDED main-text values (9.0/2.5/0.52)
+5 fluxonium,f01(0.5) spread across Manucharyan's three published sets is recorded,9.533741073202117,,+9.534e+00 <= 1.2e+01,%,True,"9.5%: the 0.012% agreement above is with a rounding, NOT with their fits"
+5 fluxonium,f01 at sweet spot is sub-GHz (heavy-fluxonium regime),0.36342136720072704,0.5,1.366e-01 (tol 2.5e-01),GHz,True,qualitative regime check; cf. Nguyen 2019 Table I range 0.17-0.83 GHz
+5 fluxonium,"f01, f02 at Phi=0 match Fig. 4B under ALL THREE parameter sets",0.6069219113330513,0.0,6.069e-01 (tol 1.0e+00),% (worst dev),True,MEASURED DATA: robust to which published parameter set is used
+5 fluxonium,"Fig. 3 triple reproduced after one flux-offset fit, all parameter sets",2.1189579535458205,0.0,2.119e+00 (tol 2.5e+00),% (worst dev),True,MEASURED DATA: best-fit flux 0.042-0.044 vs the paper's nominal 0.05 Phi_0
+5 fluxonium,third line disperses with the sign of f03,-0.003922321081481661,,-3.922e-03 <= 0.0e+00,GHz^2,True,model f03 +0.085 GHz vs measured +0.046 GHz over Phi 0 -> 0.05
+5 fluxonium,two-photon 0-4 assignment excluded: it disperses the OTHER WAY,-0.00250669348460233,,-2.507e-03 <= 0.0e+00,GHz^2,True,model two-photon -0.054 GHz against measured +0.046 GHz
+5 fluxonium,"f03 is an order of magnitude more E_C-sensitive than f01, f02",-8.909690100076787,,-8.910e+00 <= -5.0e+00,-,True,"explains why f01, f02 are robust across the published sets and f03 is not"
+5 fluxonium,f03 at Phi=0 is STRONGLY hybridised with the array mode (g > detuning),-1.4828012195384668,,-1.483e+00 <= -1.0e+00,g/|detuning|,True,"g/|D| = 1.5-3.7 under every published set: perturbation theory fails, the bare model cannot apply"
+5 fluxonium,0->2 is parity-forbidden at Phi_ext=0 (matrix element vanishes),1.1017851418728902e-14,,|1.102e-14| <= 1.0e-09,phi_zpf,True,"so the digitized f02 comes from the theory curve, not from a measured peak"
+5 fluxonium,one parameter set reproduces ALL SIX digitized lines,0.010189966450553724,0.0,1.019e-02 (tol 3.0e-02),GHz (RMS),True,"MEASURED DATA: EJ=8.94, EC=2.53, EL=0.525, bias 0.0422; independently recovers the 0.042 flux offset"
+6 pipeline,transmon T2 <= 2*T1,-1.689465078050965,,-1.689e+00 <= 1.0e-09,us,True,rates add; T2 can never exceed the 2*T1 ceiling
+6 pipeline,fluxonium T2 <= 2*T1,-412.51169680087787,,-4.125e+02 <= 1.0e-09,us,True,rates add; T2 can never exceed the 2*T1 ceiling
+6 pipeline,transmon T2 strictly below 2*T1 (crit-current channel alive),1.0310837224701994,1.031,0.008% (tol 2%),-,True,Tphi_cc = 1803 us
+6 pipeline,fluxonium T2 strictly below 2*T1 (crit-current channel alive),1.365147581261664,1.357,0.600% (tol 2%),-,True,Tphi_cc = 4325 us
+6 pipeline,transmon T1 in a physical us range (units guard),1.4474801315507717,2.0,5.525e-01 (tol 3.0e+00),log10(us),True,1e-1 to 1e5 us; catches a ns/us mix-up
+6 pipeline,fluxonium T1 in a physical us range (units guard),2.8871174475809145,2.0,8.871e-01 (tol 3.0e+00),log10(us),True,1e-1 to 1e5 us; catches a ns/us mix-up
+6.1 second order,second-order Tphi clears Nguyen's 10 ms bound on ALL nine devices,-15.375895269846797,,-1.538e+01 <= -1.0e+01,ms,True,"PUBLISHED NUMBER: worst device B at 15 ms, via Nguyen Eq. (A3) at their measured A_flux"
+6.1 second order,Richardson second derivative is step-independent,1.8077917908345857e-07,,+1.808e-07 <= 1.0e-05,-,True,Gamma_2 is directly proportional to this derivative
+6.1 second order,second-order rate scales as A_flux^2,3.2399999999999998,3.24,0.000% (tol 1e-10%),-,True,Nguyen Eq. (A3) is quadratic in the noise amplitude
+7 off-sweet-spot,transmon Tphi_charge decreases monotonically with |ng|,-498.47894109631306,,-4.985e+02 <= 0.0e+00,us,True,charge dephasing must worsen away from ng=0
+7 off-sweet-spot,fluxonium Tphi_flux decreases monotonically with detuning,-0.11683754911126609,,-1.168e-01 <= 0.0e+00,us,True,flux dephasing must worsen away from flux=0.5
+7 off-sweet-spot,transmon Tphi_charge finite and large at ng=0.25,3.9861800897679447,3.99,3.820e-03 (tol 1.5e-01),log10(us),True,~9.7e3 us at ng=0.25; charge noise still weak at EJ/EC=50
+7 off-sweet-spot,fluxonium Tphi_flux collapses to few-us at 1% detuning,0.6580514988186084,0.658,5.150e-05 (tol 1.5e-01),log10(us),True,~4.6 us at flux=0.49
+7 off-sweet-spot,fluxonium sweet spot far sharper than transmon's,2.397296828086089,2.4,2.703e-03 (tol 1.0e+00),log10(-),True,Q3 in one number; quantified properly in notebook 04

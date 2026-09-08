@@ -1,29 +1,465 @@
 {
-  "date": "2026-08-04",
-  "qubit": "Fluxonium",
-  "nominal_design": {
-    "EJ": 8.9,
-    "EC": 2.5,
-    "EL": 0.5,
+  "notebook": "notebooks/03_fluxonium_sweep.ipynb",
+  "purpose": "Q1 fluxonium design plane; Q2 dominant channel; Q3 sweet-spot sharpness",
+  "provenance": {
+    "date": "2026-09-07T22:38:41",
+    "git_revision": "5ad31aa-dirty",
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "pandas": "3.0.3",
+    "scqubits": "4.3.1",
+    "platform": "macOS-15.0-arm64-arm-64bit",
+    "nominal_design": {
+      "EJ": 8.9,
+      "EC": 2.5,
+      "EL": 0.5,
+      "flux": 0.5,
+      "cutoff": 110
+    },
+    "noise_amplitudes": {
+      "Q_cap": 1000000.0,
+      "A_flux": 1e-06,
+      "A_cc": 1e-07
+    },
+    "scqubits_noise_params": {
+      "A_flux": 1e-06,
+      "A_ng": 0.0001,
+      "A_cc": 1e-07,
+      "omega_low": 6.283185307179586e-09,
+      "omega_high": 18.84955592153876,
+      "Delta": 0.00034,
+      "x_qp": 3e-06,
+      "t_exp": 10000.0,
+      "R_0": 50.0,
+      "T": 0.015,
+      "M": 400.0
+    },
+    "units": "frequencies GHz; coherence times microseconds"
+  },
+  "validated_against": {
+    "notebook": "notebooks/01_validation.ipynb",
+    "nominal_T2_us_first_order_only": 1136.8688060132743,
+    "nominal_T2_us_with_second_order": 1129.7122532636274
+  },
+  "flux_sweep": {
+    "range": [
+      0.3,
+      0.5
+    ],
+    "points": 101,
+    "spacing": 0.0020000000000000018
+  },
+  "falloff_fine": {
+    "detuning_range": [
+      1e-05,
+      0.05011872336272722
+    ],
+    "points": 60,
+    "spacing": "logarithmic"
+  },
+  "design_grid": {
+    "EJ_GHz": [
+      3.0,
+      15.0,
+      20
+    ],
+    "EL_GHz": [
+      0.2,
+      1.5,
+      20
+    ],
+    "EC_GHz": 2.5,
+    "flux": 0.5,
     "cutoff": 110
   },
-  "flux_sweep": "flux 0.30 -> 0.50, 101 points",
-  "noise_params": {
+  "second_order_flux": {
+    "formula": "Gamma = A_flux^2 * d2(omega01)/dPhi^2",
+    "source": "Nguyen et al., PRX 9, 041041 (2019), Eq. (A3), citing Ithier 2005",
+    "log_factor_convention": "none",
+    "d2f01_dflux2_GHz_per_Phi0sq": 886.8411140043146,
+    "deriv_step": 0.0001,
+    "Tphi_flux2_us_at_sweet_spot": 179462.7476992694,
+    "rate_share_at_sweet_spot": 0.006294967996125395,
+    "convention_sensitivity_us": {
+      "Nguyen Eq. (A3), no log factor": 179462.7476992694,
+      "x |ln(omega_low t_exp)|": 18549.028418913505,
+      "x ln^2(omega_low t_exp)": 1917.2026489989019
+    }
+  },
+  "key_results": {
+    "T2_at_sweet_spot_us": 1129.7122532636274,
+    "T2_at_sweet_spot_us_first_order_only": 1136.8688060132743,
+    "tenfold_falloff_detuning": 0.0003249691047901005,
+    "twofold_falloff_detuning": 3.611204093192296e-05,
+    "falloff_exponent_by_window": {
+      "1e-05-1e-04": -0.45292257724777185,
+      "1e-04-1e-03": -0.8818451724055344,
+      "1e-03-1e-02": -0.9556477022948515,
+      "3e-03-3e-02": -0.7753458088667706,
+      "1e-02-5e-02": -0.4814868044077226
+    },
+    "falloff_exponent_best_window": {
+      "window": "1e-03-1e-02",
+      "k": -0.9556477022948515
+    },
+    "T1_limiting_channel_counts": {
+      "quasiparticle": 98,
+      "dielectric": 3
+    },
+    "T2_f01_correlation_design_plane": -0.9973182045774296,
+    "best_in_published_band": {
+      "EJ": 11.842105263157894,
+      "EL": 0.4052631578947369,
+      "T2_us": 2411.531714356788,
+      "f01_GHz": 0.17232424169208915,
+      "n_thermal": 1.3594426845624565
+    },
+    "optimum_by_frequency_floor": [
+      {
+        "f_min_GHz": 0.17,
+        "label": "lowest published device, Nguyen 2019",
+        "T2_us": 2411.531714356788,
+        "EJ": 11.842105263157894,
+        "EL": 0.4052631578947369,
+        "n_thermal": 1.3594426845624565
+      },
+      {
+        "f_min_GHz": 0.22,
+        "label": "n_th = 1",
+        "T2_us": 1888.5715435160234,
+        "EJ": 14.368421052631579,
+        "EL": 1.2263157894736842,
+        "n_thermal": 0.9747427627926208
+      },
+      {
+        "f_min_GHz": 0.36,
+        "label": "nominal design, Manucharyan 2009",
+        "T2_us": 1216.6401227384094,
+        "EJ": 13.105263157894736,
+        "EL": 1.5,
+        "n_thermal": 0.457551305787892
+      },
+      {
+        "f_min_GHz": 0.83,
+        "label": "highest published device, Nguyen 2019",
+        "T2_us": 472.0213036254171,
+        "EJ": 8.68421052631579,
+        "EL": 1.2947368421052632,
+        "n_thermal": 0.07270243928716084
+      }
+    ],
+    "interior_optimum": {
+      "exists": true,
+      "cause": "second-order 1/f flux dephasing; d2(f01)/dPhi2 grows in the deep-well regime and Gamma_2 is proportional to it",
+      "at_EC_2.5": [
+        {
+          "EC": 2.5,
+          "EL": 0.2,
+          "EJ_opt": 25.0,
+          "T2_us": 16658.528119576597,
+          "f01_GHz": 0.01460358722288646,
+          "n_thermal": 20.906120403462786,
+          "second_order_share": 0.43755995870282577,
+          "T2_first_order_only": 29618.318214251743,
+          "interior": true
+        },
+        {
+          "EC": 2.5,
+          "EL": 0.5,
+          "EJ_opt": 22.5,
+          "T2_us": 6818.385494780747,
+          "f01_GHz": 0.027310225644768593,
+          "n_thermal": 10.951685795875804,
+          "second_order_share": 0.5763885556504369,
+          "T2_first_order_only": 16095.848178157892,
+          "interior": true
+        },
+        {
+          "EC": 2.5,
+          "EL": 1.0,
+          "EJ_opt": 20.0,
+          "T2_us": 3644.5096103910964,
+          "f01_GHz": 0.06202111640714136,
+          "n_thermal": 4.555926688178956,
+          "second_order_share": 0.5038766543851698,
+          "T2_first_order_only": 7345.974831872845,
+          "interior": true
+        }
+      ],
+      "across_EC": [
+        {
+          "EC": 1.5,
+          "EL": 0.2,
+          "EJ_opt": 15.0,
+          "T2_us": 13150.331904837334,
+          "f01_GHz": 0.009722260075031741,
+          "n_thermal": 31.650393634194593,
+          "second_order_share": 0.5117160015277855,
+          "interior": true
+        },
+        {
+          "EC": 1.5,
+          "EL": 0.5,
+          "EJ_opt": 12.5,
+          "T2_us": 5480.48636920772,
+          "f01_GHz": 0.028198651234617955,
+          "n_thermal": 10.591355603077503,
+          "second_order_share": 0.42797578045106016,
+          "interior": true
+        },
+        {
+          "EC": 1.5,
+          "EL": 1.0,
+          "EJ_opt": 12.5,
+          "T2_us": 2995.919582946843,
+          "f01_GHz": 0.05269758806440805,
+          "n_thermal": 5.445041772883091,
+          "second_order_share": 0.4520320783464817,
+          "interior": true
+        },
+        {
+          "EC": 2.5,
+          "EL": 0.2,
+          "EJ_opt": 25.0,
+          "T2_us": 16658.528119576597,
+          "f01_GHz": 0.01460358722288646,
+          "n_thermal": 20.906120403462786,
+          "second_order_share": 0.43755995870282577,
+          "interior": true
+        },
+        {
+          "EC": 2.5,
+          "EL": 0.5,
+          "EJ_opt": 22.5,
+          "T2_us": 6818.385494780747,
+          "f01_GHz": 0.027310225644768593,
+          "n_thermal": 10.951685795875804,
+          "second_order_share": 0.5763885556504369,
+          "interior": true
+        },
+        {
+          "EC": 2.5,
+          "EL": 1.0,
+          "EJ_opt": 20.0,
+          "T2_us": 3644.5096103910964,
+          "f01_GHz": 0.06202111640714136,
+          "n_thermal": 4.555926688178956,
+          "second_order_share": 0.5038766543851698,
+          "interior": true
+        },
+        {
+          "EC": 3.5,
+          "EL": 0.2,
+          "EJ_opt": 37.5,
+          "T2_us": 19793.289063514763,
+          "f01_GHz": 0.015040926819931855,
+          "n_thermal": 20.283932174683294,
+          "second_order_share": 0.5083884048826176,
+          "interior": true
+        },
+        {
+          "EC": 3.5,
+          "EL": 0.5,
+          "EJ_opt": 30.0,
+          "T2_us": 8034.135905002546,
+          "f01_GHz": 0.04047529997428434,
+          "n_thermal": 7.232764494914116,
+          "second_order_share": 0.4647425095769224,
+          "interior": true
+        },
+        {
+          "EC": 3.5,
+          "EL": 1.0,
+          "EJ_opt": 27.5,
+          "T2_us": 4185.467240436173,
+          "f01_GHz": 0.07349468713158913,
+          "n_thermal": 3.772256107952717,
+          "second_order_share": 0.505775704513423,
+          "interior": true
+        }
+      ],
+      "note": "Invisible to the first-order-only pipeline, which rises monotonically to 230195 us at EJ=40, EL=0.2. Every interior optimum is thermally inaccessible (n_th 4-32), so a frequency floor still sets any quotable design."
+    },
+    "model_vs_measured": {
+      "source": "Nguyen et al., PRX 9, 041041 (2019), Table I (published version, 9 devices)",
+      "T1_ratio_median": 1.958110756398801,
+      "T2_ratio_median": 2.6302773002586415,
+      "f01_median_abs_err_GHz": 0.002602634708259055
+    },
+    "q3": {
+      "fluxonium_2x_detuning": 3.611204093192296e-05,
+      "fluxonium_10x_detuning": 0.0003249691047901005,
+      "transmon_T2_variation_full_period": 1.0055857264215904,
+      "bias_window_ratio": 13845.797332324166,
+      "raw_T2_ratio": 18.097284914948187,
+      "matched_frequency": [
+        {
+          "f01": 0.5,
+          "fx": 832.022562382379,
+          "tm": 387.2673622545647,
+          "ratio": 2.1484448303068224,
+          "n_th": 0.2530503391370289
+        },
+        {
+          "f01": 1.0,
+          "fx": 380.9390081965579,
+          "tm": 284.2601098868339,
+          "ratio": 1.340107158715349,
+          "n_th": 0.04251672883564913
+        },
+        {
+          "f01": 2.0,
+          "fx": 164.5523492279378,
+          "tm": 157.25867929886496,
+          "ratio": 1.0463800787440893,
+          "n_th": 0.0016660059817544697
+        }
+      ],
+      "gate_count_fluxonium": 9782750.297528807,
+      "gate_count_transmon": 18652.28676163032,
+      "gate_count_ratio": 524.4799429983532,
+      "gate_count_by_pulse_bound": {
+        "1/|alpha|  (leakage only)": {
+          "fluxonium": 9782750.297528807,
+          "transmon": 18652.28676163032,
+          "ratio": 524.4799429983532
+        },
+        "1/min(|alpha|, f01)  (both)": {
+          "fluxonium": 410561.57162448147,
+          "transmon": 18652.28676163032,
+          "ratio": 22.0113263789751
+        },
+        "1/f01  (drive-period floor)": {
+          "fluxonium": 410561.57162448147,
+          "transmon": 307433.88759809703,
+          "ratio": 1.3354467031337856
+        }
+      },
+      "flux_stability": [
+        {
+          "A_flux": 1e-06,
+          "t_meas": "10 us (= scqubits t_exp)",
+          "sigma_Phi0": 4.291932052578694e-06,
+          "margin_to_10x": 75.71627435127996,
+          "margin_to_2x": 8.413935842769458
+        },
+        {
+          "A_flux": 1e-06,
+          "t_meas": "1 s",
+          "sigma_Phi0": 6.437898078868041e-06,
+          "margin_to_10x": 50.47751623418664,
+          "margin_to_2x": 5.609290561846305
+        },
+        {
+          "A_flux": 1e-06,
+          "t_meas": "1 hour",
+          "sigma_Phi0": 7.60420343775607e-06,
+          "margin_to_10x": 42.73545644196967,
+          "margin_to_2x": 4.748957760995843
+        },
+        {
+          "A_flux": 1.8e-06,
+          "t_meas": "10 us (= scqubits t_exp)",
+          "sigma_Phi0": 7.72547769464165e-06,
+          "margin_to_10x": 42.064596861822196,
+          "margin_to_2x": 4.674408801538587
+        },
+        {
+          "A_flux": 1.8e-06,
+          "t_meas": "1 s",
+          "sigma_Phi0": 1.1588216541962475e-05,
+          "margin_to_10x": 28.04306457454813,
+          "margin_to_2x": 3.116272534359058
+        },
+        {
+          "A_flux": 1.8e-06,
+          "t_meas": "1 hour",
+          "sigma_Phi0": 1.3687566187960925e-05,
+          "margin_to_10x": 23.741920245538704,
+          "margin_to_2x": 2.6383098672199132
+        }
+      ]
+    }
+  },
+  "sensitivity": {
+    "method": "one-at-a-time +/- 1 decade on Q_cap, A_flux, A_cc",
+    "T2_us_range": [
+      148.78938654501846,
+      3315.5583565142592
+    ],
+    "d10_range": [
+      5.275693314804123e-05,
+      0.0031842664491015496
+    ],
+    "Q_cap_form_T1_ratio_freqdep_over_flat": 7.118992817270239,
+    "Q_cap_exponent": {
+      "this_project": 0.0,
+      "nguyen_2019_measured": 0.15,
+      "scqubits_default": 0.7,
+      "note": "Nguyen 2019 Sec. III A fit tan(delta_C) ~ omega^0.15 to their T1-vs-frequency data (jointly with thermal stimulated emission at T = 20 mK). The flat override used here is far closer to that measurement than scqubits' omega^-0.7 default is, so the 7.1x spread is one-sided.",
+      "Q_cap_enhancement_at_nominal_f01": {
+        "flat": 1.0,
+        "nguyen_measured": 1.5228639952896068,
+        "scqubits_default": 7.1189928172702395
+      }
+    }
+  },
+  "corrections_to_earlier_version": [
+    "Second-order 1/f flux dephasing was absent entirely; scqubits implements first order only and returns a divergent time at sweet spots (Groszkowski & Koch 2021 SS5.1 fn4). Added via Nguyen 2019 Eq. (A3). It contributes 0.63% of the sweet-spot rate budget, so earlier first-order-only results were sound - but this is now a computed bound rather than an assumption.",
+    "CONCLUSION OVERTURNED: the earlier version reported no interior optimum over the (EJ, EL) plane and attributed the bound entirely to thermal occupation. That was an artefact of the missing second-order channel. With it, an interior optimum exists at every (EC, EL) tested, carrying 43-58%% of the dephasing rate at the turning point. The optimum is nevertheless thermally inaccessible, so the practical guidance is unchanged.",
+    "The extended scan now uses a Richardson-extrapolated second derivative. At the extreme corner of the extended scan (EJ=40, EL=0.2) the plain central difference at h=1e-4 is still ~4% from converged; at the interior optima themselves it is within 0.1%. The extrapolation is retained because the second-order rate is directly proportional to this derivative and the scan traverses the deep-well regime.",
+    "The 10x falloff detuning is now located by Brent root-finding on the model rather than by interpolating a log grid; value 0.000325 flux quanta. The originally reported 0.0020 was the coarse grid spacing, not a measurement.",
+    "Provenance previously recorded only Q_cap/A_flux/A_cc. The scqubits NOISE_PARAMS defaults (T, x_qp, Delta, t_exp, omega_low, omega_high) also determine these results and are now captured in full.",
+    "Basis convergence was previously verified only at flux=0.5; it is now verified across the swept flux range down to flux=0.30.",
+    "The previously quoted design optimum (T2 = 5578 us at EJ=15, EL=0.2) sits on two grid edges at f01 = 75 MHz with n_th ~ 3.7; it is thermally scrambled and below any published device. Not a usable design point."
+  ],
+  "known_artifacts": [
+    "Tphi_flux (FIRST order) at flux=0.5 exceeds 1e14 us: the first-order 1/f formula with a vanishing derivative. It is not a physical dephasing time and must never be plotted or quoted. The physical value at the sweet spot is Tphi_flux2_us.",
+    "Quasiparticle tunnelling is negligible ONLY at flux=0.5, where f01 is minimal. Off the sweet spot it limits T1 at most flux points. This rests on scqubits' default x_qp = 3e-6; Nguyen 2019 infer x_qp < 1e-8, at which density the channel is negligible everywhere. The finding is conditional - see the sensitivity block.",
+    "T2 correlates with f01 at -0.9973 over the design plane, so raw T2 maxima reflect the frequency scaling of dielectric loss rather than design structure.",
+    "Q_cap=1e6 is a FLAT override of scqubits' frequency-dependent default Q_cap(w) = 1e6*(2pi*6GHz/w)^0.7 (Smith 2020). At the sweet-spot frequency the flat value shortens T1 by 7.12x. Deliberate and conservative, and better supported than the spread suggests: Nguyen 2019 Sec. III A measure the exponent as 0.15, not 0.7, so the flat model is 1.52x from their fit while the scqubits default is 4.7x from it. Still a modelling choice, not a measurement."
+  ],
+  "noise_amplitudes": {
     "Q_cap": 1000000.0,
     "A_flux": 1e-06,
     "A_cc": 1e-07
   },
-  "T1_channels": [
+  "scqubits_noise_params": {
+    "A_flux": 1e-06,
+    "A_ng": 0.0001,
+    "A_cc": 1e-07,
+    "omega_low": 6.283185307179586e-09,
+    "omega_high": 18.84955592153876,
+    "Delta": 0.00034,
+    "x_qp": 3e-06,
+    "t_exp": 10000.0,
+    "R_0": 50.0,
+    "T": 0.015,
+    "M": 400.0
+  },
+  "noise_channels": [
     "t1_capacitive",
-    "t1_quasiparticle_tunneling"
-  ],
-  "Tphi_channels": [
-    "tphi_1_over_f_flux",
+    "t1_quasiparticle_tunneling",
+    "tphi_1_over_f_flux (first order, scqubits)",
+    "tphi_flux_second_order (second order, src/coherence.py, Nguyen 2019 Eq. A3)",
     "tphi_1_over_f_cc"
   ],
-  "units": "microseconds (scqubits returns ns; *1e-3)",
-  "files": [
+  "units": "frequencies GHz; coherence times microseconds (scqubits returns ns, x1e-3)",
+  "outputs": [
     "data/fluxonium_flux_sweep.csv",
-    "data/fluxonium_design_sweep.csv"
+    "data/fluxonium_falloff_fine.csv",
+    "data/fluxonium_design_sweep.csv",
+    "data/fluxonium_extended_scan.csv",
+    "data/fluxonium_EC_slice_scan.csv",
+    "data/fluxonium_vs_measured.csv",
+    "data/fluxonium_sensitivity.csv",
+    "data/q3_comparison.json",
+    "data/fluxonium_flux_sweep_metadata.json",
+    "data/fluxonium_design_sweep_metadata.json",
+    "data/fluxonium_metadata.json",
+    "figures/fluxonium_flux_falloff.png",
+    "figures/fluxonium_channels_vs_flux.png",
+    "figures/fluxonium_design_map.png",
+    "figures/fluxonium_interior_optimum.png"
   ]
 }

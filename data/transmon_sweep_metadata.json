@@ -1,25 +1,89 @@
 {
-  "date": "2026-08-04",
-  "qubit": "Transmon",
-  "sweep": "EJ [1,80]x40  x  EC [0.1,2.0]x20  = 800 points",
-  "fixed_params": {
-    "ncut": 30,
+  "notebook": "notebooks/02_transmon_sweep.ipynb",
+  "purpose": "Q1 transmon coherence landscape over (EJ, EC); Q2 dominant noise channel",
+  "provenance": {
+    "date": "2026-09-07T22:09:40",
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "pandas": "3.0.3",
+    "scqubits": "4.3.1",
+    "platform": "macOS-15.0-arm64-arm-64bit",
+    "noise_amplitudes": {
+      "Q_cap": 1000000.0,
+      "A_ng": 0.0001,
+      "A_cc": 1e-07
+    },
+    "units": "frequencies GHz; coherence times microseconds"
+  },
+  "validated_against": {
+    "notebook": "notebooks/01_validation.ipynb",
+    "nominal_point": {
+      "EJ": 15.0,
+      "EC": 0.3,
+      "ng": 0.0,
+      "T2_us": 54.35208346332045
+    }
+  },
+  "grid": {
+    "EJ_GHz": [
+      1.0,
+      80.0,
+      40
+    ],
+    "EC_GHz": [
+      0.1,
+      2.0,
+      20
+    ],
+    "points_per_run": 800,
+    "ng_runs": [
+      0.0,
+      0.25
+    ],
+    "ncut": 30
+  },
+  "noise_amplitudes": {
     "Q_cap": 1000000.0,
     "A_ng": 0.0001,
     "A_cc": 1e-07
-  },
-  "ng_runs": {
-    "sweet_spot": 0.0,
-    "off_sweet_spot": 0.25
   },
   "noise_channels": [
     "t1_capacitive",
     "tphi_1_over_f_ng",
     "tphi_1_over_f_cc"
   ],
-  "units": "coherence times in microseconds (scqubits returns ns; multiply by 1e-3)",
-  "files": [
+  "columns_added": [
+    "anharm_GHz (E12-E01)",
+    "N_gates = 1e3*T2_us*|anharm_GHz| (derived)"
+  ],
+  "data_quality": {
+    "nan_count": 0,
+    "nonfinite_T2": 0,
+    "ncut30_max_corner_error_GHz": 3.6219915955371107e-12,
+    "inf_audit": {
+      "ng=0": [],
+      "ng=0.25": [
+        {
+          "EJ": 73.92307692307692,
+          "EC": 0.1,
+          "EJ_EC": 739.2307692307692,
+          "dispersion_GHz": 8.526512829121202e-14
+        }
+      ]
+    }
+  },
+  "known_artifacts": [
+    "At extreme EJ/EC (~700+) the charge dispersion falls below double-precision resolution (~1e-13 GHz), the first-order derivative underflows to zero and tphi_1_over_f_ng returns inf. Physically correct (charge noise is utterly negligible there) and contributes zero rate to T2, but it is an underflow, not a computed value. Located and verified individually - see data_quality.inf_audit.",
+    "Tphi_ng_us in transmon_full_sweep.csv (ng=0) exceeds 1e13 us at every point: the scqubits 1/f formula is first order in df01/dng, which vanishes at ng=0. Harmless in the T2 rate sum; must never be plotted or quoted. See 01_validation.ipynb sec 9.4c.",
+    "T2 over this plane correlates with f01 at r = -0.9999 within EJ/EC>=20, so a raw T2 maximum reflects the frequency scaling of dielectric loss rather than design structure. Use the frequency-controlled metrics in section 6.",
+    "The unconstrained T2 maximum lies near EJ/EC ~ 0.5, which is a charge qubit, not a transmon. Headline numbers use the EJ/EC >= 20 subset (Koch Eq. 2.13 bound)."
+  ],
+  "units": "frequencies GHz; coherence times microseconds (scqubits returns ns, x1e-3)",
+  "outputs": [
     "data/transmon_full_sweep.csv",
-    "data/transmon_sweep_ng025.csv"
+    "data/transmon_sweep_ng025.csv",
+    "figures/transmon_T2_map.png",
+    "figures/transmon_gatecount_map.png",
+    "figures/transmon_dominant_map.png"
   ]
 }

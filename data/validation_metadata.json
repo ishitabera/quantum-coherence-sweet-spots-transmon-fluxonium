@@ -1,0 +1,59 @@
+{
+  "notebook": "notebooks/01_validation.ipynb",
+  "purpose": "Week-1 pipeline validation prior to production sweeps",
+  "provenance": {
+    "date": "2026-09-07T22:38:15",
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "scqubits": "4.3.1",
+    "pandas": "3.0.3",
+    "platform": "macOS-15.0-arm64-arm-64bit",
+    "transmon_defaults": {
+      "EJ": 15.0,
+      "EC": 0.3,
+      "ng": 0.0,
+      "ncut": 30
+    },
+    "fluxonium_defaults": {
+      "EJ": 8.9,
+      "EC": 2.5,
+      "EL": 0.5,
+      "flux": 0.5,
+      "cutoff": 110
+    },
+    "noise_amplitudes": {
+      "Q_cap": 1000000.0,
+      "A_ng": 0.0001,
+      "A_flux": 1e-06,
+      "A_cc": 1e-07
+    },
+    "units": "frequencies in GHz; all coherence times in microseconds (scqubits returns ns)"
+  },
+  "n_checks": 43,
+  "n_passed": 43,
+  "criteria": {
+    "exact symmetries": "machine precision, tol 1e-10 GHz",
+    "convergence": "|df01| < 1e-6 GHz vs largest basis",
+    "analytic limits": "Koch et al., PRA 76, 042319 (2007), Eqs. (2.5), (2.11)-(2.12); anharmonicity evaluated at ng=1/2 per Koch's convention",
+    "published numbers": "Koch Sec. V Eq. (5.9) worked example (T2 ~ 8 s at EJ=30, EC=0.35 GHz, A=1e-4); Manucharyan 2009 Figs. 3 and 4B at all three of their published parameter sets (main text 9.0/2.5/0.52; Table 1 junction 8.93/2.39/0.52; Table 1 extended 8.97/2.47/0.52); Nguyen 2019 Appendix A 2 second-order flux bound (Tphi > 10 ms for all nine devices at A_flux = 1.8e-6)",
+    "monotonic trends": "sign-constrained differences, no tolerance"
+  },
+  "known_limitations": [
+    "1/f dephasing formulas are first order in df01/dlambda and therefore return unphysically large Tphi AT a sweet spot; sweet-spot Tphi values must not be quoted as predictions (see Section 6 and 9.4c).",
+    "t1_* methods return the total (excitation + relaxation) rate at the scqubits default temperature, not the downward rate alone.",
+    "The superinductance is modelled as ideal, so qubit-array-mode hybridisation is absent. Section 9.2(iii) shows this is what makes the bare model miss f03 at Phi_ext=0 in Manucharyan's device (their array mode at 10.78 GHz couples to the 0-3 transition with g/|detuning| = 1.5-3.7). The effect on f01 AT THE FLUX SWEET SPOT is not bounded by this study and would require the array mode structure of the device being modelled; a naive dispersive estimate is the same size as the transition frequency itself and is therefore outside its own regime of validity.",
+    "Coherence values are model-based estimates under assumed noise amplitudes; vs Nguyen 2019 Table I the model is optimistic on absolute T1/T2 by a median 2.0x (T1) and 2.6x (T2), worst case 5.7x, measured device-by-device at the nine published devices' own parameters in 03_fluxonium_sweep.ipynb section 7. The wider 3-11x quoted in section 9.3 is a DIFFERENT comparison (our one nominal design against the range their nine devices span) and reflects the design-regime mismatch, not extra model error. Contributing causes: assumed Q_cap=1e6 flat vs measured tan(delta_C)=(2.0-3.6)e-6 at 6 GHz; assumed A_flux=1e-6 vs measured 1.8e-6."
+  ],
+  "references": [
+    "J. Koch et al., Phys. Rev. A 76, 042319 (2007) - transmon theory",
+    "V. E. Manucharyan et al., Science 326, 113 (2009) - fluxonium",
+    "P. Krantz et al., Appl. Phys. Rev. 6, 021318 (2019) - engineering overview",
+    "P. Groszkowski and J. Koch, Quantum 5, 583 (2021) - scqubits",
+    "L. B. Nguyen et al., Phys. Rev. X 9, 041041 (2019) - high-coherence fluxonium",
+    "G. Ithier et al., Phys. Rev. B 72, 134519 (2005) - decoherence channels"
+  ],
+  "outputs": [
+    "data/validation_results.csv",
+    "figures/validation_spectra.png"
+  ]
+}

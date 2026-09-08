@@ -1,0 +1,86 @@
+{
+  "notebook": "notebooks/03_fluxonium_sweep.ipynb",
+  "purpose": "Q2 dominant channel vs flux at the nominal design",
+  "provenance": {
+    "date": "2026-09-07T22:38:41",
+    "git_revision": "5ad31aa-dirty",
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "pandas": "3.0.3",
+    "scqubits": "4.3.1",
+    "platform": "macOS-15.0-arm64-arm-64bit",
+    "nominal_design": {
+      "EJ": 8.9,
+      "EC": 2.5,
+      "EL": 0.5,
+      "flux": 0.5,
+      "cutoff": 110
+    },
+    "noise_amplitudes": {
+      "Q_cap": 1000000.0,
+      "A_flux": 1e-06,
+      "A_cc": 1e-07
+    },
+    "scqubits_noise_params": {
+      "A_flux": 1e-06,
+      "A_ng": 0.0001,
+      "A_cc": 1e-07,
+      "omega_low": 6.283185307179586e-09,
+      "omega_high": 18.84955592153876,
+      "Delta": 0.00034,
+      "x_qp": 3e-06,
+      "t_exp": 10000.0,
+      "R_0": 50.0,
+      "T": 0.015,
+      "M": 400.0
+    },
+    "units": "frequencies GHz; coherence times microseconds"
+  },
+  "validated_against": {
+    "notebook": "notebooks/01_validation.ipynb",
+    "nominal_T2_us_first_order_only": 1136.8688060132743,
+    "nominal_T2_us_with_second_order": 1129.7122532636274
+  },
+  "flux_sweep": {
+    "range": [
+      0.3,
+      0.5
+    ],
+    "points": 101,
+    "spacing": 0.0020000000000000018
+  },
+  "data_quality": {
+    "nan_count": 0,
+    "nonfinite_T2": 0,
+    "channel_failures": 0
+  },
+  "noise_amplitudes": {
+    "Q_cap": 1000000.0,
+    "A_flux": 1e-06,
+    "A_cc": 1e-07
+  },
+  "scqubits_noise_params": {
+    "A_flux": 1e-06,
+    "A_ng": 0.0001,
+    "A_cc": 1e-07,
+    "omega_low": 6.283185307179586e-09,
+    "omega_high": 18.84955592153876,
+    "Delta": 0.00034,
+    "x_qp": 3e-06,
+    "t_exp": 10000.0,
+    "R_0": 50.0,
+    "T": 0.015,
+    "M": 400.0
+  },
+  "noise_channels": [
+    "t1_capacitive",
+    "t1_quasiparticle_tunneling",
+    "tphi_1_over_f_flux (first order, scqubits)",
+    "tphi_flux_second_order (second order, src/coherence.py, Nguyen 2019 Eq. A3)",
+    "tphi_1_over_f_cc"
+  ],
+  "units": "frequencies GHz; coherence times microseconds (scqubits returns ns, x1e-3)",
+  "outputs": [
+    "data/fluxonium_flux_sweep.csv"
+  ]
+}

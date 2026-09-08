@@ -1,0 +1,36 @@
+file,line,kind,superseded,text
+README.md,62,correction note,best fluxonium T2 = 5578 us,"> **Superseded.** Earlier versions of this README reported ""best T2 = 5578 µs"", ""bias sensitivi"
+README.md,63,correction note,Monte Carlo median advantage 216x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,63,correction note,fluxonium bias sensitivity 528x,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,63,correction note,T2 ~ (detuning)^-0.68,"> 528×"", ""T2 ∝ detuning^−0.68"" and ""Monte Carlo median 216×"". All four were artefacts of method"
+README.md,65,correction note,best fluxonium T2 = 5578 us,> `05_summary.ipynb` §4. In particular 5578 µs was a first-order-only value at a grid-edge desi
+README.md,66,correction note,Monte Carlo median advantage 216x,"> at 75 MHz with n̄_th = 3.7, and the 216× comparison used an 18.9 GHz ""transmon"" held at its"
+docs/Week5_Findings_Worksheet.md,15,superseded region (kept for the record),best fluxonium T2 = 5578 us,"At their respective best case designs, the fluxonium reaches T2 ≈ 5578 µs (5.6 ms) versus the t"
+docs/Week5_Findings_Worksheet.md,27,superseded region (kept for the record),fluxonium bias sensitivity 528x,"As each qubit's bias knob is swept across its full range, transmon T2 changes by only 1.01× whi"
+docs/Week5_Findings_Worksheet.md,49,superseded region (kept for the record),T2 ~ (detuning)^-0.68,"Near Φ = 0.5, fluxonium T2 falls off as (flux detuning)^−0.68, dropping 10× within just 0.002 f"
+docs/Week5_Findings_Worksheet.md,49,superseded region (kept for the record),10x falloff within 0.002 flux quanta,"Near Φ = 0.5, fluxonium T2 falls off as (flux detuning)^−0.68, dropping 10× within just 0.002 f"
+docs/Week5_Findings_Worksheet.md,52,superseded region (kept for the record),T2 ~ (detuning)^-0.68,"and critical-current dephasing, which flattens the curve toward slope 0. The reported −0.68 is "
+docs/Week5_Findings_Worksheet.md,55,superseded region (kept for the record),10x falloff within 0.002 flux quanta,Implication: the usable coherence window around the sweet spot is extremely narrow which is aro
+docs/Week5_Findings_Worksheet.md,61,superseded region (kept for the record),Monte Carlo median advantage 216x,"ratio of 216× and a 90% confidence interval of [52×, 371×]. The absolute T2 values are uncertai"
+docs/Week5_Findings_Worksheet.md,112,correction note,fluxonium bias sensitivity 528x,"The ""528×"" figure measured the T2 range over an arbitrarily chosen flux window (0.45–0.50); it"
+docs/Week5_Findings_Worksheet.md,146,correction note,10x falloff within 0.002 flux quanta,"The 10× falloff occurs within **3.25×10⁻⁴ flux quanta**, not 0.002 — the 0.0020 figure *was the"
+docs/Week5_Findings_Worksheet.md,154,correction note,T2 ~ (detuning)^-0.68,"was already honest that −0.68 ""would shift with the chosen range"". It understated the problem: "
+docs/lab_notebook.md,31,append-only log entry (must not be edited),10x falloff within 0.002 flux quanta,0.0020 flux-quanta away. The sweet spot is a razor-thin peak.
+docs/lab_notebook.md,34,append-only log entry (must not be edited),best fluxonium T2 = 5578 us,"- Design map (Q1): best T2 = 5578.1 us at EJ=15.0, EL=0.2 (high EJ, low EL). = 5.6 ms."
+docs/lab_notebook.md,39,append-only log entry (must not be edited),best fluxonium T2 = 5578 us,1. Peak coherence. Fluxonium reaches ~1137 µs at its sweet spot (up to 5578 µs / 5.6 ms for
+docs/lab_notebook.md,45,append-only log entry (must not be edited),fluxonium bias sensitivity 528x,range (16.56–16.66 µs); fluxonium varies 528x across just flux 0.45–0.50. Physics: transmon
+docs/lab_notebook.md,51,append-only log entry (must not be edited),Monte Carlo median advantage 216x,"literature ranges, fluxonium beats transmon in 100% of samples, ratio median 216x,"
+docs/lab_notebook.md,54,append-only log entry (must not be edited),T2 ~ (detuning)^-0.68,4. Sweet-spot scaling. Fluxonium T2 ~ (flux detuning)^-0.68 over 0.001–0.05; 10x drop within
+docs/lab_notebook.md,55,append-only log entry (must not be edited),10x falloff within 0.002 flux quanta,"0.002 flux quanta (Week 3). Physics: dephasing rate ~ (dω/dΦ)^2, which climbs sharply off the"
+docs/lab_notebook.md,56,append-only log entry (must not be edited),T2 ~ (detuning)^-0.68,extremum. (Note: pure-flux-limited theory predicts ~-1; the shallower -0.68 reflects relaxation
+docs/lab_notebook.md,185,correction note,10x falloff within 0.002 flux quanta,"| Jul 10, Week 3 | ""T2 falls 10x by flux=0.4980 — only 0.0020 flux-quanta away"" | **3.2e-4 flux"
+docs/lab_notebook.md,187,correction note,best fluxonium T2 = 5578 us,"| Jul 10, Week 3 | ""Design map (Q1): best T2 = 5578.1 us at EJ=15.0, EL=0.2 = 5.6 ms"" | **Not a"
+docs/lab_notebook.md,188,correction note,T2 ~ (detuning)^-0.68,"| Jul 20, Week 4, finding 4 | ""T2 ~ (flux detuning)^-0.68 over 0.001–0.05"" | **Window-dependent"
+docs/lab_notebook.md,189,correction note,Monte Carlo median advantage 216x,"| Jul 20, Week 4, findings 1–3 | peak-coherence ratios, ""216x median advantage"", ""528x variatio"
+docs/lab_notebook.md,189,correction note,fluxonium bias sensitivity 528x,"| Jul 20, Week 4, findings 1–3 | peak-coherence ratios, ""216x median advantage"", ""528x variatio"
+docs/lab_notebook.md,289,correction note,model optimistic by roughly an order of magnitude,"| Sep 4, notebook 03 §7 | ""the model is optimistic on coherence by roughly an order of magnitud"
+docs/lab_notebook.md,292,correction note,best fluxonium T2 = 5578 us,"| Jul 20, Week 4, finding 1 | ""fluxonium ~1137 µs (up to 5578 µs) vs transmon **~16.7 µs**"" | T"
+docs/lab_notebook.md,293,correction note,fluxonium bias sensitivity 528x,"| Jul 20, Week 4, finding 2 | ""fluxonium varies **528×** across just flux 0.45–0.50"" | **Metric"
+docs/lab_notebook.md,294,correction note,Monte Carlo median advantage 216x,"| Jul 20, Week 4, finding 3 | ""fluxonium beats transmon in 100% of samples, median 216×, 90% CI"
+docs/lab_notebook.md,321,correction note,T2 ~ (detuning)^-0.68,"- **The scaling exponent −0.68 was a sampling artefact, and this is now demonstrated rather tha"
+docs/lab_notebook.md,340,correction note,best fluxonium T2 = 5578 us,"fluxonium's unconstrained maximum of **5427 µs** (long quoted as 5578 µs, its first-order-only"

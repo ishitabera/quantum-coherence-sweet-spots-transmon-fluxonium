@@ -1,0 +1,6 @@
+window,k,n_points,limited_by
+1e-05 - 1e-04,-0.45292257724777185,16,2*T1 ceiling
+1e-04 - 1e-03,-0.8818451724053712,16,first-order flux dephasing
+1e-03 - 1e-02,-0.9556477022948434,16,first-order flux dephasing
+3e-03 - 3e-02,-0.7753458088667649,16,mixed; f01 has risen
+1e-02 - 5e-02,-0.4814868044077211,11,mixed; f01 has risen

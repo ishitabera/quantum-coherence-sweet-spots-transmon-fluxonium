@@ -1,6 +1,21 @@
-Metric,Transmon,Fluxonium
-Best T2 (real regime),187 us,5578 us
-Bias-knob sensitivity (T2 max/min),1.01x,528x
-Dominant noise channel,dielectric relaxation,flux noise off spot; relaxation at 0.5
-Sweet-spot scaling,flat (no sharp knob),T2 ~ detuning^-0.68
-Practical character,"simple, forgiving","delicate, must hold flux=0.5"
+Metric,Transmon,Fluxonium,Source
+Operating point (design),"EJ=13.0, EC=0.26 (EJ/EC=50)","EJ=8.9, EC=2.5, EL=0.5","nb02 S6.1 / Manucharyan 2009, nb01-validated"
+f01 at the operating point,4.925 GHz,0.363 GHz,"src/coherence.py, re-verified in S0"
+T2 at the operating point,62.4 us,1129.7 us,q3_analysis_metadata.json -> operating_points
+"Best T2, frequency-constrained",187 us  (EJ/EC >= 20),2412 us  (f01 in 0.17-0.83 GHz),transmon_full_sweep.csv / fluxonium_design_sweep.csv + filter
+  ...and where it sits,"EJ=3.0, EC=0.10, f01=1.45 GHz (GRID EDGE, below 3 GHz)","EJ=11.8, EL=0.405, f01=0.172 GHz, n_th=1.36",same files; neither is a design recommendation
+"Best T2, unconstrained (DO NOT QUOTE)",950 us at EJ/EC=0.50 (charge qubit),5427 us at f01=75 MHz (n_th=3.7),both are grid-edge frequency minima
+Anharmonicity |alpha|,299 MHz,"8,660 MHz",qubits.anharmonicity at the operating point
+Thermal occupation n_th (15 mK),1.4e-07,0.45,"coherence.n_thermal, scqubits NOISE_PARAMS['T']"
+Bias knob,"n_g (charge), period 1 in 2e","Phi/Phi0 (flux), period 1",both periodic -> window fractions are comparable
+Bias window for a 2x T2 loss,100% of the period (T2 varies 1.0056x),0.00722% (+/- 3.61e-05 Phi0),q3_analysis_metadata.json -> bias_sensitivity (Brent root-find)
+  ...ratio,"13,846x wider",-,derived
+Dominant noise channel,dielectric relaxation everywhere in EJ/EC >= 20,relaxation at Phi=0.5; first-order flux noise beyond 2.75e-05 Phi0,nb02 S7 / nb03 S5 (crossover recomputed here from fluxonium_falloff_fine.csv)
+Sweet-spot falloff exponent,n/a (no sharp knob),not constant: -0.96 to -0.45; -0.96 in 1e-03 - 1e-02 where 1/f theory predicts -1,q3_scaling_exponents.csv (log-spaced sampling)
+Q3: raw T2 ratio,1x (reference),"18.1x  |  MC 11.25x  [3.59, 21.08]  win 100%",q3_metric_comparison.csv + q3_monte_carlo_summary.csv
+Q3: T2 at matched f01,1x (reference),"1.07-2.16x  |  MC 0.86x  [0.27, 1.58]  win 42%",same; the frequency confound removed
+"Q3: gate count at matched f01, 1/|alpha| bound",1x (reference),"625-1709x  |  MC 605.95x  [190.90, 1114.27]  win 100%",heuristic N = 1e3*T2[us]*|alpha|[GHz]; leakage bound only
+"Q3: gate count at matched f01, 1/f01 bound",1x (reference),"1.07-2.14x  |  MC 0.86x  [0.27, 1.58]  win 42%","same heuristic, drive-period bound; equals the T2 ratio by construction"
+"Q3: gate count, own op. points, by pulse bound",1x (reference),524x (1/|a|)  |  22.0x (1/min)  |  1.34x (1/f01),q3_analysis_metadata.json -> metrics.gate_count_by_pulse_bound
+Model vs measured (fluxonium),not calibrated,"optimistic 2.0x on T1, 2.6x on T2 (median, 9 devices)",fluxonium_vs_measured.csv vs Nguyen 2019 Table I
+Practical character,"simple, forgiving; no bias to hold","delicate; must hold Phi=0.5 to ~1e-4 Phi0, and is thermally populated",synthesis of the rows above

@@ -1,0 +1,5 @@
+architecture,knob,factor,window_fraction,note
+transmon,n_g (2e),2x,1.0,T2 varies only 1.0056x over the ENTIRE period
+transmon,n_g (2e),10x,1.0,a 10x loss never occurs at any bias
+fluxonium,Phi/Phi0,2x,7.222408183205321e-05,+/- 3.611e-05 Phi0 about the sweet spot
+fluxonium,Phi/Phi0,10x,0.000649938209548372,+/- 3.250e-04 Phi0 about the sweet spot

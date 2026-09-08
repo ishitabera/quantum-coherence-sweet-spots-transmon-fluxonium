@@ -1,14 +1,20 @@
+# Pinned deliberately. The computed coherence times depend on scqubits'
+# built-in NOISE_PARAMS defaults (Q_cap, quasiparticle x_qp, T, etc.), which
+# have changed between scqubits releases. An unpinned install can therefore
+# reproduce the code but not the numbers in data/ and figures/. These are the
+# versions installed and verified in the `qubits` conda env.
 name: qubits
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.11.15
   - pip
   - pip:
-      - scqubits
-      - qutip
-      - numpy
-      - scipy
-      - matplotlib
-      - pandas
-      - jupyterlab
+      - scqubits==4.3.1
+      - qutip==5.3.0
+      - numpy==2.2.6
+      - scipy==1.13.1
+      - matplotlib==3.11.0
+      - pandas==3.0.3
+      - jupyterlab==4.6.1
+      - pytest==8.3.5

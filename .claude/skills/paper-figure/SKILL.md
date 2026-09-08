@@ -1,6 +1,6 @@
 ---
 name: paper-figure
-description: Produce or revise a publication figure for this study so it matches the existing house style (log color scales, categorical channel maps, dpi=150 PNGs into figures/). Use when asked to plot, re-plot, restyle, or add a panel to any figure destined for figures/, docs/, or the paper.
+description: Produce or revise a publication figure for this study so it matches the existing house style (log color scales, categorical channel maps, dpi=300 PNG + .pdf siblings into figures/). Use when asked to plot, re-plot, restyle, or add a panel to any figure destined for figures/, docs/, or the paper.
 ---
 
 # Making a figure for this study
@@ -8,7 +8,7 @@ description: Produce or revise a publication figure for this study so it matches
 ## Use the shared helpers
 
 `src/plotting.py` already encodes the house style — `heatmap()`, `dominant_map()`, `save()`,
-`CHANNEL_COLORS`, `DPI = 150`. Reach for these before writing raw matplotlib. If a new figure
+`CHANNEL_COLORS`, `DPI = 300`. Reach for these before writing raw matplotlib. If a new figure
 type is genuinely needed, add it to `plotting.py` rather than leaving one-off styling inside a
 notebook, so the next figure inherits it.
 
@@ -20,16 +20,26 @@ spot entirely. `heatmap(..., log=True)` is the default for a reason. Linear is a
 for a deliberately narrow range, and then say why in the caption.
 
 **Categorical maps use the fixed channel colors.** `CHANNEL_COLORS` is
-`["#2c7fb8" relaxation, "#d95f0e" charge/flux, "#31a354" crit-current]`, and the same channel
+`["#2c7fb8" relaxation, "#d95f0e" charge/flux, "#66c2a5" crit-current]`, and the same channel
 keeps the same color across every figure so panels can be read against each other. If a fourth
 channel exists, extend the colormap deliberately — do not let matplotlib recycle.
+
+**Import the palette, never retype it.** Use `pl.CHANNEL_COLORS.colors`, because the
+colour-vision-deficiency audit lives in `src/plotting.py` and only governs figures that actually
+read from it. The green was `#31a354` until 2026-09; against `#d95f0e` that pair collapses to two
+olives under deuteranopia (ΔE00 ≈ 11, below the ~15–20 needed to tell adjacent map patches
+apart). Any figure where colour is the *only* cue — a categorical map, or a twin-axis plot whose
+axes are colour-coded — must use the audited triple.
 
 **Axis labels carry units.** `EJ (GHz)`, `EC (GHz)`, `T2 (µs)`, `Φ/Φ₀`. A bare `EJ` is
 incomplete. Colorbars state the quantity and that the scale is log.
 
-**Save at `dpi=150` with `bbox_inches="tight"`, as PNG, into `figures/`.** Reuse the existing
-filename when revising a figure so the paper's includes keep resolving; pick a new descriptive
-name only for a genuinely new figure.
+**Save through `pl.save(fig, "figures/name.png")`, never `fig.savefig` directly.** It writes
+the PNG at `DPI = 300` *and* a `.pdf` sibling for the LaTeX build, with `bbox_inches="tight"`.
+Both are tracked in git. Reuse the existing filename when revising a figure so the paper's
+includes keep resolving; pick a new descriptive name only for a genuinely new figure.
+(This was `dpi=150`, PNG only, until the notebook-04/05 regeneration pass — see
+`04_analysis.ipynb` Appendix A row 8.)
 
 ## Plot from the CSV, not from a live sweep
 

@@ -1,0 +1,606 @@
+{
+  "notebook": "notebooks/05_summary.ipynb",
+  "purpose": "master comparison table, provenance ledger, summary figure, superseded-number audit",
+  "provenance": {
+    "date": "2026-09-07T22:42:26",
+    "git_revision": "5ad31aa-dirty",
+    "python": "3.11.15",
+    "numpy": "2.2.6",
+    "pandas": "3.0.3",
+    "scqubits": "4.3.1",
+    "platform": "macOS-15.0-arm64-arm-64bit",
+    "noise_amplitudes": {
+      "Q_cap": 1000000.0,
+      "A_ng": 0.0001,
+      "A_flux": 1e-06,
+      "A_cc": 1e-07
+    },
+    "scqubits_noise_params": {
+      "A_flux": 1e-06,
+      "A_ng": 0.0001,
+      "A_cc": 1e-07,
+      "omega_low": 6.283185307179586e-09,
+      "omega_high": 18.84955592153876,
+      "Delta": 0.00034,
+      "x_qp": 3e-06,
+      "t_exp": 10000.0,
+      "R_0": 50.0,
+      "T": 0.015,
+      "M": 400.0
+    },
+    "units": "frequencies GHz; coherence times microseconds"
+  },
+  "inputs": {
+    "transmon sweep (nb02)": "data/transmon_full_sweep.csv",
+    "transmon fine grid (nb02)": "data/transmon_fine_grid.csv",
+    "transmon metadata (nb02)": "data/transmon_sweep_metadata.json",
+    "fluxonium design plane (nb03)": "data/fluxonium_design_sweep.csv",
+    "fluxonium falloff (nb03)": "data/fluxonium_falloff_fine.csv",
+    "fluxonium vs measured (nb03)": "data/fluxonium_vs_measured.csv",
+    "fluxonium metadata (nb03)": "data/fluxonium_metadata.json",
+    "Q3 comparison (nb03)": "data/q3_comparison.json",
+    "Q3 metrics (nb04)": "data/q3_metric_comparison.csv",
+    "Q3 Monte Carlo (nb04)": "data/q3_monte_carlo_summary.csv",
+    "Q3 scaling (nb04)": "data/q3_scaling_exponents.csv",
+    "Q3 metadata (nb04)": "data/q3_analysis_metadata.json"
+  },
+  "upstream_metadata_revisions": {
+    "nb02": "unrecorded",
+    "nb03": "5ad31aa-dirty",
+    "nb04": "5ad31aa-dirty"
+  },
+  "headline_numbers": {
+    "transmon_best_T2_us_EJEC_ge_20": 186.96741067546137,
+    "transmon_best_T2_location": {
+      "EJ": 3.0256410256410255,
+      "EC": 0.1,
+      "f01_GHz": 1.4480127888630017,
+      "on_grid_edge": true,
+      "note": "outside the Krantz 3-6 GHz design band"
+    },
+    "transmon_T2_us_operating_point": 62.42440557094262,
+    "fluxonium_T2_us_sweet_spot": 1129.7122532636274,
+    "fluxonium_best_T2_us_published_band": 2411.531714356788,
+    "fluxonium_best_T2_location": {
+      "EJ": 11.842105263157894,
+      "EL": 0.4052631578947369,
+      "f01_GHz": 0.1723242416920891,
+      "n_thermal": 1.3594426845624563
+    },
+    "fluxonium_unconstrained_max_T2_us": 5426.891644441802,
+    "bias_window_ratio": 13845.797338419023,
+    "q3_metrics": {
+      "raw_T2_ratio": 18.097284914948187,
+      "matched_frequency_T2_ratio": {
+        "0.5": 2.1554889350481976,
+        "1.0": 1.3619671660078851,
+        "2.0": 1.0688560728004721
+      },
+      "matched_frequency_gate_ratio": {
+        "0.5": 1708.6453046807803,
+        "1.0": 961.9506649624518,
+        "2.0": 624.8055973472166
+      },
+      "gate_count_ratio_own_operating_points": 524.4799429983532,
+      "gate_pulse_bound_note": "N = T2 / T_gate with T_gate = 1/(pulse bandwidth). 'alpha' is the leakage bound used for the headline; 'f01' is the drive-period floor; 'both' takes the smaller bandwidth. They coincide for a transmon and differ by 24x for this fluxonium.",
+      "gate_count_by_pulse_bound_own_operating_points": {
+        "alpha": {
+          "fluxonium": 9782750.297528807,
+          "transmon": 18652.28676163032,
+          "ratio": 524.4799429983532
+        },
+        "both": {
+          "fluxonium": 410561.57162448147,
+          "transmon": 18652.28676163032,
+          "ratio": 22.0113263789751
+        },
+        "f01": {
+          "fluxonium": 410561.57162448147,
+          "transmon": 307433.88759809703,
+          "ratio": 1.3354467031337856
+        }
+      },
+      "matched_frequency_gate_ratio_by_pulse_bound": {
+        "alpha": {
+          "0.5": 1708.6453046807803,
+          "1.0": 961.9506649624518,
+          "2.0": 624.8055973472166
+        },
+        "both": {
+          "0.5": 101.80197498008076,
+          "1.0": 133.61009572821484,
+          "2.0": 210.59087086947588
+        },
+        "f01": {
+          "0.5": 2.135677001747514,
+          "1.0": 1.3674096856959408,
+          "2.0": 1.0650395161752526
+        }
+      }
+    },
+    "q3_monte_carlo": [
+      {
+        "mode": "shared",
+        "metric": "raw T2",
+        "median": 11.252081673621335,
+        "ci_lo": 10.156362020349349,
+        "ci_hi": 12.140363341926472,
+        "spread_p5": 3.5851132088171407,
+        "spread_p95": 21.07716842255994,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "shared",
+        "metric": "T2 at matched f01 = 1 GHz",
+        "median": 0.8579296228425282,
+        "ci_lo": 0.7785339129649782,
+        "ci_hi": 0.9375945511050529,
+        "spread_p5": 0.2702871244086734,
+        "spread_p95": 1.5776252642130355,
+        "win_fraction": 0.42
+      },
+      {
+        "mode": "shared",
+        "metric": "gate count at matched f01",
+        "median": 605.9514441918474,
+        "ci_lo": 549.8746474686633,
+        "ci_hi": 662.2183885271837,
+        "spread_p5": 190.90245752239156,
+        "spread_p95": 1114.2689117973252,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "shared",
+        "metric": "gate count at own op. points",
+        "median": 326.09815132650954,
+        "ci_lo": 294.3429469413709,
+        "ci_hi": 351.84156648235654,
+        "spread_p5": 103.90066688124747,
+        "spread_p95": 610.8403633353847,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "shared",
+        "metric": "gate count, own op. pts, min(|a|,f01) bound",
+        "median": 13.685657452206426,
+        "ci_lo": 12.352957932837878,
+        "ci_hi": 14.766054749890282,
+        "spread_p5": 4.3604937047582935,
+        "spread_p95": 25.63569261764717,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "shared",
+        "metric": "gate count, own op. pts, drive-period bound",
+        "median": 0.8303209815754133,
+        "ci_lo": 0.7494649191661666,
+        "ci_hi": 0.895869644315007,
+        "spread_p5": 0.2645550223460106,
+        "spread_p95": 1.5553402189106107,
+        "win_fraction": 0.4025
+      },
+      {
+        "mode": "shared",
+        "metric": "gate count at matched f01, drive-period bound",
+        "median": 0.8613579719098359,
+        "ci_lo": 0.7816449910106777,
+        "ci_hi": 0.9413412470101824,
+        "spread_p5": 0.2713672113834086,
+        "spread_p95": 1.5839295693204931,
+        "win_fraction": 0.425
+      },
+      {
+        "mode": "independent",
+        "metric": "raw T2",
+        "median": 9.738074992194369,
+        "ci_lo": 8.782435073924674,
+        "ci_hi": 11.45588026272116,
+        "spread_p5": 1.3920203463347698,
+        "spread_p95": 92.56834124789374,
+        "win_fraction": 0.9775
+      },
+      {
+        "mode": "independent",
+        "metric": "T2 at matched f01 = 1 GHz",
+        "median": 0.7431181696241029,
+        "ci_lo": 0.6595579666325971,
+        "ci_hi": 0.8852834902789422,
+        "spread_p5": 0.1030637899193635,
+        "spread_p95": 7.283932659881335,
+        "win_fraction": 0.4175
+      },
+      {
+        "mode": "independent",
+        "metric": "gate count at matched f01",
+        "median": 524.8606833238791,
+        "ci_lo": 465.84252573665646,
+        "ci_hi": 625.2713453072909,
+        "spread_p5": 72.7934444536442,
+        "spread_p95": 5144.605568027331,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "independent",
+        "metric": "gate count at own op. points",
+        "median": 282.2205121278222,
+        "ci_lo": 254.5249781172458,
+        "ci_hi": 332.0044667156169,
+        "spread_p5": 40.34233617525483,
+        "spread_p95": 2682.7360330192605,
+        "win_fraction": 1.0
+      },
+      {
+        "mode": "independent",
+        "metric": "gate count, own op. pts, min(|a|,f01) bound",
+        "median": 11.84420469498583,
+        "ci_lo": 10.681881051374704,
+        "ci_hi": 13.933533157392764,
+        "spread_p5": 1.6930834825968863,
+        "spread_p95": 112.58882098301572,
+        "win_fraction": 0.9825
+      },
+      {
+        "mode": "independent",
+        "metric": "gate count, own op. pts, drive-period bound",
+        "median": 0.7185984087841699,
+        "ci_lo": 0.6480792019399342,
+        "ci_hi": 0.8453598205612477,
+        "spread_p5": 0.1027208772445433,
+        "spread_p95": 6.830863674581035,
+        "win_fraction": 0.4075
+      },
+      {
+        "mode": "independent",
+        "metric": "gate count at matched f01, drive-period bound",
+        "median": 0.7460877237878689,
+        "ci_lo": 0.662193608157887,
+        "ci_hi": 0.888821147386695,
+        "spread_p5": 0.1034756403073621,
+        "spread_p95": 7.313039783677919,
+        "win_fraction": 0.4175
+      }
+    ],
+    "model_vs_measured": {
+      "T1_ratio_median": 1.958110756398801,
+      "T2_ratio_median": 2.6302773002586415,
+      "T2_ratio_max": 5.687632535694332
+    }
+  },
+  "provenance_ledger": [
+    {
+      "claim": "Transmon best T2, real regime",
+      "value": 187.0,
+      "source": "data/transmon_full_sweep.csv",
+      "filter": "EJ_EC >= 20",
+      "recomputed": 186.96741067546137,
+      "notebook": "02",
+      "verified": true
+    },
+    {
+      "claim": "Transmon T2 at the operating point",
+      "value": 62.4,
+      "source": "src/coherence.py",
+      "filter": "EJ=13.0, EC=0.26, ng=0",
+      "recomputed": 62.42440557094262,
+      "notebook": "02/04",
+      "verified": true
+    },
+    {
+      "claim": "Transmon |alpha| at the operating point",
+      "value": 299.0,
+      "source": "qubits.anharmonicity",
+      "filter": "EJ=13.0, EC=0.26",
+      "recomputed": 298.7979875985012,
+      "notebook": "02/04",
+      "verified": true
+    },
+    {
+      "claim": "Transmon T2 variation over the whole ng period",
+      "value": 1.0056,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "bias_sensitivity",
+      "recomputed": 1.0055857264215904,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Fluxonium T2 at the sweet spot",
+      "value": 1129.7,
+      "source": "src/coherence.py",
+      "filter": "EJ=8.9, EC=2.5, EL=0.5, flux=0.5",
+      "recomputed": 1129.7122532636274,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Fluxonium best T2 within the published band",
+      "value": 2411.531714356788,
+      "source": "data/fluxonium_design_sweep.csv",
+      "filter": "0.17 <= freq_GHz <= 0.83",
+      "recomputed": 2411.531714356788,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Fluxonium 10x falloff detuning",
+      "value": 0.00032497,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "bias_sensitivity, Brent root-find",
+      "recomputed": 0.000324969104774186,
+      "notebook": "03/04",
+      "verified": true
+    },
+    {
+      "claim": "Fluxonium 2x falloff detuning",
+      "value": 3.6112e-05,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "bias_sensitivity, Brent root-find",
+      "recomputed": 3.6112040916026605e-05,
+      "notebook": "03/04",
+      "verified": true
+    },
+    {
+      "claim": "Bias-window ratio (transmon / fluxonium)",
+      "value": 13845.8,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "1 / (2 * fluxonium_2x_detuning)",
+      "recomputed": 13845.797338419023,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 raw T2 ratio",
+      "value": 18.1,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "own operating points",
+      "recomputed": 18.097284914948187,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 gate-count ratio, own operating points",
+      "value": 524.5,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "N = 1e3*T2*|alpha|",
+      "recomputed": 524.4799429983532,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 matched-frequency T2 ratio at 1 GHz",
+      "value": 1.362,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "f01_target == 1.0",
+      "recomputed": 1.3619671660078851,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 matched-frequency MC median",
+      "value": 0.858,
+      "source": "data/q3_monte_carlo_summary.csv",
+      "filter": "mode == shared, N = 400",
+      "recomputed": 0.8579296228425282,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 matched-frequency MC win fraction",
+      "value": 0.42,
+      "source": "data/q3_monte_carlo_summary.csv",
+      "filter": "mode == shared, N = 400",
+      "recomputed": 0.42,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Falloff exponent where 1/f theory applies",
+      "value": -0.956,
+      "source": "data/q3_scaling_exponents.csv",
+      "filter": "window 1e-03 - 1e-02",
+      "recomputed": -0.9556477022948434,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Model / measured T1, median over 9 devices",
+      "value": 1.96,
+      "source": "data/fluxonium_vs_measured.csv",
+      "filter": "Nguyen 2019 Table I",
+      "recomputed": 1.958110756398801,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Model / measured T2, median over 9 devices",
+      "value": 2.63,
+      "source": "data/fluxonium_vs_measured.csv",
+      "filter": "Nguyen 2019 Table I",
+      "recomputed": 2.6302773002586415,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Second-order flux share of the sweet-spot rate budget",
+      "value": 0.0063,
+      "source": "data/fluxonium_metadata.json",
+      "filter": "second_order_flux.rate_share_at_sweet_spot",
+      "recomputed": 0.006294967996125395,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Fluxonium unconstrained max T2 (NOT quotable as a design)",
+      "value": 5426.9,
+      "source": "data/fluxonium_design_sweep.csv",
+      "filter": "argmax T2_us, no filter",
+      "recomputed": 5426.891644441802,
+      "notebook": "03/05",
+      "verified": true
+    },
+    {
+      "claim": "Transmon f01 at the operating point",
+      "value": 4.925,
+      "source": "src/coherence.py",
+      "filter": "EJ=13.0, EC=0.26, ng=0",
+      "recomputed": 4.924898920322306,
+      "notebook": "02/04",
+      "verified": true
+    },
+    {
+      "claim": "Model / measured T2, worst device",
+      "value": 5.7,
+      "source": "data/fluxonium_vs_measured.csv",
+      "filter": "max over Nguyen 2019 Table I",
+      "recomputed": 5.687632535694332,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Q_cap form: T1 ratio, frequency-dependent / flat",
+      "value": 7.12,
+      "source": "data/fluxonium_metadata.json",
+      "filter": "sensitivity.Q_cap_form_T1_ratio_freqdep_over_flat",
+      "recomputed": 7.118992817270239,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Second-order flux share at the interior optimum, minimum",
+      "value": 0.43,
+      "source": "data/fluxonium_metadata.json",
+      "filter": "interior_optimum.across_EC, min",
+      "recomputed": 0.42797578045106016,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Second-order flux share at the interior optimum, maximum",
+      "value": 0.58,
+      "source": "data/fluxonium_metadata.json",
+      "filter": "interior_optimum.across_EC, max",
+      "recomputed": 0.5763885556504369,
+      "notebook": "03",
+      "verified": true
+    },
+    {
+      "claim": "Q3 gate-count ratio, own op. points, 1/min(|alpha|,f01) bound",
+      "value": 22.01,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "metrics.gate_count_by_pulse_bound, bound='both'",
+      "recomputed": 22.0113263789751,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 gate-count ratio, own op. points, 1/f01 drive-period bound",
+      "value": 1.336,
+      "source": "data/q3_analysis_metadata.json",
+      "filter": "metrics.gate_count_by_pulse_bound, bound='f01'",
+      "recomputed": 1.3354467031337856,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound",
+      "value": 624.8,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "f01_target == 2.0, bound='alpha'",
+      "recomputed": 624.8055973472166,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound",
+      "value": 1708.6,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "f01_target == 0.5, bound='alpha'",
+      "recomputed": 1708.6453046807803,
+      "notebook": "04",
+      "verified": true
+    }
+  ],
+  "superseded_audit": {
+    "files_scanned": [
+      "README.md",
+      "docs/Week5_Findings_Worksheet.md",
+      "docs/lab_notebook.md"
+    ],
+    "docs_dir_present": true,
+    "coverage_note": "docs/ is gitignored, so a clean clone scans README.md only. A pass with docs_dir_present=false is not evidence about docs/.",
+    "total_mentions": 35,
+    "live_claims": 0,
+    "replacements": [
+      {
+        "pattern": "5578",
+        "old": "best fluxonium T2 = 5578 us",
+        "new": "2412 us within the published band (EJ=11.8, EL=0.405, f01=0.172 GHz)",
+        "why": "5578 us was a first-order-only value at a double-grid-edge point at 75 MHz with n_th=3.7; the correct value AT that point is 5427 us, and the point itself is not a design (nb03 App. A row 2)"
+      },
+      {
+        "pattern": "216\\s*[x\u00d7]",
+        "old": "Monte Carlo median advantage 216x",
+        "new": "raw T2 median 11.3x [3.6, 21.1]",
+        "why": "216x compared a worst-case-biased 18.9 GHz transmon against a thermally scrambled 75 MHz fluxonium, with first-order-only physics and an unconverged N=60 CI"
+      },
+      {
+        "pattern": "528\\s*[x\u00d7]",
+        "old": "fluxonium bias sensitivity 528x",
+        "new": "bias window for a 2x loss: 0.00722% of the period vs 100% for the transmon (13,846x wider)",
+        "why": "528x was the T2 range over an arbitrary flux window (0.45-0.50); it measures the window chosen, not the physics. The window-fraction metric is bias-independent"
+      },
+      {
+        "pattern": "0\\.68",
+        "old": "T2 ~ (detuning)^-0.68",
+        "new": "no single exponent: -0.96 to -0.45, reaching -0.96 in 1e-03 - 1e-02 where 1/f theory predicts -1",
+        "why": "fitted on linearly spaced samples, so 55 of 60 points sat in the far field"
+      },
+      {
+        "pattern": "0\\.0020|0\\.002\\b",
+        "old": "10x falloff within 0.002 flux quanta",
+        "new": "3.250e-04 flux quanta (Brent root-find)",
+        "why": "0.0020 was the grid spacing, i.e. a resolution limit rather than a measurement"
+      },
+      {
+        "pattern": "order of magnitude",
+        "old": "model optimistic by roughly an order of magnitude",
+        "new": "optimistic by a median 2.0x on T1 and 2.6x on T2 (worst case 5.7x)",
+        "why": "nb03 S7's own table gives 2.0x/2.6x; the prose overstated it by ~4x"
+      }
+    ]
+  },
+  "noise_amplitudes": {
+    "Q_cap": 1000000.0,
+    "A_ng": 0.0001,
+    "A_flux": 1e-06,
+    "A_cc": 1e-07
+  },
+  "scqubits_noise_params": {
+    "A_flux": 1e-06,
+    "A_ng": 0.0001,
+    "A_cc": 1e-07,
+    "omega_low": 6.283185307179586e-09,
+    "omega_high": 18.84955592153876,
+    "Delta": 0.00034,
+    "x_qp": 3e-06,
+    "t_exp": 10000.0,
+    "R_0": 50.0,
+    "T": 0.015,
+    "M": 400.0
+  },
+  "units": "frequencies GHz; coherence times microseconds (scqubits returns ns, x1e-3)",
+  "corrections_to_earlier_version": [
+    "INLINE PHYSICS REMOVED. This notebook previously defined its own transmon_T2 and fluxonium_T2 without notebook 03's second-order flux channel, and recomputed the bias sensitivity inline at the superseded 18.9 GHz transmon operating point. It now reads committed artefacts and re-verifies two anchor points against src/coherence.py.",
+    "MASTER TABLE REBUILT. The previous table quoted the unconstrained maxima (187 us / 5578 us) as 'best T2 in the real regime'. Both are double-grid-edge frequency minima; the table now reports the frequency-constrained values alongside the constraint, and flags the unconstrained ones as not quotable.",
+    "SUMMARY FIGURE REBUILT. Linear colour scales replaced with LogNorm on both maps (the data spans three decades); the twin-axis bias panel replaced with the Q3 metric comparison and its Monte Carlo spread; saved at dpi=300 with a .pdf sibling.",
+    "PROVENANCE LEDGER ADDED. Every headline number is now recomputed from its named source and asserted, so a drifted number fails here rather than in review.",
+    "SUPERSEDED-NUMBER AUDIT ADDED. README.md and docs/*.md are scanned for the six superseded headline figures, distinguishing live claims from correction-table records."
+  ],
+  "outputs": [
+    "data/architecture_comparison.csv",
+    "data/headline_provenance_ledger.csv",
+    "data/superseded_number_audit.csv",
+    "data/summary_metadata.json",
+    "figures/summary_figure.png"
+  ]
+}
