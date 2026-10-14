@@ -31,7 +31,7 @@ recomputes each one from its named source and asserts it.
 | Practical character | simple, forgiving; no bias to hold | delicate; must hold Φ=0.5 to ~10⁻⁴ Φ₀, and is thermally populated |
 
 **Q3 has no single answer.** The fluxonium/transmon ratio depends on the metric by a factor of
-**491×** at the default noise amplitudes (~700× across the Monte Carlo medians) — and the
+**491×** across defensible metrics at the default noise amplitudes — and the
 gate-count metric hides a further **393×** inside itself, in the choice of what bounds the minimum
 pulse length.
 

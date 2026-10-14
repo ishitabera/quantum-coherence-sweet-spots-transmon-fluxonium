@@ -2,8 +2,8 @@
   "notebook": "notebooks/05_summary.ipynb",
   "purpose": "master comparison table, provenance ledger, summary figure, superseded-number audit",
   "provenance": {
-    "date": "2026-09-07T23:36:34",
-    "git_revision": "81dc9c6-dirty",
+    "date": "2026-10-01T21:39:01",
+    "git_revision": "4f079ed-dirty",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",
@@ -400,6 +400,15 @@
       "source": "data/q3_metric_comparison.csv",
       "filter": "f01_target == 1.0",
       "recomputed": 1.3619671660078851,
+      "notebook": "04",
+      "verified": true
+    },
+    {
+      "claim": "Q3 metric span across defensible metrics (deterministic)",
+      "value": 490.7,
+      "source": "data/q3_metric_comparison.csv",
+      "filter": "gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",
+      "recomputed": 490.6927661683971,
       "notebook": "04",
       "verified": true
     },

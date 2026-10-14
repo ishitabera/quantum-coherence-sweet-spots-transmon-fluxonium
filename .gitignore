@@ -28,3 +28,8 @@ paper/*.blg
 paper/*.bbl
 paper/*.out
 paper/*.synctex.gz
+
+# arXiv bundle (rebuilt by paper/make_arxiv.py)
+paper/arxiv/
+paper/arxiv.tar.gz
+paper/*.toc

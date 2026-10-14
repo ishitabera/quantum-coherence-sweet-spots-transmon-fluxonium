@@ -11,6 +11,7 @@ Bias-window ratio (transmon / fluxonium),13845.8,data/q3_analysis_metadata.json,
 Q3 raw T2 ratio,18.1,data/q3_metric_comparison.csv,own operating points,18.097284914948187,04,True
 "Q3 gate-count ratio, own operating points",524.5,data/q3_metric_comparison.csv,N = 1e3*T2*|alpha|,524.4799429983532,04,True
 Q3 matched-frequency T2 ratio at 1 GHz,1.362,data/q3_metric_comparison.csv,f01_target == 1.0,1.3619671660078851,04,True
+Q3 metric span across defensible metrics (deterministic),490.7,data/q3_metric_comparison.csv,"gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",490.6927661683971,04,True
 Q3 matched-frequency MC median,0.858,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.8579296228425282,04,True
 Q3 matched-frequency MC win fraction,0.42,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.42,04,True
 Falloff exponent where 1/f theory applies,-0.956,data/q3_scaling_exponents.csv,window 1e-03 - 1e-02,-0.9556477022948434,04,True

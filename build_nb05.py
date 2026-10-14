@@ -382,6 +382,14 @@ entry("Q3 gate-count ratio, own operating points", 524.5, "data/q3_metric_compar
 # on a finer scan (140 EL points vs 80, 160 EC points vs 120). The ledger caught the stale value.
 entry("Q3 matched-frequency T2 ratio at 1 GHz", 1.362, "data/q3_metric_comparison.csv",
       "f01_target == 1.0", float(mt[mt.f01_target == 1.0].T2_ratio.iloc[0]), notebook="04")
+# The paper's "~500x across defensible metrics" (abstract, S8.2). Both ends are Table 2 rows.
+# NOT the ~700x span of the Monte Carlo medians: that needs the matched-f01 gate count, whose
+# 1 GHz transmon has |alpha| = 10 MHz at EJ/EC = 1275, far outside the Krantz envelope.
+entry("Q3 metric span across defensible metrics (deterministic)", 490.7,
+      "data/q3_metric_comparison.csv",
+      "gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",
+      float(Q3_META["metrics"]["gate_count_ratio_own_operating_points"]) / float(mt.T2_ratio.min()),
+      notebook="04")
 entry("Q3 matched-frequency MC median", 0.858, "data/q3_monte_carlo_summary.csv",
       "mode == shared, N = 400",
       float(mcs_sh.loc["T2 at matched f01 = 1 GHz", "median"]), notebook="04")
@@ -493,7 +501,7 @@ ax[0, 0].plot(TM_OP["EJ"], TM_OP["EC"], "r*", ms=16, markeredgecolor="k",
 ax[0, 0].set_xlim(dft.EJ.min(), dft.EJ.max()); ax[0, 0].set_ylim(dft.EC.min(), dft.EC.max())
 ax[0, 0].set_xlabel(r"$E_J$ (GHz)"); ax[0, 0].set_ylabel(r"$E_C$ (GHz)")
 ax[0, 0].set_title(r"(a) Transmon $T_2$ over $(E_J, E_C)$" "\n"
-                   r"left of the dashed line is the charge-qubit regime")
+                   r"left of the dashed line lies outside the transmon regime")
 ax[0, 0].legend(loc="upper right", frameon=False, fontsize=8, labelcolor="w")
 
 # ---- (b) fluxonium sweet-spot falloff --------------------------------------
@@ -931,8 +939,10 @@ md(r"""
   should quote.
 - **Q3's answer is metric-dependent by a factor of $\sim\!490$** at the default noise amplitudes
   (gate count at own operating points under the $1/|\alpha|$ bound, divided by $T_2$ at matched
-  frequency, as `04_analysis.ipynb` §3 prints), rising to $\sim\!700$ across the Monte Carlo
-  medians. The matched-frequency $T_2$ comparison — the one that controls the confound — puts the
+  frequency, as `04_analysis.ipynb` §3 prints). The Monte Carlo medians span $\sim\!700$ only
+  if the matched-frequency gate count is included, and that metric's 1 GHz transmon has
+  $|\alpha| = 10$ MHz at $E_J/E_C = 1275$ — far outside the design envelope — so the paper
+  quotes $\sim\!500$. The matched-frequency $T_2$ comparison — the one that controls the confound — puts the
   fluxonium at parity or slightly behind.
 - **The gate-count metric hides a second range of comparable size inside itself.** Bounding the
   minimum pulse length by $1/|\alpha|$, $1/\min(|\alpha|, f_{01})$ or $1/f_{01}$ gives
