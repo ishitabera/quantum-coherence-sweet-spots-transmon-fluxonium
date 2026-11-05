@@ -2,8 +2,8 @@
   "notebook": "notebooks/03_fluxonium_sweep.ipynb",
   "purpose": "Q2 dominant channel vs flux at the nominal design",
   "provenance": {
-    "date": "2026-09-07T23:28:03",
-    "git_revision": "81dc9c6-dirty",
+    "date": "2026-11-04T23:29:59",
+    "git_revision": "96f42ce-dirty",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",
@@ -32,14 +32,15 @@
       "t_exp": 10000.0,
       "R_0": 50.0,
       "T": 0.015,
-      "M": 400.0
+      "M": 400.0,
+      "cc_convention": "fractional"
     },
     "units": "frequencies GHz; coherence times microseconds"
   },
   "validated_against": {
     "notebook": "notebooks/01_validation.ipynb",
-    "nominal_T2_us_first_order_only": 1136.8688060132743,
-    "nominal_T2_us_with_second_order": 1129.7122532636274
+    "nominal_T2_us_first_order_only": 369.54270558880427,
+    "nominal_T2_us_with_second_order": 368.7833213261312
   },
   "flux_sweep": {
     "range": [
@@ -70,7 +71,8 @@
     "t_exp": 10000.0,
     "R_0": 50.0,
     "T": 0.015,
-    "M": 400.0
+    "M": 400.0,
+    "cc_convention": "fractional"
   },
   "noise_channels": [
     "t1_capacitive",

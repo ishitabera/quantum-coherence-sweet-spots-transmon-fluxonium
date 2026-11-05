@@ -1,34 +1,54 @@
 claim,value,source,filter,recomputed,notebook,verified
-"Transmon best T2, real regime",187.0,data/transmon_full_sweep.csv,EJ_EC >= 20,186.96741067546137,02,True
-Transmon T2 at the operating point,62.4,src/coherence.py,"EJ=13.0, EC=0.26, ng=0",62.42440557094262,02/04,True
+"Transmon best T2, real regime",147.1,data/transmon_full_sweep.csv,EJ_EC >= 20,147.14412654972242,02,True
+Transmon T2 at the operating point,44.1,src/coherence.py,"EJ=13.0, EC=0.26, ng=0",44.10097615493354,02/04,True
 Transmon |alpha| at the operating point,299.0,qubits.anharmonicity,"EJ=13.0, EC=0.26",298.7979875985012,02/04,True
-Transmon T2 variation over the whole ng period,1.0056,data/q3_analysis_metadata.json,bias_sensitivity,1.0055857264215904,04,True
-Fluxonium T2 at the sweet spot,1129.7,src/coherence.py,"EJ=8.9, EC=2.5, EL=0.5, flux=0.5",1129.7122532636274,03,True
-Fluxonium best T2 within the published band,2411.531714356788,data/fluxonium_design_sweep.csv,0.17 <= freq_GHz <= 0.83,2411.531714356788,03,True
-Fluxonium 10x falloff detuning,0.00032497,data/q3_analysis_metadata.json,"bias_sensitivity, Brent root-find",0.000324969104774186,03/04,True
-Fluxonium 2x falloff detuning,3.6112e-05,data/q3_analysis_metadata.json,"bias_sensitivity, Brent root-find",3.6112040916026605e-05,03/04,True
-Bias-window ratio (transmon / fluxonium),13845.8,data/q3_analysis_metadata.json,1 / (2 * fluxonium_2x_detuning),13845.797338419023,04,True
-Q3 raw T2 ratio,18.1,data/q3_metric_comparison.csv,own operating points,18.097284914948187,04,True
-"Q3 gate-count ratio, own operating points",524.5,data/q3_metric_comparison.csv,N = 1e3*T2*|alpha|,524.4799429983532,04,True
-Q3 matched-frequency T2 ratio at 1 GHz,1.362,data/q3_metric_comparison.csv,f01_target == 1.0,1.3619671660078851,04,True
-Q3 metric span across defensible metrics (deterministic),490.7,data/q3_metric_comparison.csv,"gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",490.6927661683971,04,True
-Q3 matched-frequency MC median,0.858,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.8579296228425282,04,True
-Q3 matched-frequency MC win fraction,0.42,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.42,04,True
-Falloff exponent where 1/f theory applies,-0.956,data/q3_scaling_exponents.csv,window 1e-03 - 1e-02,-0.9556477022948434,04,True
+Transmon T2 variation over the whole ng period,1.0056,data/q3_analysis_metadata.json,bias_sensitivity,1.0039511654631044,04,True
+Fluxonium T2 at the sweet spot,368.8,src/coherence.py,"EJ=8.9, EC=2.5, EL=0.5, flux=0.5",368.7833213261312,03,True
+Fluxonium best T2 within the Nguyen 2019 Table I band,719.1359338032125,data/fluxonium_design_sweep.csv,0.17 <= freq_GHz <= 0.83,719.1359338032125,03,True
+Fluxonium 10x falloff detuning,0.0009961,data/q3_analysis_metadata.json,"bias_sensitivity, Brent root-find",0.0009960991352342603,03/04,True
+Fluxonium 2x falloff detuning,0.0001106,data/q3_analysis_metadata.json,"bias_sensitivity, Brent root-find",0.00011061945526287813,03/04,True
+Bias-window ratio (transmon / fluxonium),4520.0,data/q3_analysis_metadata.json,1 / (2 * fluxonium_2x_detuning),4520.000562394659,04,True
+Q3 raw T2 ratio,8.362,data/q3_metric_comparison.csv,own operating points,8.362248491519518,04,True
+"Q3 gate-count ratio, own operating points",242.3,data/q3_metric_comparison.csv,N = 1e3*T2*|alpha|,242.34749205653304,04,True
+Q3 matched-frequency T2 ratio at 1 GHz,0.6244,data/q3_metric_comparison.csv,f01_target == 1.0,0.6244160388683098,04,True
+Q3 metric span across defensible metrics (deterministic),389.1,data/q3_metric_comparison.csv,"gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",389.1107067256617,04,True
+Q3 matched-frequency MC median,0.3704,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.3703748193825445,04,True
+Q3 matched-frequency MC win fraction,0.0475,data/q3_monte_carlo_summary.csv,"mode == shared, N = 400",0.0475,04,True
+Falloff exponent where 1/f theory applies,-0.9292,data/q3_scaling_exponents.csv,window 1e-03 - 1e-02,-0.9291922018715107,04,True
 "Model / measured T1, median over 9 devices",1.96,data/fluxonium_vs_measured.csv,Nguyen 2019 Table I,1.958110756398801,03,True
-"Model / measured T2, median over 9 devices",2.63,data/fluxonium_vs_measured.csv,Nguyen 2019 Table I,2.6302773002586415,03,True
-Second-order flux share of the sweet-spot rate budget,0.0063,data/fluxonium_metadata.json,second_order_flux.rate_share_at_sweet_spot,0.006294967996125395,03,True
-Fluxonium unconstrained max T2 (NOT quotable as a design),5426.9,data/fluxonium_design_sweep.csv,"argmax T2_us, no filter",5426.891644441802,03/05,True
+"Model / measured T2, median over 9 devices",1.457,data/fluxonium_vs_measured.csv,Nguyen 2019 Table I,1.4570263303301778,03,True
+Second-order flux share of the sweet-spot rate budget,0.002055,data/fluxonium_metadata.json,second_order_flux.rate_share_at_sweet_spot,0.002054929650046991,03,True
+Fluxonium unconstrained max T2 (NOT quotable as a design),1398.0,data/fluxonium_design_sweep.csv,"argmax T2_us, no filter",1397.6377116987155,03/05,True
 Transmon f01 at the operating point,4.925,src/coherence.py,"EJ=13.0, EC=0.26, ng=0",4.924898920322306,02/04,True
-"Model / measured T2, worst device",5.7,data/fluxonium_vs_measured.csv,max over Nguyen 2019 Table I,5.687632535694332,03,True
+"Model / measured T2, worst device",3.237,data/fluxonium_vs_measured.csv,max over Nguyen 2019 Table I,3.2369636188389848,03,True
 "Q_cap form: T1 ratio, frequency-dependent / flat",7.12,data/fluxonium_metadata.json,sensitivity.Q_cap_form_T1_ratio_freqdep_over_flat,7.118992817270239,03,True
-"Second-order flux share at the interior optimum, minimum",0.43,data/fluxonium_metadata.json,"interior_optimum.across_EC, min",0.42797578045106016,03,True
-"Second-order flux share at the interior optimum, maximum",0.58,data/fluxonium_metadata.json,"interior_optimum.across_EC, max",0.5763885556504369,03,True
-"Q3 gate-count ratio, own op. points, 1/min(|alpha|,f01) bound",22.01,data/q3_analysis_metadata.json,"metrics.gate_count_by_pulse_bound, bound='both'",22.0113263789751,04,True
-"Q3 gate-count ratio, own op. points, 1/f01 drive-period bound",1.336,data/q3_analysis_metadata.json,"metrics.gate_count_by_pulse_bound, bound='f01'",1.3354467031337856,04,True
-"Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound",624.8,data/q3_metric_comparison.csv,"f01_target == 2.0, bound='alpha'",624.8055973472166,04,True
-"Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound",1708.6,data/q3_metric_comparison.csv,"f01_target == 0.5, bound='alpha'",1708.6453046807803,04,True
-"Q3 gate-count ratio, pulse simulation (settles the bound)",48.259426439861834,data/q3_pulse_simulation.csv,shortest calibrated gate with error < 1e-03,48.259426439861834,04,True
+"Second-order flux share of 1/T2 at the grid interior optimum, minimum",0.4456,data/fluxonium_metadata.json,"interior_optimum.across_EC, interior only, min",0.4456169392254522,03,True
+"Second-order flux share of 1/T2 at the grid interior optimum, maximum",0.5283,data/fluxonium_metadata.json,"interior_optimum.across_EC, interior only, max",0.5282923814955449,03,True
+"Q3 gate-count ratio, own op. points, 1/min(|alpha|,f01) bound",10.17,data/q3_analysis_metadata.json,"metrics.gate_count_by_pulse_bound, bound='both'",10.170817427806146,04,True
+"Q3 gate-count ratio, own op. points, 1/f01 drive-period bound",0.6171,data/q3_analysis_metadata.json,"metrics.gate_count_by_pulse_bound, bound='f01'",0.617072518406399,04,True
+"Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound",364.1,data/q3_metric_comparison.csv,"f01_target == 2.0, bound='alpha'",364.0751450978798,04,True
+"Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound",646.7,data/q3_metric_comparison.csv,"f01_target == 0.5, bound='alpha'",646.7238227419506,04,True
+"Q3 gate-count ratio, pulse simulation (estimate between the bounds)",22.299329310718715,data/q3_pulse_simulation.csv,shortest calibrated gate with error < 1e-03,22.299329310718715,04,True
 "Simulated minimum gate time, transmon",8.0,data/q3_pulse_simulation.csv,argmin T_ns with gate_error < target,8.0,04,True
 "Simulated minimum gate time, fluxonium",3.0,data/q3_pulse_simulation.csv,argmin T_ns with gate_error < target,3.0,04,True
 Array-mode shift in f01 at the flux sweet spot,-0.43,notebooks/01_validation.ipynb,"section 5 step (iv), explicit diagonalisation",-0.4290103087119635,01,True
+"Transmon QP-tunneling T1 at the op. point, default x_qp=3e-6 (us)",5.6,data/robustness_checks.json,transmon_T1_qp_us.EJ_EC_50.x_qp_3e-06,5.633653100329493,results/referee_checks.py,True
+"Transmon QP-tunneling T1 at the op. point, x_qp=1e-8 (us)",1700.0,data/robustness_checks.json,transmon_T1_qp_us.EJ_EC_50.x_qp_1e-08,1690.0959300988482,results/referee_checks.py,True
+"Transmon QP-tunneling T1, Catelani 2011 analytic cross-check (us)",5.55,data/robustness_checks.json,transmon_T1_qp_catelani_us.EJ_EC_50,5.547052449644284,results/referee_checks.py,True
+"Second-order charge Tphi, minimum over EJ/EC >= 20 (s)",0.15,data/robustness_checks.json,"second_order_charge_Tphi_s, EJ_EC >= 20, min",0.15360699691247198,results/referee_checks.py,True
+Second-order charge Tphi at the transmon op. point (s),78.0,data/robustness_checks.json,"second_order_charge_Tphi_s, EJ=13, EC=0.26",78.34854996708005,results/referee_checks.py,True
+"Confound under Q_cap(omega), transmon EJ/EC >= 20: corr",-0.9998,data/robustness_checks.json,"confound_under_Qcap_model, transmon, scqubits Q_cap(omega)",-0.9997149031041302,results/referee_checks.py,True
+"Confound under Q_cap(omega), fluxonium (EJ, EL): corr",-0.9718,data/robustness_checks.json,"confound_under_Qcap_model, fluxonium, scqubits Q_cap(omega)",-0.9717897715697242,results/referee_checks.py,True
+Q3 under Q_cap(omega): raw_T2_ratio,9.599,data/robustness_checks.json,comparison_under_Qcap_model.scqubits Q_cap(omega).raw_T2_ratio,9.598933824095438,results/referee_checks.py,True
+Q3 under Q_cap(omega): matched_T2_ratio_0.5GHz,0.3673,data/robustness_checks.json,comparison_under_Qcap_model.scqubits Q_cap(omega).matched_T2_ratio_0.5GHz,0.367330576282363,results/referee_checks.py,True
+Q3 under Q_cap(omega): matched_T2_ratio_1.0GHz,0.3746,data/robustness_checks.json,comparison_under_Qcap_model.scqubits Q_cap(omega).matched_T2_ratio_1.0GHz,0.3746255905643653,results/referee_checks.py,True
+Q3 under Q_cap(omega): matched_T2_ratio_2.0GHz,0.4759,data/robustness_checks.json,comparison_under_Qcap_model.scqubits Q_cap(omega).matched_T2_ratio_2.0GHz,0.4758623481034289,results/referee_checks.py,True
+"Residual T2 scatter about the log-log fit, fluxonium (rms %)",12.04,data/robustness_checks.json,"residual_T2_scatter_at_fixed_f01, fluxonium",12.043230822244965,results/referee_checks.py,True
+"Residual T2 scatter about the log-log fit, transmon (rms %)",0.593,data/robustness_checks.json,"residual_T2_scatter_at_fixed_f01, transmon",0.5929887757689656,results/referee_checks.py,True
+"Refined interior optimum, lowest f01 (MHz)",5.443,data/fluxonium_interior_refined.csv,"continuous optimum in EJ, interior slices (8 of 9), min f01",5.442564280855322,results/referee_checks.py,True
+"Refined interior optimum, highest f01 (MHz)",29.56,data/fluxonium_interior_refined.csv,"continuous optimum in EJ, interior slices (8 of 9), max f01",29.558551029843727,results/referee_checks.py,True
+"Refined interior optimum, second-order share of 1/T2, minimum",0.4601,data/fluxonium_interior_refined.csv,"share, min",0.4601130686964435,results/referee_checks.py,True
+"Refined interior optimum, second-order share of 1/T2, maximum",0.4688,data/fluxonium_interior_refined.csv,"share, max",0.4687919127943705,results/referee_checks.py,True
+Matched transmon held at EJ/EC = 50: largest change in matched-f01 transmon T2 (%),1.319,data/matched_transmon_check.json,"deterministic, max over 0.5/1/2 GHz of |tm_best_T2/tm50_T2 - 1|",1.3191345620138906,results/matched_transmon_check.py,True
+Matched transmon held at EJ/EC = 50: MC median T2 ratio at 1 GHz (shared),0.3801,data/matched_transmon_check.json,monte_carlo_1GHz.shared.median_50,0.38006631167801297,results/matched_transmon_check.py,True
+"Pulse simulation, gate-count ratio with the stronger optimizer",20.07,data/pulse_convergence.json,"summary.stronger_optimizer_ratio (7 starts, 400 evals)",20.069396379646843,results/pulse_convergence.py + summarize_pulse_convergence.py,True

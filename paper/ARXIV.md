@@ -11,7 +11,7 @@ source), `preprint.bbl` (arXiv does not run BibTeX), the layout class `SciPost.c
 `SciPost_bibstyle.bst` and the five figure PDFs. The paper carries no journal branding.
 
 **What has been checked:** the bundle compiles using only its own files and the shipped `.bbl`, and
-the result matches `preprint.pdf` text-for-text on all 16 pages, with 0 unresolved citations.
+the result matches `preprint.pdf` text-for-text on all 21 pages, with 0 unresolved citations.
 **Not checked:** arXiv compiles with pdfLaTeX, and this machine has only XeTeX (tectonic). The
 source is pure ASCII and uses standard packages, so a problem is unlikely, but arXiv's compiled
 preview is the real test. Read every page of it before you confirm.
@@ -25,19 +25,19 @@ preview is the real test. Read every page of it before you confirm.
 | Cross-list | `cond-mat.supr-con` |
 | Title | Coherence sweet spots are frequency minima in disguise: Metric sensitivity in transmon and fluxonium design spaces |
 | Authors | Ishita Bera |
-| Comments | 16 pages, 5 figures, 3 tables. Code and data: https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium |
+| Comments | 21 pages, 5 figures, 3 tables. Code and data: https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium |
 | Report-no / Journal-ref / DOI | leave blank |
 
-### Abstract (1898 / 1920 characters)
+### Abstract (1914 / 1920 characters)
 
 Keep the blank lines between paragraphs.
 
 ```
-Dielectric loss is well known to scale with transition frequency, implying that a lower-frequency qubit relaxes more slowly at fixed quality factor. We show that this has a stronger consequence for design studies than is usually acknowledged. Under a common noise model, $\log T_2$ over the transmon $(E_J,E_C)$ plane correlates with $\log f_{01}$ at $r=-0.9999$ within the transmon regime, while over the fluxonium $(E_J,E_L)$ plane the correlation is $r=-0.9973$. Because each parameter plane effectively reduces to a single degree of freedom, the transition frequency, a raw $T_2$ maximum primarily identifies the lowest-frequency corner of the swept domain rather than an intrinsic optimal design. Indeed, both of our initial headline optima occur at grid-edge points outside any usable frequency band.
+At fixed quality factor, dielectric loss makes a lower-frequency transmon-like qubit relax more slowly. This has a stronger consequence for design studies than is usually acknowledged. Under a common noise model, $\log T_2$ over the transmon $(E_J,E_C)$ plane correlates with $\log f_{01}$ at $r=-0.9999$ within the transmon regime, and over the fluxonium $(E_J,E_L)$ plane at $r=-0.9878$. Because modeled $T_2$ on each plane is largely a function of the transition frequency, a raw $T_2$ maximum primarily identifies the lowest-frequency corner of the swept domain rather than an optimal design. Both our initial headline optima lie at grid edges outside the usual bands.
 
-Controlling for frequency changes these conclusions. For the transmon, we find no interior optimum in $E_J/E_C$ at fixed $f_{01}$. $T_2$ varies by only 4.8% across a tenfold range in $E_J/E_C$, while the anharmonicity decreases by a factor of 7.3. Charge insensitivity is therefore obtained primarily at the cost of gate speed rather than through improved coherence, and any reported optimum depends on the imposed regime boundary.
+Controlling for frequency changes these conclusions. For the transmon, we find no interior optimum in $E_J/E_C$ at fixed $f_{01}$: $T_2$ varies by only 3.2% over $E_J/E_C$ = 11-118, while the anharmonicity decreases by a factor of 7.3. Charge insensitivity is therefore bought with anharmonicity rather than coherence, and any reported optimum depends on the imposed regime boundary.
 
-The fluxonium has a genuine interior optimum once second-order $1/f$ flux dephasing is included, but it occurs at frequencies of only 10-73 MHz, where $\bar n_{\rm th}$ = 4-32. For the cross-architecture comparison, there is no single answer: the fluxonium/transmon ratio spans $\sim$500$\times$ across defensible metrics, while at matched frequency the $T_2$ advantage reverses to a median 0.86$\times$ across the literature noise band. A lab-frame pulse simulation yields a 36-58$\times$ advantage in gate count, excluding both analytic bounds: the fluxonium drive couples 10.2$\times$ more strongly to its leakage transition than to its qubit transition.
+Within this model, the fluxonium has an interior optimum once second-order $1/f$ flux dephasing is included, but at only 5.4-30 MHz, a convention-dependent location, where $\bar n_{\rm th}$ = 10-57 requires active initialization. Across architectures there is no single answer: the fluxonium/transmon ratio spans $\sim$400$\times$ across the metrics we consider, and at matched frequency the transmon is ahead, with a median $T_2$ ratio of 0.37$\times$ at 1 GHz under our noise priors. A lab-frame pulse simulation puts the coherence-to-gate-time ratio at a model-dependent 17-27$\times$, between the two heuristic estimates, partly because the fluxonium drive couples 10.2$\times$ more strongly to its leakage transition than to its qubit transition. Critical-current noise, read as fractional rather than as scqubits applies it, dominates the fluxonium.
 ```
 
 ## Before you press submit
@@ -47,7 +47,7 @@ public. So do these first, in this order:
 
 1. **Voice pass.** Read the paper as it will appear and make the sentences yours.
 2. **AI disclosure and references.** Make the *Use of generative AI* paragraph match what
-   actually happened, and check all 16 references yourself (see `README.md`).
+   actually happened, and check all 18 references yourself (see `README.md`).
 3. **Affiliation:** "Independent researcher". The author confirmed this on 2026-10-01.
 4. **Rebuild** with `python make_arxiv.py` if anything changed.
 5. **Endorsement.** A first-time `quant-ph` submitter usually needs one. arXiv offers the

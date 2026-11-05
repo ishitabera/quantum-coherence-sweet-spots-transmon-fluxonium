@@ -1,0 +1,242 @@
+[
+ {
+  "arch": "transmon",
+  "case": "6 levels, notebook starts",
+  "T_ns": 6.0,
+  "error": 0.0031326828867950227,
+  "amp": 0.1332283305680646,
+  "drag": -1.3675872243627096,
+  "det_GHz": -0.03797826414638936,
+  "passes": false
+ },
+ {
+  "arch": "transmon",
+  "case": "6 levels, notebook starts",
+  "T_ns": 8.0,
+  "error": 4.893716811893433e-06,
+  "amp": 0.1087085410026443,
+  "drag": -0.4708338620404524,
+  "det_GHz": -0.000172713473095963,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "6 levels, 7 starts, 400 evals",
+  "T_ns": 6.0,
+  "error": 0.000204343893315806,
+  "amp": 0.12568135105523448,
+  "drag": -1.4799666683513089,
+  "det_GHz": -0.04628345168269889,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "6 levels, 7 starts, 400 evals",
+  "T_ns": 8.0,
+  "error": 4.892889526098013e-06,
+  "amp": 0.10870977206274218,
+  "drag": -0.47027462688161525,
+  "det_GHz": -0.00015711645228415642,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "6 levels, tight ODE tolerance",
+  "T_ns": 6.0,
+  "error": 0.003132680364401507,
+  "amp": 0.1332283305680646,
+  "drag": -1.3675872243627096,
+  "det_GHz": -0.03797826414638936,
+  "passes": false
+ },
+ {
+  "arch": "transmon",
+  "case": "6 levels, tight ODE tolerance",
+  "T_ns": 8.0,
+  "error": 4.8933130738504386e-06,
+  "amp": 0.1087085410026443,
+  "drag": -0.4708338620404524,
+  "det_GHz": -0.000172713473095963,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "8 levels",
+  "T_ns": 6.0,
+  "error": 0.003132725810505276,
+  "amp": 0.13322833056831374,
+  "drag": -1.3675872243627096,
+  "det_GHz": -0.03797826414638936,
+  "passes": false
+ },
+ {
+  "arch": "transmon",
+  "case": "8 levels",
+  "T_ns": 8.0,
+  "error": 4.887669115660744e-06,
+  "amp": 0.10870967749870988,
+  "drag": -0.4703005266239225,
+  "det_GHz": -0.00015802646424756308,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "10 levels",
+  "T_ns": 6.0,
+  "error": 0.003132726942234876,
+  "amp": 0.13322833056806438,
+  "drag": -1.3675872243627096,
+  "det_GHz": -0.03797826414638936,
+  "passes": false
+ },
+ {
+  "arch": "transmon",
+  "case": "10 levels",
+  "T_ns": 8.0,
+  "error": 4.887179007262436e-06,
+  "amp": 0.10870963537345146,
+  "drag": -0.4703083136218794,
+  "det_GHz": -0.00015825234836085435,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "10 levels, 7 starts, 400 evals",
+  "T_ns": 6.0,
+  "error": 0.00020434420794179794,
+  "amp": 0.1256817830104872,
+  "drag": -1.479944738347109,
+  "det_GHz": -0.04628286708430489,
+  "passes": true
+ },
+ {
+  "arch": "transmon",
+  "case": "10 levels, 7 starts, 400 evals",
+  "T_ns": 8.0,
+  "error": 4.887178395307504e-06,
+  "amp": 0.10870953693204705,
+  "drag": -0.47031369653672517,
+  "det_GHz": -0.00015843510673895373,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, notebook starts",
+  "T_ns": 2.5,
+  "error": 0.002220074393047943,
+  "amp": 7.634428221250435,
+  "drag": -18.46691938191983,
+  "det_GHz": -0.010773481021842182,
+  "passes": false
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, notebook starts",
+  "T_ns": 3.0,
+  "error": 7.720117506382347e-07,
+  "amp": 7.28559486765243,
+  "drag": -19.485859354938874,
+  "det_GHz": -0.0300927939897098,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, 7 starts, 400 evals",
+  "T_ns": 2.5,
+  "error": 3.1697307145694985e-07,
+  "amp": 7.073011136496978,
+  "drag": -24.654431986080812,
+  "det_GHz": 0.036462483746532846,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, 7 starts, 400 evals",
+  "T_ns": 3.0,
+  "error": 7.710285195861039e-07,
+  "amp": 7.28601953935024,
+  "drag": -19.481637516067625,
+  "det_GHz": -0.03012303329917193,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, tight ODE tolerance",
+  "T_ns": 2.5,
+  "error": 0.0022200743851209515,
+  "amp": 7.634428221250435,
+  "drag": -18.46691938191983,
+  "det_GHz": -0.010773481021842182,
+  "passes": false
+ },
+ {
+  "arch": "fluxonium",
+  "case": "6 levels, tight ODE tolerance",
+  "T_ns": 3.0,
+  "error": 7.720034282954209e-07,
+  "amp": 7.28559486765243,
+  "drag": -19.485859354938874,
+  "det_GHz": -0.0300927939897098,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "8 levels",
+  "T_ns": 2.5,
+  "error": 0.001174761217942688,
+  "amp": 7.638419099449916,
+  "drag": -11.976812730285143,
+  "det_GHz": -0.0249031059127717,
+  "passes": false
+ },
+ {
+  "arch": "fluxonium",
+  "case": "8 levels",
+  "T_ns": 3.0,
+  "error": 3.2399055239773468e-06,
+  "amp": 6.844769570852511,
+  "drag": -12.69555259605536,
+  "det_GHz": -0.029108622507641367,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "10 levels",
+  "T_ns": 2.5,
+  "error": 0.0014514135402179378,
+  "amp": 7.564759073043085,
+  "drag": -11.829587220323496,
+  "det_GHz": -0.03973483098805844,
+  "passes": false
+ },
+ {
+  "arch": "fluxonium",
+  "case": "10 levels",
+  "T_ns": 3.0,
+  "error": 8.452001507452952e-06,
+  "amp": 6.691419420200175,
+  "drag": -12.470126791535758,
+  "det_GHz": -0.03273254082414476,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "10 levels, 7 starts, 400 evals",
+  "T_ns": 2.5,
+  "error": 5.455862837067119e-07,
+  "amp": 6.91837406827181,
+  "drag": -17.73928259847178,
+  "det_GHz": 0.03650999264089805,
+  "passes": true
+ },
+ {
+  "arch": "fluxonium",
+  "case": "10 levels, 7 starts, 400 evals",
+  "T_ns": 3.0,
+  "error": 2.63165289737799e-06,
+  "amp": 6.664379190527918,
+  "drag": -12.89367852166064,
+  "det_GHz": -0.0300344208678347,
+  "passes": true
+ }
+]

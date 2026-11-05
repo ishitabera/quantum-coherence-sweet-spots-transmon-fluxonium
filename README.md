@@ -18,62 +18,68 @@ architectures, not in absolute coherence times.
 All numbers below are traceable to a file and a filter; the ledger in `05_summary.ipynb` §2
 recomputes each one from its named source and asserts it.
 
+> **Convention change, 2026-11-04.** Critical-current noise is now read as **fractional**
+> (A_cc = δI_c/I_c, passed to scqubits as A_cc·E_J). scqubits applies A_cc to the dimensionless
+> ∂H/∂E_J, i.e. as an absolute E_J fluctuation in GHz, which made the channel 8.9× (fluxonium) to
+> 13× (transmon) too weak. Every number below is for the fractional reading; the earlier numbers
+> (e.g. fluxonium T2 = 1130 µs, raw ratio 18.1×, matched-frequency median 0.86×) are reproducible
+> with `cc_convention="absolute"` and are listed in the paper's §3.1.
+
 | Metric | Transmon | Fluxonium |
 |---|---|---|
 | Operating point | EJ=13.0, EC=0.26 (EJ/EC=50), f01=4.92 GHz | EJ=8.9, EC=2.5, EL=0.5, f01=0.363 GHz |
-| T2 at the operating point | 62.4 µs | 1130 µs |
-| Best T2, frequency-constrained | 187 µs (EJ/EC ≥ 20) | 2412 µs (f01 in the published 0.17–0.83 GHz band) |
+| T2 at the operating point | 44.1 µs | 369 µs |
+| Best T2, frequency-constrained | 147 µs (EJ/EC ≥ 20; a grid-edge point at 1.45 GHz) | 719 µs (f01 in the published 0.17–0.83 GHz band; on the EL grid edge) |
 | Anharmonicity \|α\| | 299 MHz | 8660 MHz (24× its own f01 — see the gate-count caveat) |
 | Thermal occupation n̄_th at 15 mK | 1.4×10⁻⁷ | 0.45 |
-| Bias window for a 2× T2 loss | 100% of the charge period (T2 varies 1.006×) | 7.2×10⁻⁵ of the flux period |
-| Dominant noise channel | dielectric relaxation | relaxation at Φ=0.5; first-order flux noise dominates the rate budget beyond 2.75×10⁻⁵ Φ₀ |
-| Sweet-spot falloff exponent | n/a (no sharp knob) | not a constant: −0.45 to −0.96, reaching −0.96 where 1/f theory predicts −1 |
+| Bias window for a 2× T2 loss | 100% of the charge period (T2 varies 1.004×) | 2.2×10⁻⁴ of the flux period |
+| Dominant noise channel | dielectric relaxation (critical current ~⅓ of the rate) | critical-current dephasing (76% of 1/T2 at Φ=0.5; 358 of 400 design points); first-order flux noise dominates beyond 8.7×10⁻⁵ Φ₀ |
+| Sweet-spot falloff exponent | n/a (no sharp knob) | not a constant: −0.22 to −0.93, reaching −0.93 where 1/f theory predicts −1 |
 | Practical character | simple, forgiving; no bias to hold | delicate; must hold Φ=0.5 to ~10⁻⁴ Φ₀, and is thermally populated |
 
 **Q3 has no single answer.** The fluxonium/transmon ratio depends on the metric by a factor of
-**491×** across defensible metrics at the default noise amplitudes — and the
-gate-count metric hides a further **393×** inside itself, in the choice of what bounds the minimum
-pulse length.
+**~390×** across defensible metrics at the default noise amplitudes (242× against 0.62×) — and
+the gate-count metric hides a further **393×** inside itself, in the choice of what bounds the
+minimum pulse length.
 
-Monte Carlo over literature noise ranges, N=400 per correlation mode, 90% CI on the median by
-bootstrap:
+Monte Carlo over literature noise ranges, N=400 per correlation mode (shared draws shown), 90% CI
+on the median by bootstrap:
 
 | Metric | Deterministic | MC median [5–95%] | Fluxonium wins |
 |---|---|---|---|
-| Raw T2, own operating points | 18.1× | 11.3× [3.6, 21.1] | 100% |
-| **T2 at matched f01** | 1.07–2.16× | **0.86× [0.27, 1.58]** | **42%** |
-| Gate count, matched f01, 1/\|α\| bound | 625–1709× | 606× [191, 1114] | 100% |
-| Gate count, own op. points, 1/\|α\| bound | 524× | 326× [104, 611] | 100% |
-| Gate count, own op. points, 1/min(\|α\|,f01) | 22.0× | 13.7× [4.4, 25.6] | 100% |
-| **Gate count, own op. points, 1/f01 bound** | **1.34×** | **0.83× [0.26, 1.56]** | **40%** |
-| **Gate count, pulse simulation** | **48×** [36–58] | — | — |
-| **Gate count, matched f01, 1/f01 bound** | 1.07–2.14× | **0.86× [0.27, 1.58]** | **42%** |
+| Raw T2, own operating points | 8.4× | 5.1× [3.6, 13.1] | 100% |
+| **T2 at matched f01 (MC at 1 GHz)** | **0.62–0.82×** | **0.37× [0.25, 0.99]** | **5%** |
+| Gate count, matched f01, 1/\|α\| bound | 364–647× | 262× [179, 698] | 100% |
+| Gate count, own op. points, 1/\|α\| bound | 242× | 148× [105, 379] | 100% |
+| Gate count, own op. points, 1/min(\|α\|,f01) | 10.2× | 6.2× [4.4, 15.9] | 100% |
+| **Gate count, own op. points, 1/f01 bound** | **0.62×** | **0.38× [0.27, 0.97]** | **4%** |
+| **Gate count, pulse simulation** | **22×** [17–27] | — | — |
+| **Gate count, matched f01, 1/f01 bound** | 0.62–0.81× | **0.37× [0.26, 0.99]** | **5%** |
 
-The raw coherence advantage is **substantially a frequency effect**: control for f01 and the T2
-advantage disappears — across the noise band the transmon is the better device more often than
-not. What survives is **anharmonicity per unit coherence** (the gate-count rows) — but only to the
-extent that anharmonicity, rather than the qubit's own transition frequency, sets how short a
-pulse can be. The fluxonium's \|α\| = 8.7 GHz is 24× its 0.363 GHz transition frequency, so the
-1/\|α\| bound assumes a gate 24× shorter than one period of the transition being driven. Bound it
-instead by the drive period and the advantage falls to 1.34×, and does not survive the noise band
-(40% win rate).
+The raw coherence advantage is **a frequency effect**: under T2 ∝ 1/f01 the 13.6× frequency
+ratio would more than account for the raw 8.4×, and at matched f01 the transmon is ahead at every
+frequency tested and in 95% of noise draws. Matching frequency requires transmons at 0.5–2 GHz
+with EJ/EC = 325–5050, outside any design envelope, so this is a control for the confound rather
+than a device comparison. What survives for the fluxonium is converting coherence into operations
+— but only to the extent that anharmonicity, rather than the qubit's own transition frequency,
+sets how short a pulse can be. Its \|α\| = 8.7 GHz is 24× its 0.363 GHz transition frequency, so
+the 1/\|α\| bound assumes a gate 24× shorter than one period of the transition being driven.
 
-**§3.1 settles it by simulation.** Integrating the lab-frame Schrödinger equation with no RWA
-and calibrating amplitude, DRAG and Stark detuning at each duration gives a shortest
-error-<10⁻³ gate of 8 ns (transmon, bracketed 6–8) and 3 ns (fluxonium, bracketed 2.5–3), so
-**N = T₂/T_gate gives 48×, bracketed 36–58×** — decisively between the two naive bounds and
-excluding both. The mechanism the α-only argument misses: the fluxonium's drive couples 10.2×
-more strongly to its leakage transition than to the qubit transition (transmon: 1.37×), which
-eats most of its 29× anharmonicity advantage. Durations are upper bounds — the calibration is
-coarse, so optimal control would shorten both, not necessarily equally. The price, on every metric, is
-operating-point precision.
+**`04_analysis.ipynb` §3.1 estimates it by simulation.** Integrating the lab-frame Schrödinger
+equation with no RWA and numerically optimizing amplitude, DRAG and Stark detuning at each
+duration gives a shortest tested error-<10⁻³ gate of 8 ns (transmon, bracketed 6–8) and 3 ns
+(fluxonium, bracketed 2.5–3), so **N = T₂/T_gate gives 22×, bracketed 17–27×** — between the two
+naive estimates *within this model*. The mechanism the α-only argument misses: the fluxonium's
+drive couples 10.2× more strongly to its leakage transition than to the qubit transition
+(transmon: 1.37×). Durations are upper bounds — the calibration is coarse and the optimizer is not
+converged — so this is a model-dependent estimate, not an uncertainty interval. The price, on
+every metric, is operating-point precision.
 
 > **Superseded.** Earlier versions of this README reported "best T2 = 5578 µs", "bias sensitivity
 > 528×", "T2 ∝ detuning^−0.68" and "Monte Carlo median 216×". All four were artefacts of method,
 > not physics, and are corrected above; see `04_analysis.ipynb` Appendix A and
-> `05_summary.ipynb` §4. In particular 5578 µs was a first-order-only value at a grid-edge design
-> at 75 MHz with n̄_th = 3.7, and the 216× comparison used an 18.9 GHz "transmon" held at its
-> worst-case bias against that same fluxonium.
+> `05_summary.ipynb` §4. The numbers of the 2026-10 version (62.4 µs, 1130 µs, 18.1×, 0.86×, 48×)
+> are superseded by the critical-current convention change above.
 
 ## Repository layout
 
@@ -91,7 +97,7 @@ operating-point precision.
 ├── data/           generated CSVs + run metadata (JSON)
 ├── figures/        publication figures, PNG at dpi=300 + .pdf siblings
 ├── docs/           lab notebook and findings worksheet (git-ignored, local only)
-└── paper/          LaTeX source (IEEE two-column)
+└── paper/          LaTeX source: preprint.tex (arXiv) · main.tex (old IEEE draft, frozen)
 ```
 
 **Notebooks are generated, not hand-edited.** Each `notebooks/0N_*.ipynb` is produced by the
@@ -110,7 +116,7 @@ conda activate qubits
 jupyter lab
 ```
 
-Check the pipeline first — `pytest tests/ -q` (32 tests, ~2 s) verifies the units, rate-addition
+Check the pipeline first — `pytest tests/ -q` (35 tests, ~5 s) verifies the units, rate-addition
 and channel conventions, pins the validated anchor values, and gates the published-number anchors
 (Nguyen's second-order flux bound, Manucharyan's three parameter sets, the gate-count pulse bound). Then run the notebooks in order
 `01 → 05`. Each notebook begins with a bootstrap cell that
@@ -127,6 +133,8 @@ Every sweep writes its raw results to `data/*.csv` **before** plotting, and save
 - **Rates add, not times:** `1/T2 = 1/(2·T1) + Σ 1/Tφ_k`. The shortest timescale dominates.
 - A plain transmon has no flux loop, so `tphi_1_over_f_flux` is not a supported channel for
   it; the fluxonium supports it. Channels are chosen per architecture accordingly.
+- **Critical-current noise is fractional** (A_cc = δI_c/I_c): `src/coherence.py` passes
+  A_cc·E_J to scqubits, which otherwise applies A_cc as an absolute E_J fluctuation in GHz.
 
 ## Noise channels modelled
 
@@ -142,8 +150,8 @@ Every sweep writes its raw results to `data/*.csv` **before** plotting, and save
 scqubits implements 1/f dephasing to **first order only** and returns a divergent time wherever
 ∂ω₀₁/∂λ = 0 — documented behaviour, not a bug (Groszkowski & Koch 2021, §5.1 fn. 4). The
 second-order channel is implemented in `src/coherence.py` from Nguyen et al. (2019) Eq. (A3).
-It carries 0.63% of the rate budget at the nominal sweet spot, but 43–58% at the interior design
-optimum of the (EJ, EL) plane — an optimum that is invisible without it.
+It carries 0.2% of the rate budget at the nominal sweet spot, but 46–47% at the interior design
+optimum of the extended (EJ, EL) scan (5–30 MHz) — an optimum that is invisible without it.
 
 Because that channel is the one piece of physics written here rather than taken from scqubits, it
 is validated against a published number: run on Nguyen's nine devices at *their* measured
@@ -171,10 +179,11 @@ agreement" is agreement with the *rounded main-text values*, not with the paper'
 `01_validation.ipynb` §9.2.
 
 **Calibration.** Run on the nine measured fluxonium devices of Nguyen et al. (2019), Table I
-(published version), the model is optimistic by a median factor of **2.0× on T1 and 2.6× on T2**
-(worst case 5.7×). The gap is smallest where it matters most: **device I**, the device nearest this
-project's nominal design in frequency (0.395 vs 0.363 GHz), is matched to **4% on T2**, and the
-model is *pessimistic* on its T1 (402 µs against 500 µs measured).
+(published version), the model is optimistic by a median factor of **2.0× on T1 and 1.5× on T2**
+(worst case 3.2×, device F; 2.6× and 5.7× under the old absolute critical-current reading). The
+gap is not uniform: **device I**, the device nearest this project's nominal design in frequency
+(0.395 vs 0.363 GHz), is the one on which the model is *pessimistic* on both, T1 (402 µs against
+500 µs measured) and T2 (291 µs against 510 µs).
 
 The gap is not uniform across devices, so it is not a single missing constant — the largest
 identified contributors are the flat Q_cap = 10⁶ against Nguyen's
@@ -193,10 +202,11 @@ truth much nearer the flat end. The flat value is retained as both the conservat
 better-supported choice — but it is still a modelling choice, and Nguyen fit that exponent jointly
 with thermal stimulated emission, so it is not a free-standing measurement of the loss tangent.
 
-**Both architectures' raw T2 maxima are grid-edge artefacts.** The transmon's 187 µs sits at
-EJ=3.0, EC=0.10 — both grid edges — at f01 = 1.45 GHz, outside the 3–6 GHz band real transmons
-occupy. The fluxonium's unconstrained maximum sits at EJ=15, EL=0.2 — also both grid edges — at
-75 MHz with n̄_th = 3.7. In both planes T2 correlates with f01 at |r| > 0.99, so a raw T2 maximum
+**Both architectures' raw T2 maxima are grid-edge artefacts.** The transmon's 147 µs sits at
+EJ=3.03, EC=0.10 — the smallest EC on the grid and the smallest *sampled* EJ with EJ/EC ≥ 20 — at
+f01 = 1.45 GHz, below the conventional 3–6 GHz band. The fluxonium's unconstrained maximum, 1398 µs,
+sits at EJ=15, EL=0.2 — both grid edges — at 75 MHz with n̄_th = 3.7. In both planes log T2
+correlates with log f01 at |r| > 0.98 (−0.9999 and −0.9878), so a raw T2 maximum
 is a frequency minimum in disguise. Neither is a design recommendation; quote the
 frequency-constrained values together with their constraint.
 

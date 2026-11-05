@@ -38,6 +38,12 @@
 \DeclareSIPrefix{\micro}{\upmu}{-6}
 \usepackage{xurl}   % break long URLs
 \emergencystretch=1.5em   % absorbs the few unbreakable inline-math runs
+% Float placement. With [t] only and LaTeX's default limits, the tall summary figure could not
+% be placed early, and because floats keep their order every later figure queued behind it:
+% all five landed after the references. Allow float pages and larger top floats.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.12}
+\renewcommand{\floatpagefraction}{0.75}
 
 \begin{document}
 
@@ -59,30 +65,27 @@ $\star$ \href{mailto:ishitabera4@gmail.com}{\small ishitabera4@gmail.com}
 
 \section*{\color{scipostdeepblue}{Abstract}}
 {\bfseries\boldmath
-Dielectric loss is well known to scale with transition frequency, implying that a
-lower-frequency qubit relaxes more slowly at fixed quality factor. We show that this has a
-stronger consequence for design studies than is usually acknowledged. Under a common noise
-model, $\log T_2$ over the transmon $(E_J,E_C)$ plane correlates with $\log f_{01}$ at
-$r=-0.9999$ within the transmon regime, while over the fluxonium $(E_J,E_L)$ plane the
-correlation is $r=-0.9973$. Because each parameter plane effectively reduces to a single degree of
-freedom, the transition frequency, a raw $T_2$ maximum primarily identifies the
-lowest-frequency corner of the swept domain rather than an intrinsic optimal design. Indeed,
-both of our initial headline optima occur at grid-edge points outside any usable frequency band.
+At fixed quality factor, dielectric loss makes a lower-frequency transmon-like qubit relax more
+slowly. This has a stronger consequence for design studies than is usually
+acknowledged. Under a common noise model, $\log T_2$ over the transmon $(E_J,E_C)$ plane correlates
+with $\log f_{01}$ at $r=-0.9999$ within the transmon regime, and over the fluxonium $(E_J,E_L)$
+plane at $r=-0.9878$. Because modeled $T_2$ on each plane is largely a function of the transition
+frequency, a raw $T_2$ maximum primarily identifies the lowest-frequency corner of the swept domain
+rather than an optimal design. Both our initial headline optima lie at grid edges outside the usual bands.
 
-Controlling for frequency changes these conclusions. For the transmon, we find no interior
-optimum in $E_J/E_C$ at fixed $f_{01}$. $T_2$ varies by only 4.8\% across a tenfold range in
-$E_J/E_C$, while the anharmonicity decreases by a factor of 7.3. Charge insensitivity is
-therefore obtained primarily at the cost of gate speed rather than through improved coherence,
-and any reported optimum depends on the imposed regime boundary.
+Controlling for frequency changes these conclusions. For the transmon, we find no interior optimum
+in $E_J/E_C$ at fixed $f_{01}$: $T_2$ varies by only 3.2\% over $E_J/E_C=11$--$118$, while
+the anharmonicity decreases by a factor of 7.3. Charge insensitivity is therefore bought with
+anharmonicity rather than coherence, and any reported optimum depends on the imposed regime boundary.
 
-The fluxonium has a genuine interior optimum once second-order
-$1/f$ flux dephasing is included, but it occurs at frequencies of only 10--73\,MHz, where
-$\bar n_{\mathrm{th}}=4$--$32$. For the cross-architecture comparison, there is no single
-answer: the fluxonium/transmon ratio spans ${\sim}500\times$ across defensible metrics, while
-at matched frequency the $T_2$ advantage reverses to a median $0.86\times$ across the
-literature noise band. A lab-frame pulse simulation yields a $36$--$58\times$ advantage in
-gate count, excluding both analytic bounds: the fluxonium drive couples
-$10.2\times$ more strongly to its leakage transition than to its qubit transition.\par}
+Within this model, the fluxonium has an interior optimum once second-order $1/f$ flux dephasing is
+included, but at only 5.4--30\,MHz, a convention-dependent location, where $\bar n_{\mathrm{th}}=10$--$57$ requires active initialization.
+Across architectures there is no single answer: the fluxonium/transmon ratio spans ${\sim}400\times$
+across the metrics we consider, and at matched frequency the transmon is ahead, with a median $T_2$
+ratio of $0.37\times$ at 1\,GHz under our noise priors. A lab-frame pulse simulation puts the
+coherence-to-gate-time ratio at a model-dependent $17$--$27\times$, between the two heuristic estimates, partly because the fluxonium drive couples $10.2\times$ more strongly to its leakage transition than to its
+qubit transition. Critical-current noise, read as fractional rather than as \texttt{scqubits}
+applies it, dominates the fluxonium.\par}
 
 \vspace{\baselineskip}
 \noindent\rule{\textwidth}{1pt}
@@ -98,43 +101,47 @@ coordinate, so that first-order dephasing vanishes. The transmon has charge swee
 at integer and half-integer offset charge, and its exponentially suppressed charge dispersion
 keeps it nearly insensitive in between~\cite{koch2007}; the fluxonium achieves it at
 half a flux quantum, where $\partial\omega_{01}/\partial\Phi = 0$ by
-symmetry~\cite{nguyen2019}. Both are then said to have a coherence sweet
-spot in \emph{design} space as well, and the point of best modeled $T_2$ over a swept
-parameter plane is reported as an optimum.
+symmetry~\cite{nguyen2019}. A natural extension carries the idea from bias to the circuit parameters themselves: the
+point of best modeled $T_2$ over a swept parameter plane is read as an optimal design, a
+coherence sweet spot in \emph{design} space. The term is ours, introduced to name that reading.
 
-This paper argues that the second usage does not survive scrutiny, and that the error is
-systematic rather than incidental. We address three questions:
+This paper argues that this extension does not survive scrutiny: under the noise models
+studied, it systematically selects for low transition frequency rather than for a design. We address three questions:
 
 \begin{itemize}
-\item[\textbf{Q1}] Where are the coherence optima across the transmon $(E_J, E_C)$ and
-      fluxonium $(E_J, E_C,\allowbreak E_L, \Phi)$ design spaces?
+\item[\textbf{Q1}] Where are the coherence optima over the transmon $(E_J, E_C)$ plane, and over
+      the fluxonium $(E_J, E_L)$ plane, selected $(E_C, E_L)$ slices and flux-bias sweeps?
 \item[\textbf{Q2}] Which noise channel dominates where?
 \item[\textbf{Q3}] Does the fluxonium's flux sweet spot buy more robustness than the
       transmon's charge insensitivity, and at what cost?
 \end{itemize}
 
 Our central methodological claim is that Q1 and Q3 cannot be answered without controlling
-for the transition frequency, and that once controlled the conventional answers change sign
-or dissolve. Our central negative result is that the fluxonium's coherence advantage at
-matched frequency does not survive the uncertainty in the noise amplitudes that the model
-itself assumes.
+for the transition frequency, and that once it is controlled the answers our model gives to both change sign or
+dissolve. Our central negative result is that at matched frequency the fluxonium has no coherence advantage
+in this model: the transmon is ahead at every matched frequency we test, and in 95\% of noise
+draws.
 
 Figure~\ref{fig:summary} summarizes the study. All results are model-based estimates under
 literature noise amplitudes. They are not predictions of device performance, and
 Section~\ref{sec:calibration} quantifies how far they sit from measurement.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/summary_figure.pdf}
 \caption{The study in four panels. (a) Transmon $T_2$ over $(E_J, E_C)$ at $n_g = 0$; left of
-the dashed line ($E_J/E_C < 20$) lies outside the transmon regime, and its numbers are not
-transmon results. (b) The
+the dashed line ($E_J/E_C < 20$) lies outside the transmon regime adopted here. Points there are not used for any transmon
+headline result; the fixed-frequency slice of Section~\ref{sec:transmon} extends to
+$E_J/E_C=11.4$ only to show the trend. (b) The
 fluxonium sweet-spot falloff on a log-detuning axis, with the $2T_1$ ceiling and the two-
 and tenfold loss points; on a linear flux axis the entire collapse hides inside the first
 0.1\% of the plot. (c) Fluxonium $T_2$ over $(E_J, E_L)$ at half flux, with $f_{01}$ contours
-in white --- the $T_2$ structure merely follows them, which is the confound this paper is
-about. (d) The Q3 answer under each metric, with the 5--95\% spread over $N=400$ noise-amplitude
-draws; orange marks the metrics in which the fluxonium wins fewer than 90\% of samples.}
+in white --- the $T_2$ structure mostly follows them (12\% rms scatter at fixed $f_{01}$), which is the
+confound this paper is about. (d) The Q3 answer under each metric, with the 5--95\% spread over $N=400$ noise-amplitude
+draws; orange marks the metrics in which the fluxonium wins fewer than 90\% of samples. These
+Monte Carlo medians span ${\sim}700\times$ because they include the gate count at matched
+frequency, whose matched transmons lie outside the design envelope; the ${\sim}400\times$ quoted in the text is the deterministic span across the metrics of
+Table~\ref{tab:q3} ($242\times$ against $0.62\times$).}
 \label{fig:summary}
 \end{figure}
 
@@ -145,8 +152,15 @@ draws; orange marks the metrics in which the fluxonium wins fewer than 90\% of s
 The frequency scaling on which we build is not a new idea. Dielectric loss at surfaces and
 interfaces, commonly attributed to two-level-system defects, is a major relaxation mechanism in
 superconducting qubits; in 3D transmons the relaxation rate scales approximately with the
-surface participation of lossy dielectrics~\cite{wang2015}. At fixed effective quality factor, $\Gamma_1\propto\omega_{01}$, so a
-lower-frequency qubit relaxes more slowly. Design-space optimization under explicit noise models
+surface participation of lossy dielectrics~\cite{wang2015}. For a weakly anharmonic qubit at fixed
+effective quality factor and low temperature ($hf_{01}\gg k_BT$), $\Gamma_1\approx\omega_{01}/Q$:
+the charge matrix element, the charging energy and the transition frequency are tied together by
+the harmonic-oscillator relations, so a lower-frequency qubit relaxes more slowly. The
+fluxonium's matrix elements do not follow those relations. At finite temperature upward
+transitions add a further factor
+$\coth(hf_{01}/2k_BT)$, which is $1.00$ at \SI{4.92}{\giga\hertz} but $1.91$ at
+\SI{0.363}{\giga\hertz} and $8.4$ at \SI{75}{\mega\hertz} at \SI{15}{\milli\kelvin}, so the
+simple law fails in the low-frequency fluxonium regime. Design-space optimization under explicit noise models
 is likewise established: Papi\v{c} \emph{et al.} identify optimal transmon parameter ranges using
 comprehensive noise modeling that includes charge-parity effects~\cite{papic2024}, while Ram
 \emph{et al.} present a staged framework spanning circuit design, spectral analysis, and
@@ -178,19 +192,18 @@ Our contribution is not the frequency scaling itself, but its consequence for ho
 are interpreted:
 
 \begin{enumerate}
-\item We quantify the frequency confound in both architectures, finding $|r|>0.99$ between
-      modeled $\log T_2$ and $\log f_{01}$ across the relevant design planes. As a result, a raw
+\item We quantify the frequency confound in both architectures, finding $|r|>0.98$ between modeled $\log T_2$ and $\log f_{01}$ across the relevant design planes. As a result, a raw
       $T_2$ optimum can primarily reflect the lowest-frequency boundary of the sweep rather than
       an intrinsic design optimum.
-\item We show that the transmon's gate-count optimum within the 3--6\,GHz band is pinned to the
+\item We show that the transmon's anharmonicity-based gate-count optimum within the 3--6\,GHz band is pinned to the
       imposed regime threshold across eight thresholds spanning $E_J/E_C=15$--$60$. The
       substantive choice is therefore the threshold itself, rather than the subsequent
       optimization within that domain.
 \item We show that including second-order $1/f$ flux dephasing produces an interior fluxonium
       optimum that is absent from a first-order treatment.
 \item We show that the transmon--fluxonium coherence comparison varies substantially across
-      defensible figures of merit, and we narrow the gate-count comparison, the one most
-      sensitive to its assumptions, to 36--58$\times$ by direct pulse simulation.
+      defensible figures of merit, and we estimate the gate-count comparison, the one most
+      sensitive to its assumptions, at 17--27$\times$ with a lab-frame pulse simulation.
 \end{enumerate}
 
 We are not aware of prior work that explicitly examines how strongly the transmon--fluxonium
@@ -200,25 +213,55 @@ Our contribution is to show this dependence
 and how controlling for transition frequency changes the resulting design conclusions.
 
 \subsection{A limitation of the present comparison}
+\label{sec:matched-choice}
 
 Matching $f_{01}$ removes the dominant confound but not all of it. Dielectric loss also depends
 on geometry and surface participation, which differ between architectures and which a
 Hamiltonian-level model does not capture~\cite{wang2015}, and real devices fluctuate in ways no
-static model represents~\cite{mcrae2021}. Frequency matching is necessary, not sufficient, and
-our matched-frequency numbers should be read as removing one large confound rather than as a
-fully controlled experiment.
+static model represents~\cite{mcrae2021}. Frequency matching is necessary to separate architecture-dependent effects from the
+transition-frequency difference, but not sufficient for a complete hardware comparison;
+comparing devices at their intended operating points answers a different, also legitimate,
+question. Our matched-frequency numbers should be read as removing one large confound rather
+than as a fully controlled experiment.
 
 A second limitation follows from the matching itself. The fluxonium's sweet-spot frequency lies
 below the transmon band, so the matched transmons sit at 0.5--2\,GHz with
 $E_J/E_C = 325$--$5050$ and $|\alpha| \approx \SI{10}{\mega\hertz}$, far outside the design
-envelope adopted in Section~\ref{sec:transmon}. Because the modeled transmon $T_2$ at fixed
-$f_{01}$ is nearly independent of $E_J/E_C$, this does not bias the $T_2$ comparison, but it means
-the matched transmons are not usable qubits, and gate-based metrics at matched frequency should
-not be read as device comparisons.
+envelope adopted in Section~\ref{sec:transmon}. The matched transmon at each frequency is the one with the highest $T_2$ allowed by
+$E_J/E_C\ge50$, and since modeled $T_2$ rises slowly with $E_J/E_C$ that is the most favorable
+transmon the scan contains, at the edge of its $E_C$ range. The choice barely matters for $T_2$:
+holding the matched transmons at $E_J/E_C=50$ instead changes their $T_2$ by at most 1.3\% and the
+1\,GHz Monte Carlo median of Section~\ref{sec:q3} from $0.37\times$ to $0.38\times$. It does mean
+the matched transmons lie outside the adopted design envelope and are unsuited to the assumed
+gate speeds, and gate-based metrics at matched frequency should not be read as device
+comparisons.
+
+A third limitation is that the two noise models are not symmetric. Quasiparticle tunneling is
+modeled for the fluxonium but not for the transmon, for which \texttt{scqubits} provides no such
+channel; inductive loss in the fluxonium's superinductance, a known loss channel in real devices,
+is omitted; and only the fluxonium model is calibrated against measurement
+(Section~\ref{sec:calibration}). The quasiparticle asymmetry is not harmless. Evaluating the same
+\texttt{scqubits} quasiparticle spectral density with the transmon's
+$|\langle 0|\sin(\varphi/2)|1\rangle|^2$ gives $T_1^{\rm qp}\approx\SI{5.6}{\micro\second}$ at the
+transmon operating point for the default $x_{qp}=3\times10^{-6}$, shorter than its dielectric
+$T_1$ of \SI{32}{\micro\second}; at $x_{qp}=10^{-8}$ it is \SI{1.7}{\milli\second}, a 2\%
+correction. The leading-order analytic transmon result of Catelani \emph{et al.}~\cite{catelani2011}
+gives \SI{5.55}{\micro\second} at the same density, within 1.5\%. Quasiparticle tunneling changes charge parity, and the extended-phase matrix element used here
+neglects the difference between the two parity sectors. That is an approximation: at
+$E_J/E_C\ge20$ parity-dependent spectral differences are exponentially suppressed, which is why the
+two estimates agree, but it does not make every effect of quasiparticle tunneling identical in the
+two sectors. For the modeled quasiparticle-induced $0\to1$ relaxation, omitting the channel is
+approximately equivalent to taking a small transmon quasiparticle density, consistent with the
+bound Nguyen \emph{et al.}\ infer for fluxonium. It does not exclude other quasiparticle- or
+charge-parity-related errors~\cite{papic2024}. The fluxonium, meanwhile, carries the $300\times$ higher default. That default is irrelevant at the flux sweet
+spot, where the fluxonium term vanishes, but our transmon numbers are conditional on a low
+$x_{qp}$. The other two asymmetries can bias the cross-architecture ratios, in opposite
+directions, by amounts we do not quantify.
 
 \section{Model and Conventions}
 
 \subsection{Noise channels}
+\label{sec:model}
 
 Coherence is estimated using \texttt{scqubits}~\cite{groszkowski2021}. Independent relaxation and
 dephasing rates are combined as
@@ -232,7 +275,55 @@ fluxonium model considered here, the inductive shunt removes the dependence on o
 entirely, so charge dephasing is not included. Table~\ref{tab:channels} summarizes the channel
 assignments.
 
-\begin{table}[t]
+Throughout, $E_J$, $E_C$ and $E_L$ are quoted as frequencies ($E/h$, in GHz), following
+\texttt{scqubits}, and the anharmonicity is $\alpha=f_{12}-f_{01}$. $T_1$ is the inverse of the total
+relaxation rate, the sum of the downward rate and the thermally activated upward rate
+($\Gamma_\downarrow+\Gamma_\uparrow$), which is the \texttt{scqubits} default. Each $1/f$ channel has spectral density $S_\lambda(\omega)=2\pi A_\lambda^2/|\omega|$ in the noise
+coordinate $\lambda$, the \texttt{scqubits} convention, which Nguyen \emph{et al.}\ also use for
+Eq.~\eqref{eq:secondorder}; we use the package's default cutoffs and measurement time, and the first-order dephasing rate depends
+explicitly only on the infrared cutoff $\omega_{\rm low}=2\pi\times\SI{1}{\hertz}$ and the measurement time
+$t_{\rm exp}=\SI{10}{\micro\second}$. $A_\Phi$ is in units of $\Phi_0$. $A_{n_g}$ is
+applied as a fluctuation of $n_g$, which counts offset charge in units of the Cooper-pair charge
+$2e$; \texttt{scqubits} annotates it as in units of $e$, and if $10^{-4}e$ is meant literally the
+charge-dephasing rates here are $2\times$ too large. That matters only at charge-sensitive bias: it
+would move the crossover of Section~\ref{sec:channels} within the range we already report there, and
+leaves every $n_g=0$ result unchanged. Critical-current noise is where we depart from the package. \texttt{scqubits} documents $A_{\rm cc}$ in units of
+the critical current, but applies it to the dimensionless operator $\partial H/\partial E_J=-\cos\varphi$,
+so the amplitude acts as an absolute fluctuation of $E_J$ in GHz. We read $A_{\rm cc}$ as the fractional fluctuation $\epsilon_I=\delta I_c/I_c$, as the literature
+amplitudes it stands for are: since $E_J=\hbar I_c/2e$, the perturbation is
+$\delta H(t)=-E_J\cos\hat\varphi\,\epsilon_I(t)$ with $S_{\epsilon_I}(\omega)=2\pi A_{\rm cc}^2/|\omega|$, and we
+pass $A_{\rm cc}E_J$ to the package. The two readings differ by $E_J/h$ in GHz: $8.9\times$ for the nominal fluxonium and
+$13\times$ for the transmon operating point. Under the absolute reading the critical-current rate of a transmon at fixed $f_{01}$ would also
+depend on $E_J/E_C$: since $\partial f_{01}/\partial E_J\approx\sqrt{2E_C/E_J}$, it would fall as
+$(E_J/E_C)^{-1/2}$, the dephasing time growing as $\sqrt{E_J/E_C}$. A fractional $E_J$ fluctuation
+instead shifts $f_{01}$ by $E_J\,\partial f_{01}/\partial E_J\approx(f_{01}+E_C)/2$ at any $E_J/E_C$.
+The choice matters. Under the absolute reading, which the package applies by default, the nominal
+fluxonium $T_2$ would be \SI{1130}{\micro\second} rather than \SI{369}{\micro\second}, the raw
+fluxonium/transmon ratio $18.1\times$ rather than $8.4\times$, the matched-frequency ratios
+1.07--2.16$\times$ rather than 0.62--0.82$\times$, and the calibration of Section~\ref{sec:calibration}
+$2.6\times$ optimistic on $T_2$ rather than $1.5\times$. Critical-current dephasing carries a median 76\% of the fluxonium's total decoherence rate over its design plane, so its amplitude is the dominant uncertainty for that architecture. Koch \emph{et al.}\ use the same fractional amplitude, $\bar A=A/I_c$, independent of
+$E_J$~\cite{koch2007}. The convention and the value are separate questions. Measured $1/f$
+critical-current noise in Al/AlOx and Nb-based junctions~\cite{vanharlingen2004,eroms2006,nugroho2013},
+extrapolated to 15--20\,mK and junction areas of 0.01--0.1\,$\upmu$m$^2$, gives
+$A\approx1.4\times10^{-7}$--$1.4\times10^{-6}$ per $\sqrt{\rm Hz}$ at 1\,Hz, clustering near
+$2$--$6\times10^{-7}$; the temperature scaling below ${\sim}0.3$\,K is not measured, and the
+extrapolations disagree by about $2.5\times$. Our baseline $A_{\rm cc}=10^{-7}$ therefore lies near the optimistic end of the range extrapolated from
+published measurements, Koch \emph{et al.}\ use $10^{-6}$, and the Monte Carlo range of
+Section~\ref{sec:q3}, $10^{-7}$--$10^{-6}$, spans the extrapolations. The adopted amplitude is a literature-motivated modeling assumption, not a
+device-specific measurement.
+
+Equation~\eqref{eq:rates} is an approximation: we represent each relaxation and dephasing
+contribution by an effective exponential rate and add the rates to define a comparative $T_2$.
+Independence of the noise processes, exponential decay and additivity are separate assumptions,
+and the construction does not in general reproduce the decay envelope. Linear coupling to quasistatic $1/f$ noise instead produces approximately Gaussian
+dephasing, and at a sweet spot, where the coupling is quadratic, the accumulated phase is
+quadratic in the noise and the envelope differs from both forms. The first- and second-order flux
+terms also arise from the same noise process, so adding their rates is a further approximation,
+most relevant at small detunings where the two are comparable. Equation~\eqref{eq:rates}
+therefore summarizes a non-exponential decay by a single effective time. We use it, as is
+standard in design studies, to compare designs rather than to predict measured decay curves.
+
+\begin{table}[tbp]
 \caption{Noise channels by architecture.}
 \label{tab:channels}
 \centering
@@ -253,8 +344,8 @@ Critical current          & \texttt{tphi\_1\_over\_f\_cc}    & \checkmark & \che
 We use $Q_{\mathrm{cap}}=10^6$, $A_{n_g}=10^{-4}$, $A_\Phi=10^{-6}\,\Phi_0$, and
 $A_{\mathrm{cc}}=10^{-7}$. The chosen flux-noise amplitude, $A_\Phi=1\,\upmu\Phi_0$, is slightly below
 the values measured on flux-sensitive devices, $1.4\,\upmu\Phi_0$~\cite{yan2016} and
-$1.8\,\upmu\Phi_0$~\cite{nguyen2019}, and is therefore optimistic. Temperature, quasiparticle density, and the $1/f$ cutoffs are
-otherwise taken from the \texttt{scqubits} defaults ($T=\SI{15}{\milli\kelvin}$,
+$1.8\,\upmu\Phi_0$~\cite{nguyen2019}, and is therefore optimistic. Temperature, quasiparticle density, and the $1/f$ cutoffs are assumed parameters, taken from the
+\texttt{scqubits} defaults ($T=\SI{15}{\milli\kelvin}$,
 $x_{\mathrm{qp}}=3\times10^{-6}$, $t_{\mathrm{exp}}=\SI{10}{\micro\second}$) and are recorded with
 every result because these parameters materially affect the predicted coherence times.
 
@@ -268,19 +359,30 @@ sensitivity at half flux is therefore second order. We include the second-order 
 using the expression employed for fluxonium by Nguyen \emph{et al.}~\cite{nguyen2019}, following
 Ithier \emph{et al.}~\cite{ithier2005}:
 \begin{equation}
-\Gamma_\Phi^{(2)} = \left|\frac{\partial^2\omega_{01}}{\partial\Phi^2}\right| A_\Phi^2 .
+\Gamma_\lambda^{(2)} = \left|\frac{\partial^2\omega_{01}}{\partial\lambda^2}\right| A_\lambda^2 ,
 \label{eq:secondorder}
 \end{equation}
-Equation~\eqref{eq:secondorder} contains no logarithmic factor under this convention. Alternative
+where $\lambda$ is the dimensionless noise coordinate ($\lambda=\Phi/\Phi_0$ for flux, $\lambda=n_g$
+for charge), so the curvature is in rad\,s$^{-1}$ and $A_\lambda$ is dimensionless: $A_\lambda=10^{-6}$
+for flux is $A_\Phi=1\,\upmu\Phi_0$. The absolute value keeps the rate positive at a sweet spot of either curvature.
+Equation~\eqref{eq:secondorder} contains no logarithmic factor under this convention, and it is a
+phenomenological effective rate rather than a derivation of the decay envelope. Alternative
 treatments introduce factors involving $|\ln(\omega_{\mathrm{low}}t_{\mathrm{exp}})|$, producing
 substantial quantitative changes in the inferred dephasing time. Rather than selecting among these
 conventions implicitly, we report the associated sensitivity explicitly
-(Section~\ref{sec:limitations}). The required curvature is evaluated using Richardson
+(Section~\ref{sec:limitations}). The transmon at $n_g=0$ is also a first-order sweet spot, for
+charge, so the same divergence occurs there. The analogous second-order charge term, evaluated
+with Eq.~\eqref{eq:secondorder} at $\lambda=n_g$ and $A_{n_g}$, gives $T_\phi\ge\SI{0.15}{\second}$ everywhere with
+$E_J/E_C\ge20$ (\SI{78}{\second} at the operating point), and we omit it as negligible. That estimate uses the same convention as the flux term but, unlike
+it, has not been checked against an independent published number. It is negligible throughout the adopted $E_J/E_C\ge20$ regime under our assumed noise model, and we
+do not rely on that omission when interpreting behavior below the regime boundary. The required curvature is evaluated using Richardson
 extrapolation, since a simple central difference remains 4--10\% from its converged value in the
 deepest-well part of the scan ($E_J=40$--\SI{45}{\giga\hertz}, $E_L=\SI{0.2}{\giga\hertz}$),
-though within 0.2\% at the interior optima of Section~\ref{sec:fluxonium}.
+though the finite-difference estimates agree to within 0.2\% under the step-size extrapolation at
+the interior optima of Section~\ref{sec:fluxonium}.
 
 \subsection{A declared modeling choice}
+\label{sec:model-choice}
 
 Passing $Q_{\mathrm{cap}}$ explicitly replaces the \texttt{scqubits} default frequency-dependent
 quality factor, $Q_{\mathrm{cap}}(\omega)\propto\omega^{-0.7}$~\cite{smith2020}, with a constant
@@ -290,15 +392,25 @@ is not symmetric: Nguyen \emph{et al.} fit their measured $T_1$-versus-frequency
 $\tan\delta_C\propto\omega^{0.15}$, and at $f_{01}=\SI{0.363}{\giga\hertz}$ the constant-$Q$ model
 lies $1.52\times$ from their measured scaling, compared with $4.7\times$ for the \texttt{scqubits}
 default. That exponent was fit jointly with thermal effects and is not an independent measurement
-of the loss tangent, but it favors the constant-$Q_{\mathrm{cap}}$ model, which we therefore
-retain as the more conservative and better-supported choice, while stating the assumption
-explicitly.
+of the loss tangent, but it favors the constant-$Q_{\mathrm{cap}}$ model, which we therefore retain as the baseline because it is closer to the fitted frequency scaling of
+those devices over the range examined here, while stating the assumption explicitly. The frequency confound of Sections~\ref{sec:transmon} and~\ref{sec:fluxonium} does
+not depend on this choice. Under the frequency-dependent default,
+$\mathrm{corr}(\log T_2,\log f_{01})$ is $-0.9997$ for the transmon ($E_J/E_C\ge20$) and $-0.9718$
+for the fluxonium, against $-0.9999$ and $-0.9878$ here, and both raw maxima remain at the
+lowest-frequency grid point. The cross-architecture comparison does depend on it. Under the
+default, the raw $T_2$ ratio of Section~\ref{sec:q3} rises from $8.4\times$ to $9.6\times$, and
+the deterministic matched-frequency ratios fall from $0.82$, $0.62$ and $0.62\times$ at 0.5, 1 and
+2\,GHz to $0.37$, $0.37$ and $0.48\times$: the longer dielectric $T_1$ leaves the fluxonium's
+critical-current dephasing a larger share of its rate budget (91\% rather than 75\% at 1\,GHz). The
+size of the matched-frequency ratio therefore depends on the loss model, although under both it
+favors the transmon.
 
 \section{Validation}
 \label{sec:validation}
 
-Forty-four checks validate the numerical pipeline before the results presented below are
-generated. These tests include exact Hamiltonian symmetries to machine precision, basis-size
+Forty-four checks of the numerical pipeline run before the results presented below are generated.
+They are numerical checks, analytic benchmarks and selected experimental comparisons, and they test
+the numerics and the stated limits rather than the completeness of the noise model. They include exact Hamiltonian symmetries to machine precision, basis-size
 convergence, analytic limits from Koch \emph{et al.}~\cite{koch2007}, and, in several cases,
 comparison with published data from experimental devices.
 
@@ -333,8 +445,10 @@ implemented here rather than inherited from established tooling, so we check it 
 independent published evaluation rather than against its defining equation alone. Nguyen
 \emph{et al.}, using the same expression and their measured $A_\Phi=1.8\,\upmu\Phi_0$, state that
 the second-order limit exceeds $\SI{10}{\milli\second}$ for all of their qubits~\cite{nguyen2019}.
-Evaluated for their nine devices at the same amplitude, our implementation gives
-$T_{\phi}^{(2)}=15$--$\SI{804}{\milli\second}$, consistent with that statement.
+Evaluated for their nine devices at the same amplitude, our implementation gives $T_{\phi}^{(2)}=15$--$\SI{804}{\milli\second}$, consistent with that statement.
+This tests the rate expression in the parameter regime of the published devices; it does not
+independently validate its extrapolation to the much deeper-well designs of
+Section~\ref{sec:fluxonium}.
 
 \section{The Transmon Design Plane}
 \label{sec:transmon}
@@ -346,42 +460,46 @@ $E_C \in [0.08, 0.6]$\,GHz.
 \subsection{The confound}
 
 Within the transmon regime $E_J/E_C \ge 20$, $\mathrm{corr}(\log T_2, \log f_{01}) = -0.9999$.
-The plane contains one degree of freedom, not two. The reason is structural rather than
-numerical: dielectric loss dominates $T_1$ everywhere in the regime, with
+Under this noise model the coherence landscape over the plane is effectively one-dimensional:
+$E_J$ and $E_C$ remain independent design variables, but $T_2$ depends on them almost only through
+$f_{01}$. The reason is structural rather than numerical: dielectric loss dominates $T_1$
+everywhere in the regime, and at transmon frequencies $hf_{01}\gg k_BT$, with
 $\Gamma \propto |\langle 0|\hat n|1\rangle|^2 S(\omega_{01})$. Since
 $|\langle 0|\hat n|1\rangle|^2 \propto \sqrt{E_J/E_C}$ and $S \propto E_C$, the rate goes as
-$\sqrt{E_JE_C} \propto \omega_{01}$---a function of frequency alone. Consequently the best
-$T_2$ point of the swept plane, \SI{187}{\micro\second} at $E_J = 3.03$,
-$E_C = \SI{0.10}{\giga\hertz}$, sits at the corner of the admissible domain---the smallest
-$E_C$ on the grid and the smallest $E_J$ satisfying $E_J/E_C \ge 20$---at
+$\sqrt{E_JE_C} \propto \omega_{01}$---a function of frequency alone. The critical-current rate,
+set by $E_J\,\partial\omega_{01}/\partial E_J\approx\omega_{01}/2$, is too. Consequently the best sampled $T_2$ point of the swept plane, \SI{147}{\micro\second} at $E_J = 3.03$,
+$E_C = \SI{0.10}{\giga\hertz}$, sits at the corner of the sampled domain---the smallest $E_C$ on the grid and the smallest
+sampled $E_J$ satisfying $E_J/E_C \ge 20$ (the $E_J$ grid spacing is \SI{2.03}{\giga\hertz}, so the
+exact boundary $E_J=\SI{2.0}{\giga\hertz}$ is not sampled)---at
 $f_{01} = \SI{1.45}{\giga\hertz}$,
-below the \SIrange{3}{6}{\giga\hertz} band real transmons occupy~\cite{krantz2019}. It is a
+below the conventional \SIrange{3}{6}{\giga\hertz} transmon operating band~\cite{krantz2019}. It is a
 frequency minimum, not a design.
 
-\subsection{No interior optimum}
+\subsection{No interior optimum in this model}
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/transmon_tradeoff.pdf}
 \caption{The transmon trade-off at fixed frequency ($f_{01} = 5.00 \pm
-\SI{0.05}{\giga\hertz}$). (a) Gate count falls monotonically with $E_J/E_C$; the three
+\SI{0.05}{\giga\hertz}$). (a) The anharmonicity-based gate-count estimate falls monotonically with $E_J/E_C$; the three
 vertical lines are candidate regime thresholds, and the optimum sits on whichever one is
-imposed. (b) $T_2$ is flat to 4.8\% while $|\alpha|$ falls $7.3\times$; the shaded band is
-the Krantz \SIrange{100}{300}{\mega\hertz} design window. Charge insensitivity costs gate
-speed, not coherence.}
+imposed. (b) $T_2$ is flat to 3.2\% while $|\alpha|$ falls $7.3\times$; the shaded band is
+the Krantz \SIrange{100}{300}{\mega\hertz} design window. Charge insensitivity costs anharmonicity, not coherence.}
 \label{fig:tradeoff}
 \end{figure}
 
-Holding $f_{01} = 5.00 \pm \SI{0.05}{\giga\hertz}$ and sweeping $E_J/E_C$ from 11.4 to 117.6,
-$T_2$ is flat to 4.8\% (\SIrange{59.7}{62.6}{\micro\second}) while $|\alpha|$ falls by a
-factor of 7.3 (\SIrange{1353}{185}{\mega\hertz}). \textbf{Charge insensitivity is bought with
-anharmonicity---that is, with gate speed---and essentially not with coherence at all}
-(Fig.~\ref{fig:tradeoff}).
+Holding $f_{01} = 5.00 \pm \SI{0.05}{\giga\hertz}$ and sweeping $E_J/E_C$ from 11.4 to 117.6, a cut
+that extends below the $E_J/E_C\ge20$ regime to show the trend,
+$T_2$ is flat to 3.2\% (\SIrange{42.64}{44.02}{\micro\second}) while $|\alpha|$ falls by a
+factor of 7.3 (\SIrange{1353}{185}{\mega\hertz}). \textbf{Charge insensitivity is bought with anharmonicity, and essentially not with coherence at
+all} (Fig.~\ref{fig:tradeoff}). Lower anharmonicity tightens the leakage constraint on pulse design,
+but how much it lengthens a real gate depends on pulse shaping, matrix elements and the error target,
+as the pulse simulation of Section~\ref{sec:pulse} shows.
 
 That the trade is anharmonicity-for-charge-insensitivity is expected from Koch's asymptotics:
 with $\alpha \simeq -E_C$ and $f_{01} \simeq \sqrt{8E_JE_C}$ held fixed, raising $E_J/E_C$
 forces $E_C \propto (E_J/E_C)^{-1/2}$, predicting a factor 3.21 over our swept range against a
-measured $E_C$ ratio of 3.47. The observed $7.3\times$ fall in $|\alpha|$ is steeper still
+computed $E_C$ ratio of 3.47. The observed $7.3\times$ fall in $|\alpha|$ is steeper still
 because $\alpha \simeq -E_C$ is asymptotic and fails at the low end: $|\alpha|/E_C = 2.29$ at
 $E_J/E_C = 11.4$ against $1.09$ at $117.6$. The trade-off is therefore harshest exactly in the
 low-$E_J/E_C$ corner that an unconstrained gate-count metric wants to select, which is an
@@ -392,41 +510,61 @@ Relocating the gate-count optimum under eight regime thresholds spanning $E_J/E_
 never inside the domain. This is the signature of a constrained optimum, and it means the
 substantive choice in this part of the design space is the threshold, not the optimization. The correct claim is a monotone trade-off terminated wherever the
 regime boundary is drawn, and any quoted optimum is meaningful only together with its
-threshold. We adopt the Krantz envelope ($E_J/E_C \ge 50$, $|\alpha| \in
+threshold. We adopt the conventional design envelope of Krantz \emph{et al.} ($E_J/E_C \ge 50$, $|\alpha| \in
 [100,300]$\,MHz, $f_{01} \in [3,6]$\,GHz)~\cite{krantz2019} because it is independent of every
 noise amplitude in the study, giving the operating point $E_J = \SI{13.0}{\giga\hertz}$,
 $E_C = \SI{0.26}{\giga\hertz}$, $f_{01} = \SI{4.92}{\giga\hertz}$,
-$T_2 = \SI{62.4}{\micro\second}$, $|\alpha| = \SI{299}{\mega\hertz}$.
+$T_2 = \SI{44.1}{\micro\second}$, $|\alpha| = \SI{299}{\mega\hertz}$.
 
 A limitation of the model bears on this choice: \texttt{tphi\_1\_over\_f\_ng} covers $1/f$
 dephasing only, and the broadband charge sensitivity that motivates Krantz's
 $E_J/E_C \ge 50$ is absent. Left to itself the metric under-penalizes low $E_J/E_C$ and would
-recommend $|\alpha| \approx \SI{728}{\mega\hertz}$, roughly $2.4\times$ what is fabricated.
+recommend $|\alpha| \approx \SI{728}{\mega\hertz}$, roughly $2.4\times$ what is typically fabricated.
 The envelope is a constraint imposed on the model, not a result derived from it.
 
 \section{The Fluxonium Design Plane}
 \label{sec:fluxonium}
 
 Over $E_J \in [3,15]$, $E_L \in [0.2,1.5]$\,GHz at $E_C = \SI{2.5}{\giga\hertz}$ and
-$\Phi/\Phi_0 = 1/2$, the same confound appears: $\mathrm{corr}(\log T_2, \log f_{01}) =
--0.9973$. The unconstrained maximum, \SI{5427}{\micro\second}, sits at both grid edges at
-$f_{01} = \SI{75}{\mega\hertz}$, where $\bar n_{\rm th} = 3.7$---thermally scrambled and
-$2.3\times$ below the lowest published device. Constrained to the published band
-\SIrange{0.17}{0.83}{\giga\hertz} the best design gives \SI{2412}{\micro\second} at
-$E_J = 11.8$, $E_L = \SI{0.405}{\giga\hertz}$.
+$\Phi/\Phi_0 = 1/2$, the same confound appears: $\mathrm{corr}(\log T_2, \log f_{01}) = -0.9878$. It is looser than for
+the transmon. About a log-log fit (slope $-0.79$), fluxonium $T_2$ at fixed $f_{01}$ still scatters by
+12\% rms, and by up to 39\% at the worst point, against 0.6\% rms for the transmon; frequency is the
+dominant variable here, not the only one. The unconstrained maximum, \SI{1398}{\micro\second}, sits at both grid edges at
+$f_{01} = \SI{75}{\mega\hertz}$, where $\bar n_{\rm th} = 3.7$, and $2.3\times$ below the
+lowest-frequency device in Nguyen \emph{et al.}'s Table~I. Constrained to that table's range,
+\SIrange{0.17}{0.83}{\giga\hertz}, the best sampled design gives \SI{719}{\micro\second} at $E_J = 10.6$, $E_L = \SI{0.20}{\giga\hertz}$
+($f_{01}=\SI{0.177}{\giga\hertz}$), itself on the $E_L$ grid edge and at the low end of the band: the
+confound again.
+
+Here and below, $\bar n_{\rm th} = 1/(e^{hf_{01}/k_BT}-1)$ is the Bose occupation of the bath at
+the qubit frequency, at the model's $T = \SI{15}{\milli\kelvin}$. It is not the qubit's own
+population. The qubit's equilibrium excited-state population, $p_1 = 1/(1+e^{hf_{01}/k_BT})$, is
+44\% at \SI{75}{\mega\hertz}, but it is already 24\% for the nominal design at
+\SI{0.363}{\giga\hertz}: thermal population is a matter of degree across this whole regime, and
+under these conditions passive thermal equilibrium does not provide high-fidelity ground-state
+initialization for any fluxonium here; active reset, heralding or engineered cooling is needed. Effective qubit temperatures in real devices
+are often above the bath temperature assumed here.
 
 \subsection{An interior optimum, created by second-order dephasing}
 
-Extending the scan to $E_J = \SI{45}{\giga\hertz}$ reveals a genuine interior maximum in
-$T_2$, present at every $(E_C, E_L)$ combination tested (Fig.~\ref{fig:interior}). It is created by the second-order
+Extending the scan to $E_J = \SI{45}{\giga\hertz}$ reveals a one-dimensional interior maximum of $T_2$ in $E_J$ within this model, present in eight of
+the nine $(E_C, E_L)$ slices tested; this is not a joint optimum over all three parameters, and in the ninth ($E_C=3.5$, $E_L=\SI{0.2}{\giga\hertz}$) $T_2$ is still rising at the edge of
+the scan, so its optimum is not located (Fig.~\ref{fig:interior}). It is created by the second-order
 flux channel: as $E_J$ rises and $E_L$ falls the qubit sinks into a deep double well,
 $f_{01}$ collapses, and $\partial^2 f_{01}/\partial\Phi^2$ grows by three orders of
-magnitude across the scan, so $\Gamma_\Phi^{(2)}$ grows with it and eventually overwhelms the
-improving dielectric $T_1$. At the turning point that channel carries 43--58\% of the total
-dephasing rate, which is the signature of a genuine internal optimum: the channel that turns
-the curve over is comparable to everything else exactly at the turn. A first-order-only
-pipeline shows no turnover over the same range and rises monotonically, reaching
-$4.2\times10^{5}$\,\si{\micro\second} at the end of the scan---which is precisely how an earlier version of this
+magnitude across the scan, so $\Gamma_\Phi^{(2)}$ grows with it and eventually overwhelms the improving dielectric and
+critical-current terms. Located by continuous optimization in $E_J$ at each of the nine
+$(E_C, E_L)$ slices rather than read off the $\Delta E_J = 2.5$\,GHz grid, the optimum moves by at most \SI{0.9}{\giga\hertz} in $E_J$ and 0.8\% in $T_2$, and at it the
+second-order channel carries 46--47\% of the total decoherence rate $1/T_2$ in the eight located
+slices. That is what an interior optimum of this kind looks like: the channel that turns the curve over is
+comparable to everything else at the turn. It is an optimum of this model. Its location inherits the
+uncertainty in the second-order rate convention (Section~\ref{sec:limitations}), the loss model and the
+omitted channels, and it applies to the slices searched. Two of those dependences are large. Under
+a $\ln^2$ second-order convention the optimum persists but moves up by an order of magnitude in
+frequency, to 0.18--\SI{0.31}{\giga\hertz} in the two slices checked; and the array-mode bound of
+Section~\ref{sec:validation} does not extend to these deep-well designs. A first-order-only
+pipeline shows no turnover over the same range and rises monotonically, reaching $5.7\times10^{4}$\,\si{\micro\second} at the end of the scan (a model output, not an achievable
+coherence)---which is precisely how an earlier version of this
 analysis concluded there was no interior optimum, and is a concrete argument for including the
 second-order channel in any design study that sweeps toward low $E_L$.
 
@@ -434,74 +572,101 @@ The mechanism is geometric. As $E_J$ rises and $E_L$ falls the potential minima 
 the tunnel splitting that sets $f_{01}$ collapses; the same deepening well sharpens the
 curvature to which $\Gamma_\Phi^{(2)}$ is proportional by Eq.~\eqref{eq:secondorder}, so a
 single geometric change both lowers the frequency and raises the second-order rate. The
-transmon has no analog: its charge dispersion falls
-exponentially in $\sqrt{E_J/E_C}$ with no turning point.
+investigated transmon model shows no analogous turnover: its charge dispersion falls exponentially
+in $\sqrt{E_J/E_C}$ with no turning point.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fluxonium_interior_optimum.pdf}
 \caption{(a) $T_2$ versus $E_J$ at three values of $E_L$. Solid curves include second-order
-flux dephasing and turn over (stars); the dashed first-order-only curves rise without limit
-over the same range, which is how the interior optimum was previously missed. (b) The same
-points against $f_{01}$, colored by the second-order share of the dephasing rate. Every
-turning point lies far below the published fluxonium band (shaded).}
+flux dephasing and turn over (stars); the dashed first-order-only curves show no turnover over the plotted range, which is how the interior optimum was previously missed. (b) The same
+points against $f_{01}$, colored by the second-order share of the total decoherence rate
+$1/T_2$. The shaded band is the frequency range of Nguyen \emph{et al.}'s devices;
+every turning point lies below it, at frequencies comparable to operated low-frequency
+fluxoniums (1.8 and \SI{14}{\mega\hertz})~\cite{zhang2021,najerasantos2024}.}
 \label{fig:interior}
 \end{figure}
 
-The optimum is nevertheless inaccessible. It occurs at $f_{01} = 10$--\SI{73}{\mega\hertz}
-with $\bar n_{\rm th} = 4$--32. Past the turnover the frequency correlation reverses sign,
-which is a further indication that the second-order channel introduces genuinely new
-structure rather than rescaling the old.
+The optimum nevertheless carries a cost. In the convention of Eq.~\eqref{eq:secondorder} it occurs at $f_{01} = 5.4$--\SI{30}{\mega\hertz}, with $\bar n_{\rm th} = 10$--57 and an equilibrium
+excited-state population of 48--50\%, so passive thermal equilibration at \SI{15}{\milli\kelvin} does not provide high-fidelity
+ground-state initialization for these designs. That is a cost, not a barrier: Zhang \emph{et al.} operate a \SI{14}{\mega\hertz} fluxonium, initialize it with 97\% fidelity and
+run single-qubit gates with 99.8\% average fidelity~\cite{zhang2021}, and Najera-Santos \emph{et al.} cool a \SI{1.8}{\mega\hertz} fluxonium to
+a 97.7\% ground-state population~\cite{najerasantos2024}. Under the 15\,mK equilibrium assumed here the
+optimum is thermally unfavorable rather than impossible; whether it is worth reaching is a
+question of initialization overhead, which this model does not include, and these results do
+not show that the particular designs found here would work experimentally. Past the turnover the frequency correlation reverses sign: within each slice of
+Fig.~\ref{fig:interior}, $\mathrm{corr}(\log T_2,\log f_{01})$ is $+0.98$ to $+0.99$ beyond the optimum,
+against $-0.99$ over the in-band plane. The second-order channel adds new structure rather than
+rescaling the old.
 
 \section{Dominant Noise Channels}
+\label{sec:channels}
 
 At a charge-sensitive bias ($n_g = 0.25$) charge noise dominates the transmon below
-$E_J/E_C \approx 25$ and dielectric relaxation above it. That crossover is measured from our
-own data and lands close to Koch's independently derived bound of 20; the two arguments are
-unrelated---one a noise-budget crossover, the other a pulse-duration requirement---so their
-agreement is genuine corroboration. Critical-current noise never dominates anywhere in 1600
-points at literature amplitudes. The crossover is noise-model dependent (it spans 20.8--29.9
-across literature ranges) and is therefore reported as a result rather than used as an input.
+$E_J/E_C \approx 25$ and dielectric relaxation above it. That crossover is computed from our numerical sweep and lands close to the lower edge of the transmon
+window of Koch \emph{et al.}, $20\lesssim E_J/E_C\ll5\times10^4$~\cite{koch2007}. The two are not
+independent: both reflect the exponential suppression of charge dispersion, and Koch \emph{et
+al.}'s pulse-duration argument sets only the upper end of their window, through the shrinking
+anharmonicity. The agreement is therefore a consistency check, and it does not by itself validate the
+noise amplitudes or the predicted coherence times. Critical-current noise never dominates the transmon anywhere in its 1600 points at literature
+amplitudes, though it carries about a third of the rate at the operating point. The crossover is noise-model dependent (it spans 20.8--29.9
+across literature ranges) and is therefore reported as a model result, not a universal threshold, rather than used as an
+input.
 
-For the fluxonium, relaxation dominates at the sweet spot and first-order flux noise becomes
-the largest single term beyond $2.75\times10^{-5}\,\Phi_0$. Quasiparticle tunneling is not a
+For the fluxonium the picture is different. Critical-current dephasing dominates at the sweet
+spot, where it carries 76\% of $1/T_2$, and at 358 of the 400 points of the design plane, and
+first-order flux noise becomes the largest single term only beyond $8.7\times10^{-5}\,\Phi_0$. That
+makes the fluxonium results sensitive above all to $A_{\rm cc}$ and its convention (Section~\ref{sec:model}). Quasiparticle tunneling is not a
 dead channel: it is suppressed only \emph{at} the sweet spot, where its $0$--$1$ matrix
 element vanishes by symmetry, and limits $T_1$ at most detuned points. This finding is
 conditional on $x_{qp} = 3\times10^{-6}$, a default roughly $300\times$ above the bound of
-$10^{-8}$ that Nguyen \emph{et al.} infer for their devices; at their density the channel is negligible everywhere. It is the
-most fragile result in the study and is reported as conditional.
+$10^{-8}$ that Nguyen \emph{et al.} infer for their devices; at their density the channel is negligible everywhere. It is one of the most fragile results in the study, after the critical-current dependence above,
+and is reported as conditional.
 
 \section{The Cross-Architecture Comparison}
+\label{sec:q3}
+
+The comparison uses the transmon operating point of Section~\ref{sec:transmon}
+($E_J = \SI{13.0}{\giga\hertz}$, $E_C = \SI{0.26}{\giga\hertz}$) and the nominal fluxonium
+$E_J = \SI{8.9}{\giga\hertz}$, $E_C = \SI{2.5}{\giga\hertz}$, $E_L = \SI{0.5}{\giga\hertz}$ at
+half flux ($f_{01} = \SI{0.363}{\giga\hertz}$, $T_2 = \SI{368.8}{\micro\second}$). The fluxonium
+is chosen because it is the spectroscopically validated device of Section~\ref{sec:validation},
+not the best design in band: the best Table~I-band design of Section~\ref{sec:fluxonium} would raise the raw ratio by a further $1.9\times$, mostly by lowering the frequency.
 
 \subsection{Bias robustness, the one unambiguous asymmetry}
 
 Both bias coordinates are periodic with period one, so the width of the window over which
-$T_2$ stays within a factor $k$ of its sweet-spot value, as a fraction of one bias period, is
-directly comparable. The transmon's $T_2$ varies by $1.0056\times$ across its \emph{entire}
+$T_2$ stays within a factor $k$ of its sweet-spot value can be compared as a fraction of one bias
+period. This is a comparison of normalized sensitivity, not of the physical precision each bias
+demands: offset charge is not normally controlled at all, which is why insensitivity to it
+matters, while flux is set by a bias current. The transmon's $T_2$ varies by $1.0040\times$ across its \emph{entire}
 charge period---a factor-of-two loss never occurs at any bias. The fluxonium loses a factor
-of two within $\pm 3.61\times10^{-5}\,\Phi_0$ and a factor of ten within
-$3.25\times10^{-4}\,\Phi_0$, located by root-finding on the model rather than read off a
-grid. The usable bias window differs by $1.4\times10^{4}$.
+of two within $\pm 1.11\times10^{-4}\,\Phi_0$ and a factor of ten within $9.96\times10^{-4}\,\Phi_0$, located by root-finding on the model rather than read off a
+grid. The usable bias window is therefore at least $4.5\times10^{3}$ times wider for the transmon,
+a lower bound because the transmon never reaches the twofold loss.
 
 The falloff exponent is not a single number. It approaches the first-order $1/f$ prediction
 of $-1$ only in an intermediate window where $T_2$ is genuinely flux-dephasing limited,
-reaching $-0.956$ there, and flattens on both sides---capped by the $2T_1$ ceiling close in,
+reaching $-0.929$ there, and flattens on both sides---capped by the $2T_1$ ceiling close in,
 and contaminated by other channels far out.
 
-Intrinsic $1/f$ flux noise does not by itself drive the qubit off the spot: even at Nguyen's
-measured amplitude integrated over an hour, the RMS wander leaves a $24\times$ margin to the
-tenfold-loss detuning. The binding constraint is systematic drift and bias-line calibration,
-not stochastic noise---which relocates the difficulty rather than removing it, and makes it
-scale with qubit count.
+Intrinsic $1/f$ flux noise does not by itself drive the qubit off the spot: at Nguyen's measured amplitude, in the two-sided convention $S_\Phi(\omega)=2\pi A_\Phi^2/|\omega|$ used
+for every dephasing rate here, the variance accumulated over both frequency signs between
+$f_{\rm lo}=1/t$, for an observation time $t$ of one hour, and $f_{\rm hi}=\SI{1}{\giga\hertz}$ is
+$\sigma_\Phi^2=2A_\Phi^2\ln(f_{\rm hi}/f_{\rm lo})$, an RMS wander of $1.4\times10^{-5}\,\Phi_0$
+(a one-sided reading of the same amplitude would give $9.7\times10^{-6}\,\Phi_0$; note that this drift
+estimate uses $1/t$ as its infrared cutoff, not the $\omega_{\rm low}$ of the coherence calculation), a $73\times$ margin to the tenfold-loss detuning. Under that spectrum and those
+limits, systematic drift and bias calibration may become the more restrictive constraints rather
+than stochastic noise---which relocates the difficulty rather than removing it, and plausibly makes it grow with qubit
+count, although a single-qubit model cannot show that. A different spectrum or a longer observation time would change the margin.
 
 \textbf{This constraint is being engineered away, which we should say plainly.} B\'en\^atre
 \emph{et al.} hold gradiometric fluxonium qubits at their sweet spot passively, reporting
 stability of $3\times10^{-4}\,\Phi_0$ from target with only a 15\% reduction in echo
-coherence~\cite{benatre2025}. Their achieved stability sits essentially at our computed
-tenfold-loss detuning of $3.25\times10^{-4}\,\Phi_0$, yet they observe far less degradation
-than that number would suggest---unsurprisingly, since their device has different $E_L$ and
-hence different curvature, and echo suppresses low-frequency drift that free induction does
-not. We read their result as evidence that the bias-precision cost we quantify is real,
+coherence~\cite{benatre2025}. Their achieved stability lies between our computed twofold- and tenfold-loss detunings
+($1.1\times10^{-4}$ and $1.0\times10^{-3}\,\Phi_0$), and their 15\% loss is smaller than our model would
+give there---unsurprisingly, since their device has different $E_L$ and hence different curvature, and
+echo suppresses low-frequency drift that free induction does not. We read their result as evidence that the bias-precision cost we quantify is real,
 understood, and addressable by design rather than by calibration alone. It weakens the
 scalability pessimism in our conclusion without touching the arithmetic behind it.
 
@@ -510,121 +675,160 @@ scalability pessimism in our conclusion without touching the arithmetic behind i
 Table~\ref{tab:q3} gives the comparison under every metric we consider defensible, and
 Fig.~\ref{fig:robust} shows how each fares across the noise band.
 
-\begin{table}[t]
-\caption{Fluxonium/transmon ratio by metric. MC = median over $N=400$ log-uniform draws of
-each noise amplitude across its literature decade, with the 5--95\% sample spread.}
+\begin{table}[tbp]
+\caption{Fluxonium/transmon ratio by metric. MC = median and 5--95\% sample range over $N=400$
+log-uniform draws (fixed seed) of $Q_{\rm cap}\in[10^5,10^7]$, $A_\Phi\in[10^{-6},10^{-5}]\,\Phi_0$,
+$A_{\rm cc}\in[10^{-7},10^{-6}]$ and $A_{n_g}\in[10^{-4},10^{-3}]$; the three amplitude ranges extend one
+decade above the defaults, so the Monte Carlo is noisier than the deterministic column. All Monte Carlo columns use shared draws, the
+same noise parameters for both architectures in each sample. For the matched-frequency row the
+deterministic values span the pairs at 0.5, 1 and 2\,GHz, and the Monte Carlo is at 1\,GHz. With independent draws the matched-frequency median is $0.47\times$
+and the fluxonium wins 19\%.}
 \label{tab:q3}
 \centering
 \begin{tabular}{@{}lccc@{}}
 \toprule
 Metric & Det. & MC med.\ [5--95\%] & Wins\\
 \midrule
-Raw $T_2$                       & $18.1$      & $11.3$ [3.6, 21.1]   & 100\%\\
-$T_2$, matched $f_{01}$         & $1.1$--$2.2$ & $\mathbf{0.86}$ [0.27, 1.6] & \textbf{42\%}\\
-Gates, $1/|\alpha|$             & $524$       & $326$ [104, 611]     & 100\%\\
-Gates, $1/\min(|\alpha|,f_{01})$ & $22.0$     & $13.7$ [4.4, 25.6]   & 100\%\\
-Gates, $1/f_{01}$               & $\mathbf{1.34}$ & $\mathbf{0.83}$ [0.26, 1.6] & \textbf{40\%}\\
-Gates, simulated                & $48$        & --                   & --\\
+Raw $T_2$                       & $8.4$       & $5.1$ [3.6, 13.1]    & 100\%\\
+$T_2$, matched $f_{01}$ (MC at 1\,GHz) & $\mathbf{0.62}$--$\mathbf{0.82}$ & $\mathbf{0.37}$ [0.25, 0.99] & \textbf{5\%}\\
+Gates, $1/|\alpha|$             & $242$       & $148$ [105, 379]     & 100\%\\
+Gates, $1/\min(|\alpha|,f_{01})$ & $10.2$     & $6.2$ [4.4, 15.9]    & 100\%\\
+Gates, $1/f_{01}$               & $\mathbf{0.62}$ & $\mathbf{0.38}$ [0.27, 0.97] & \textbf{4\%}\\
+Gates, simulated                & $22$        & --                   & --\\
 \midrule
-Bias window, $2\times$ loss     & \multicolumn{3}{c}{$1.4\times10^{4}$ wider for the transmon}\\
+Bias window, $2\times$ loss     & \multicolumn{3}{c}{$\ge4.5\times10^{3}$ wider for the transmon}\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two ranges are visible, and they are of comparable size. \emph{Across} metrics the answer
-spans roughly $500\times$ ($524\times$ against $1.07\times$, Table~\ref{tab:q3}). \emph{Within} the gate-count metric alone it spans $393\times$,
+Two ranges are visible, and they are of comparable size. \emph{Across} metric definitions---a spread, not an uncertainty on one physical quantity---the answer
+spans roughly $400\times$ ($242\times$ against $0.62\times$, Table~\ref{tab:q3}). \emph{Within} the gate-count metric alone it spans $393\times$,
 depending on what bounds the minimum pulse length. The $|\alpha|$ bound---leakage to
 $|2\rangle$ only---is the textbook choice, but for a fluxonium at half flux
 $|\alpha| = \SI{8.7}{\giga\hertz}$ is $24\times$ the transition frequency it would drive, so
 that bound licenses a pulse $24\times$ shorter than one period of the transition itself. The
-drive-period bound $1/f_{01}$ is equally physical and gives $1.34\times$.
+drive-period estimate $1/f_{01}$ gives $0.62\times$. The three are diagnostic estimates that show
+how sensitive the answer is to the pulse assumption, not validated limits on gate time. The
+$1/f_{01}$ estimate ignores leakage entirely: for the transmon it would allow a pulse
+$16.5\times$ shorter than $1/|\alpha|$, with no evidence that it meets an error target. Nor is one drive period a hard floor: Zhang \emph{et al.} perform their computational fluxonium
+gates within a single transition period~\cite{zhang2021}.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/q3_robustness.pdf}
 \caption{Robustness of the Q3 answer to the noise amplitudes. (a) Distribution of the
 fluxonium/transmon ratio under four metrics, $N=400$ shared-parameter draws; the metric and
-the pulse bound each move the answer by more than the noise band does. (b) The 90\%
-bootstrap CI on the median against sample size, showing that an earlier $N=60$ interval had
-not converged. (c) Median and 5--95\% spread per metric under shared versus independent
+the pulse bound each move the answer by more than the noise band does. (b) Width of the 90\% bootstrap CI on the median against sample size. It narrows with $N$; at
+$N=400$ the matched-frequency median is $0.37\times$ with CI 0.355--0.404, against a much wider interval
+at the $N=60$ of an earlier version. Panels (a) and (c) show the spread under the priors; (b) shows
+the precision of the estimated median. (c) Median and 5--95\% spread per metric under shared versus independent
 sampling.}
 \label{fig:robust}
 \end{figure}
 
-\subsection{The raw advantage is mostly frequency}
+\subsection{The raw advantage is a frequency effect}
 
-The two devices differ in frequency by $13.6\times$, and
-$\log 13.55/\log 18.10 = 0.90$: about 90\% of the log-advantage is the frequency difference.
-This is not a coincidence of these two designs. Dielectric loss dominates both architectures
-and its rate scales with $\omega_{01}$, so $T_2 \propto 1/f_{01}$ in both---measured as
-$f_{01}^{-0.965}$ for the transmon. Because the flux sweet spot \emph{is} a frequency
+The two devices differ in frequency by $13.6\times$. If $T_2 \propto 1/f_{01}$, the frequency ratio alone would produce $\log 13.55/\log 8.36 = 123\%$ of
+the log-ratio: more than the whole raw advantage, so at fixed frequency the fluxonium would be the
+less coherent of the two. This is a scaling estimate under that law, not a decomposition of causes,
+and the law describes the transmon better than the fluxonium. Dielectric loss dominates the transmon and critical-current dephasing the fluxonium. For the transmon the rate scales with $\omega_{01}$ and $T_2 \propto f_{01}^{-1.00}$ is obtained from a fit to the modeled design plane; for the fluxonium the thermal factor, the matrix elements and the dominant critical-current
+channel break a simple $\Gamma_1\propto\omega_{01}$ law, and the scaling, $T_2\propto f_{01}^{-0.79}$
+($r=-0.988$), is an empirical property of the model rather than a derived one. Because the flux sweet spot \emph{is} a frequency
 minimum, the fluxonium is structurally advantaged on any uncontrolled $T_2$ comparison, and
 reporting one credits the architecture with what the frequency did.
 
-Controlling for it, the deterministic ratio at matched $f_{01}$ is 1.07--2.16$\times$. But
-propagated across the literature noise band the median is $0.86\times$ and the fluxonium wins
-in only 42\% of samples. \textbf{At matched frequency the transmon is more often the better
-device.} This is the most important negative result here: what remains of the coherence
-advantage after the frequency control does not survive the noise-amplitude uncertainty.
+Controlling for it, the deterministic ratio at matched $f_{01}$ is already below one, 0.62--0.82$\times$
+at 0.5, 1 and 2\,GHz. Propagated across the literature noise band at matched $f_{01}=\SI{1}{\giga\hertz}$,
+with shared draws, the median is $0.37\times$ and the fluxonium wins in only 4.8\% of samples (19\% with
+independent draws). The 90\% bootstrap interval on that median is 0.355--0.404. These are draws of the noise
+parameters under our priors, not a population of fabricated devices. \textbf{Under these noise
+priors, and at matched frequencies where the transmon is not a practical design, the transmon comes
+out ahead in 95\% of samples.} This is the most important
+negative result here: in this model no coherence advantage remains once frequency is controlled.
 
-\subsection{Settling the pulse bound}
+\subsection{Estimating gate durations by simulation}
 \label{sec:pulse}
 
-The gate-count range is wide enough to make the metric almost uninformative, so we settle it
+The gate-count range is wide enough to make the metric almost uninformative, so we estimate it
 by simulation rather than by argument. We integrate the lab-frame Schr\"odinger equation for
 each architecture with no rotating-wave approximation, using a six-level truncation of the
-\texttt{scqubits} eigenbasis and a charge drive, and calibrate each gate as an experimentalist
-would: amplitude, DRAG coefficient~\cite{motzoi2009} and Stark-shifted drive frequency are
-optimized at every duration, and the average gate error is evaluated on the computational
+\texttt{scqubits} eigenbasis and a charge drive, and numerically optimize the pulse amplitude, DRAG coefficient~\cite{motzoi2009} and Stark-shifted
+drive frequency at every duration; the average gate error is evaluated on the computational
 subspace so that leakage is counted; Fig.~\ref{fig:pulse} shows the resulting error curves.
 
 This exposes an effect that the anharmonicity argument misses entirely. The fluxonium's
 $|\alpha|/f_{01} = 24$ looks decisive, but its drive matrix elements are unfavourable: at
 half flux $|\langle 1|\hat n|2\rangle| / |\langle 0|\hat n|1\rangle| = 10.2$, against $1.37$
 for the transmon. The drive couples ten times more strongly to the leakage transition than to
-the qubit transition, so the effective figure of merit is the anharmonicity divided by that
-ratio, not the anharmonicity itself.
+the qubit transition. That ratio is an important factor the anharmonicity alone does not
+capture; leakage also depends on the pulse spectrum, detuning, drive strength and higher levels,
+which is why we simulate rather than combine the two numbers by hand.
 
-Table~\ref{tab:pulse} reports the shortest calibrated gate reaching an average error below
+Table~\ref{tab:pulse} reports the shortest tested duration at which the calibrated gate reaches an
+average error below
 $10^{-3}$ for each architecture, and the resulting gate count. \emph{These durations are upper
 bounds}: a three-parameter calibration over a fixed Gaussian shape is far from optimal
-control, and GRAPE or CRAB over a free pulse shape would shorten both---not necessarily
-equally. The point is not the precise value but that the simulated ratio falls decisively
-between the two naive bounds, excluding both.
+control, and more flexible optimal-control approaches, such as GRAPE or CRAB over a free pulse shape, could
+shorten one or both gates, potentially by different amounts. The bracket also leaves out modeling choices that a different simulation could make
+differently: we drive through the charge operator, whereas low-frequency fluxoniums are often
+controlled through flux~\cite{zhang2021}; we use a single pulse family, omit decoherence during
+the gate, and fix the error target at $10^{-3}$. The result is a single-model estimate that has
+not been checked against an independent code or a measured gate. The point is not the precise
+value but that, within this model, the simulated ratio falls well between the two naive
+estimates.
 
-\begin{table}[t]
-\caption{Shortest calibrated $X$ gate reaching an average error below $10^{-3}$, from the
-lab-frame simulation, and the resulting gate count $N = T_2/T_{\rm gate}$. Durations are
-upper bounds and are bracketed by the duration grid and by optimizer convergence.}
+We tested the numerics at the durations that set $T_{\rm gate}$. The pass/fail classification at the tested durations is stable across truncations after
+recalibration, although individual optimized pulses are not: a pulse
+calibrated on six levels does not carry over unchanged (the 3\,ns fluxonium pulse has error
+$4\times10^{-2}$ when replayed on ten levels), but recalibrating on eight or ten levels changes no
+pass/fail verdict at any tested duration, and tighter ODE tolerances reproduce every error. The
+optimizer is not converged. With seven starting points and 400 evaluations instead of three and
+140, both gates shorten, to \SI{6.0}{\nano\second} (transmon) and \SI{2.5}{\nano\second}
+(fluxonium), on six or ten levels, and the ratio becomes $20\times$, inside the bracket; shorter
+durations were not retested. The fluxonium gate also needs a Rabi frequency of
+$\approx$\SIrange{0.35}{0.40}{\giga\hertz}, comparable to its own $f_{01}$; whether a charge
+drive that strong is practical is not assessed here.
+
+\begin{table}[tbp]
+\caption{Shortest tested duration at which the calibrated $X$ gate reaches an average error below
+$10^{-3}$, from the
+lab-frame simulation, and the resulting gate count $N = T_2/T_{\rm gate}$, a coherence-limited
+gate-time budget rather than a number of gates that could be run in sequence: gate errors
+accumulate, and the calibration omits decoherence during the pulse. A passing duration shows that a gate that short is achievable within the simulated model
+(charge drive, one pulse family). The listed intervals bracket the shortest passing durations found
+under the explored optimization settings; they are not rigorous bounds on globally optimal gate
+times. A stronger optimizer gives $20\times$.}
 \label{tab:pulse}
 \centering
 \begin{tabular}{lccc}
 \toprule
  & $T_{\rm gate}$ (ns) & $T_2$ (\si{\micro\second}) & $N$\\
 \midrule
-Transmon  & $8.0$ ($6.0$--$8.0$)  & $62.4$   & $7{,}803$\\
-Fluxonium & $3.0$ ($2.5$--$3.0$) & $1129.7$ & $376{,}571$\\
+Transmon  & $8.0$ ($6.0$--$8.0$)  & $44.1$   & $5{,}513$\\
+Fluxonium & $3.0$ ($2.5$--$3.0$) & $368.8$  & $122{,}928$\\
 \midrule
-\multicolumn{3}{l}{\textbf{Simulated ratio}} & $\mathbf{48\times}$\\
-\multicolumn{3}{l}{\quad bracket from grid + optimizer} & $36$--$58\times$\\
-\multicolumn{3}{l}{\quad for comparison, $1/|\alpha|$ bound} & $524\times$\\
-\multicolumn{3}{l}{\quad for comparison, $1/f_{01}$ bound} & $1.34\times$\\
+\multicolumn{3}{l}{\textbf{Simulated ratio}} & $\mathbf{22\times}$\\
+\multicolumn{3}{l}{\quad bracket from grid + optimizer} & $17$--$27\times$\\
+\multicolumn{3}{l}{\quad for comparison, $1/|\alpha|$ estimate} & $242\times$\\
+\multicolumn{3}{l}{\quad for comparison, $1/f_{01}$ estimate} & $0.62\times$\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The result is that the fluxonium does convert coherence into operations more efficiently than
-the transmon, but by a factor of order $36$--$58\times$ rather than the ${\sim}500\times$ the anharmonicity bound suggests or the ${\sim}1\times$ the drive-period bound suggests. Neither extreme survives contact with a simulated pulse, and the residual uncertainty is dominated by optimizer convergence rather than by physics.
+Within the investigated charge-drive model, the fluxonium yields a larger coherence-to-gate-duration
+proxy than the transmon, by approximately $17$--$27\times$ over the explored numerical settings, rather than the ${\sim}240\times$ of the anharmonicity estimate or the ${\sim}0.6\times$ of the drive-period
+estimate, both heuristic pulse-time estimates rather than demonstrated minimum durations. Within this model neither extreme is reached. The quoted bracket covers only the duration grid and optimizer convergence, not the modeling choices listed above, so the true uncertainty is larger than the bracket.
 
-\begin{figure}[t]
+\begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{figures/q3_pulse_bound.pdf}
-\caption{(a) Average $X$-gate error against gate duration for both architectures, from the
-lab-frame simulation with amplitude, DRAG and Stark detuning calibrated at each point;
-dotted lines mark the shortest duration meeting the $10^{-3}$ target. Non-monotonicity at the
+\caption{(a) Simulated coherent average $X$-gate error (leakage included, decoherence omitted) against
+gate duration for both architectures, from the
+lab-frame simulation with amplitude, DRAG and Stark detuning optimized at each point; dotted lines mark the shortest
+tested duration meeting the $10^{-3}$ target. Non-monotonicity at the
 shortest durations is optimizer noise and is not smoothed. (b) The gate-count ratio under
-each pulse-length bound. The two analytic bounds differ by $393\times$; the simulation
-(purple) falls between them and excludes both.}
+each pulse-length estimate. The two heuristic pulse-time estimates differ by $393\times$; the simulation
+(purple) falls between them.}
 \label{fig:pulse}
 \end{figure}
 
@@ -632,27 +836,31 @@ each pulse-length bound. The two analytic bounds differ by $393\times$; the simu
 \label{sec:calibration}
 
 Run at the parameters of each of the nine devices in the published Table~I of Nguyen
-\emph{et al.}, the model is optimistic by a median factor of $2.0\times$ on $T_1$ and
-$2.6\times$ on $T_2$, worst case $5.7\times$. The gap is not uniform, so it is not a single
-missing constant---and it is smallest where it matters most: device~I, the device nearest our
-nominal design in frequency (0.395 versus \SI{0.363}{\giga\hertz}), is matched to 4\% on
-$T_2$, with the model \emph{pessimistic} on its $T_1$.
+\emph{et al.}, the model is optimistic by a median factor of $2.0\times$ on $T_1$ and $1.5\times$ on $T_2$, worst
+case $3.2\times$ (device~F). The gap is not uniform, so it is not a single missing constant: the $T_2$
+ratio runs from $0.57\times$ to $3.2\times$, and device~I, the device nearest our nominal design in
+frequency (0.395 versus \SI{0.363}{\giga\hertz}), is the one on which the model is \emph{pessimistic}
+on both, by $1.25\times$ on $T_1$ and $1.75\times$ on $T_2$. Under the absolute reading of $A_{\rm cc}$ the
+$T_2$ median would be $2.6\times$ (Section~\ref{sec:model}). This calibration covers the fluxonium
+only. We have not calibrated the transmon model against measured devices, so the
+cross-architecture ratios of the previous section carry a transmon-side model bias that we do
+not quantify.
 
-Identified contributors, in order: the flat $Q_{\rm cap} = 10^6$ against their measured
+Possible contributors include the flat $Q_{\rm cap} = 10^6$ against their measured
 $\tan\delta_C = (2.0$--$3.6)\times10^{-6}$ at \SI{6}{\giga\hertz}; the absence of Purcell
-decay, photon shot noise and inductive loss; the fact that their $T_2$ is a Hahn echo while
-this model computes free-induction decay, which makes the comparison conservative in the
-model's favor; and a temperature mismatch, since we run at the \SI{15}{\milli\kelvin}
-default while they state \SI{20}{\milli\kelvin}.
+decay, photon shot noise and inductive loss; the fact that their $T_2$ is a Hahn echo while this model computes free-induction decay, so the two are not like for like (because echo generally suppresses low-frequency dephasing, an
+echo version of the model could give a longer $T_2$ and change the discrepancy; we do not quantify
+that protocol dependence); and a temperature mismatch, since we run at the \SI{15}{\milli\kelvin}
+default while they state \SI{20}{\milli\kelvin}. We have not quantified these contributions
+separately, so the list is not a ranking.
 
 The comparison also has a floor set by our own model rather than by the devices. Absolute
-$T_2$ spans \SIrange{149}{3316}{\micro\second} under single-decade moves of the noise
-amplitudes, so a factor of $2.6$ is well inside the band the model itself admits; the
-calibration should be read as establishing the right order of magnitude, not as a residual to
-be explained away. Consistent with that, the state of the art has moved well past the devices
-we calibrate against---Somoroff \emph{et al.} report $T_2^* = 1.48$\,ms~\cite{somoroff2023}, so
-a model tuned to reproduce Nguyen's 2019 numbers exactly would now be miscalibrated against
-2023 hardware.
+$T_2$ spans \SIrange{47}{1163}{\micro\second} under single-decade moves of the noise amplitudes, so
+a factor of $1.5$ is well inside the band the model itself admits; the calibration should be read as establishing the right order of magnitude, not as a residual to be
+explained away, and, because the protocols differ, not as a precise estimate of omitted loss. Device performance and loss parameters also differ across fabrication generations: Somoroff
+\emph{et al.} report $T_2^* = 1.48$\,ms~\cite{somoroff2023}, well beyond the devices we calibrate
+against, so a calibration to Nguyen's 2019 devices should not be assumed to predict later hardware
+without re-evaluating the physical parameters.
 
 We stress that the published table must be used. The arXiv v1 preprint lists eight devices
 and omits device~I entirely---the paper's headline device, and the one closest to the design
@@ -663,50 +871,72 @@ regime studied here.
 
 The model omits Purcell decay, photon shot noise, inductive loss in the junction array, TLS
 spectral structure, crosstalk and any lattice; qubits are treated in isolation. The
-superinductance is ideal, so array-mode hybridization is absent, though
-Section~\ref{sec:validation} bounds that omission at $-0.43\%$ in $f_{01}$ at the flux sweet
-spot. Second-order dephasing uses a convention with no logarithmic factor; a $\ln^2$
-convention would change sweet-spot $T_2$ by ${\sim}37\%$ instead of 0.6\% and would move,
-though not remove, the interior optimum. Absolute $T_2$ spans
-\SIrange{149}{3316}{\micro\second} under single-decade moves of the noise amplitudes and
-should never be quoted without a band. The Monte Carlo varies amplitudes only; fabrication
+superinductance is ideal, so array-mode hybridization is absent, though Section~\ref{sec:validation} bounds that omission at $-0.43\%$ in $f_{01}$ at the flux sweet
+spot for the nominal and Manucharyan devices; it is not bounded for the deep-well designs of the
+extended scan. Second-order dephasing uses a convention with no logarithmic factor; a $\ln^2$ convention would change sweet-spot $T_2$ by ${\sim}16\%$ instead of 0.2\% and would move,
+though not remove, the interior optimum: in two slices we checked it rises by an order of magnitude in
+frequency, to 0.18--0.31\,GHz, inside the range of Nguyen \emph{et al.}'s devices. The location of the
+optimum is therefore the least robust number in Section~\ref{sec:fluxonium}. Absolute $T_2$ spans \SIrange{47}{1163}{\micro\second} under single-decade moves of the noise
+amplitudes and should never be quoted without a band. The Monte Carlo varies amplitudes only; fabrication
 spread in $E_J$, $E_C$, $E_L$ is not propagated, and the log-uniform priors are a choice. The
-gate-count metric is a heuristic, not a literature formula.
+gate-count metric is a heuristic, not a literature formula: $N = T_2/T_{\rm gate}$ is a ratio of
+timescales, not an achievable circuit depth.
+
+Several checks that would strengthen these results have not been done, and the conclusions are
+stated for this model only because of them. No result has been reproduced with an independent
+implementation; everything comes from one code base built on \texttt{scqubits}. The interior
+fluxonium optima are located by continuous optimization, but the transmon optimum and the in-band
+fluxonium optimum are read from sampled grids rather than solved along the constraint boundaries.
+The second-order curvature is computed by a single method, Richardson-extrapolated finite
+differences. The Monte Carlo uses one fixed seed and priors of our choosing. The pulse simulation
+uses one propagator and one pulse family, its optimizer is not converged, and shorter durations
+were not retested with the stronger optimizer. Noise-model parity has not been tested: adding
+quasiparticle loss to the transmon at the fluxonium's density, or inductive loss to the fluxonium,
+could change the matched-frequency ranking, which Section~\ref{sec:model-choice} shows already
+depends on the loss model, and Section~\ref{sec:matched-choice} on the choice of matched transmon.
 
 \section{Conclusion}
 
-Neither architecture has a usable coherence sweet spot in design space. Both design planes are, to
-better than $|r| = 0.99$, restatements of the transition frequency, so a raw $T_2$ maximum
-locates the edge of the swept domain or the point where a frequency constraint was drawn.
+Neither architecture has a coherence sweet spot in design space that comes without a cost. Over the swept design
+planes the modeled $T_2$ is, to better than $|r| = 0.98$, largely a function of the transition
+frequency (to 0.6\% rms for the transmon and 12\% for the fluxonium), so a raw $T_2$ maximum
+locates the edge of the swept domain or the point where a frequency constraint was drawn. The
+extended fluxonium scan departs from this: past its interior optimum, lowering the frequency
+further makes $T_2$ worse.
 The transmon is a monotone trade-off in which charge insensitivity is paid for in
-anharmonicity, once, at design time. The fluxonium has a real interior optimum, visible only
-once second-order flux dephasing is included, but it is thermally out of reach; in practice
-it too is a trade-off terminated by a frequency floor.
+anharmonicity, once, at design time. Within this model the fluxonium has an interior optimum, visible only once second-order flux dephasing is included, but in the convention of Eq.~\eqref{eq:secondorder} it sits at 5.4--30\,MHz, where passive thermal equilibration at 15\,mK does not give high-fidelity initialization, and its location
+depends strongly on the second-order rate convention; without the overhead of active initialization it too is a
+trade-off terminated by a frequency floor.
 
-For Q3, the honest output is a metric family, not a number. The fluxonium's raw $18\times$
-coherence advantage is roughly 90\% frequency; at matched frequency it inverts to a median
-$0.86\times$ across the literature noise band. Its durable advantage is anharmonicity per
-unit coherence, and its price is operating-point precision---a bias window four orders of
-magnitude narrower than the transmon's, paid continuously at run time rather than once at
-design time. Whether that trade is worth making is a question about qubit count and
-calibration budget, not about coherence.
+For Q3, the honest output is a metric family, not a number. The fluxonium's raw $8.4\times$ coherence advantage is, under $T_2\propto 1/f_{01}$ scaling, more than
+accounted for by frequency; at matched frequency the transmon is ahead deterministically at all three frequencies tested, under
+both loss models (0.62--0.82$\times$ with the flat $Q_{\rm cap}$), and in 95\% of noise draws at 1\,GHz
+(median $0.37\times$). These fluxonium numbers rest mainly on the critical-current amplitude, the least
+constrained input in the study: read as \texttt{scqubits} applies it, the matched ratios would be
+1.07--2.16$\times$ instead.
+Under the tested charge-drive pulse model the fluxonium has a larger coherence-to-gate-duration
+proxy, by roughly $17$--$27\times$ across the explored numerical settings. Its price is
+operating-point precision: a normalized bias window at least $4.5\times10^3$ times narrower than the
+transmon's, which must hold during operation, whether by active control, passive flux
+locking~\cite{benatre2025} or other architectural means, rather than being fixed once at design
+time. Whether that trade is worth making depends on qubit
+count and calibration budget, which this single-qubit model does not quantify.
 
 More generally, we suggest that architecture comparisons in this field should state the
-metric, the control variable and the uncertainty band together. A single ratio between two
-architectures at their own operating points is not a comparison between architectures.
+metric, the control variable and the uncertainty band together. A single ratio between architectures evaluated at different operating points cannot, by itself,
+isolate an architecture-dependent advantage.
 
 \section{Outlook}
 
-Two extensions would sharpen the results most. The gate-count metric is currently settled by a
-coarse calibration; optimal control over a free pulse shape (GRAPE or CRAB) would tighten the
-$36$--$58\times$ bracket and, more interestingly, would test whether the fluxonium's
+Two extensions would sharpen the results most. The gate-count metric is currently estimated with a
+coarse calibration in a single model; optimal control over a free pulse shape (GRAPE or CRAB),
+a flux drive, and a check against an independent code or a measured gate would tighten the $17$--$27\times$ bracket and, more interestingly, would test whether the fluxonium's
 unfavourable leakage matrix element can be shaped around---the anharmonicity is genuinely
 there, and a pulse that exploits it without driving $|1\rangle \to |2\rangle$ would move the
-number back toward the leakage-only bound. Second, the interior fluxonium optimum we find is
-thermally inaccessible at \SI{15}{\milli\kelvin}, but that is a statement about temperature as
-much as about design; the same analysis at lower base temperature, or with active
-initialization modeled, would establish whether it is inaccessible in principle or merely
-inconvenient.
+number back toward the leakage-only bound. Second, passive thermal equilibration at \SI{15}{\milli\kelvin} does not initialize the interior fluxonium
+optimum we find with high fidelity, but low-frequency fluxoniums have been operated
+with active initialization~\cite{zhang2021,najerasantos2024}; modeling that initialization, and
+its cost in time and fidelity, would establish whether the optimum is a usable design point.
 
 A broader point follows from the metric sensitivity. If a single architecture comparison can
 span more than two orders of magnitude depending on choices that are all defensible, then comparisons
@@ -718,16 +948,17 @@ comparisons: state the control variable, state the figure of merit, and give the
 \section*{Code and data availability}
 \addcontentsline{toc}{section}{Code and data availability}
 
-All code, generated data and figures are openly available at
+All code, generated data and figures are openly available at\\
 \url{https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium}.
 
-Every number in this paper is produced by five notebooks run in order from a single validated
-pipeline; no notebook reimplements the physics. Each sweep writes its raw data before any
+The results are produced by five notebooks run in order from a single pipeline, plus three
+standalone check scripts in \texttt{results/} for the robustness, pulse-convergence and
+matched-transmon checks; none reimplements the physics, and the Monte Carlo uses a fixed random
+seed. Each sweep writes its raw data before any
 figure code executes, together with a metadata record of the grid, the noise amplitudes, the
-software versions and the git revision. Every quoted value is bound to the file and filter
-that produced it by an automated provenance ledger of 33 entries, which recomputes and asserts
+software versions and the git revision. The headline values are bound to the file and filter that produced them by an automated provenance ledger of 53 entries, which recomputes and asserts
 each one on every run and fails rather than warns if a value drifts from its artifact. A test
-suite of 32 checks pins the conventions and the validated anchors, including the published
+suite of 35 checks pins the conventions and the validated anchors, including the published
 numbers used for calibration.
 
 \section*{Acknowledgments}

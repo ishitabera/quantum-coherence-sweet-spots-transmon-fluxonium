@@ -2,8 +2,8 @@
   "notebook": "notebooks/04_analysis.ipynb",
   "purpose": "Q3 cross-architecture comparison (transmon vs fluxonium) and robustness",
   "provenance": {
-    "date": "2026-09-07T23:30:04",
-    "git_revision": "81dc9c6-dirty",
+    "date": "2026-11-04T23:08:34",
+    "git_revision": "96f42ce-dirty",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",
@@ -26,7 +26,8 @@
       "t_exp": 10000.0,
       "R_0": 50.0,
       "T": 0.015,
-      "M": 400.0
+      "M": 400.0,
+      "cc_convention": "fractional"
     },
     "units": "frequencies GHz; coherence times microseconds"
   },
@@ -41,11 +42,11 @@
       "data/fluxonium_metadata.json",
       "data/transmon_sweep_metadata.json"
     ],
-    "fluxonium_metadata_git_revision": "81dc9c6-dirty"
+    "fluxonium_metadata_git_revision": "96f42ce-dirty"
   },
   "validated_against": {
-    "transmon_nominal_T2_us": 54.35208346332045,
-    "fluxonium_nominal_T2_us_first_order_only": 1136.8688060132743
+    "transmon_nominal_T2_us": 38.2208528179222,
+    "fluxonium_nominal_T2_us_first_order_only": 369.54270558880427
   },
   "operating_points": {
     "transmon": {
@@ -54,7 +55,7 @@
       "ncut": 30,
       "f01_GHz": 4.924898920322306,
       "anharmonicity_GHz": -0.2987979875985012,
-      "T2_us": 62.42440557094262,
+      "T2_us": 44.10097615493354,
       "source": "notebooks/02_transmon_sweep.ipynb section 6.1"
     },
     "fluxonium": {
@@ -65,7 +66,7 @@
       "cutoff": 110,
       "f01_GHz": 0.36342136720072704,
       "anharmonicity_GHz": 8.659506232022716,
-      "T2_us": 1129.7122532636274,
+      "T2_us": 368.7833213261312,
       "source": "Manucharyan 2009 nominal design, validated in notebook 01"
     },
     "superseded": {
@@ -90,58 +91,58 @@
   },
   "bias_sensitivity": {
     "metric": "width of the bias window for a factor-k coherence loss, as a fraction of one bias period (both knobs are periodic with period 1)",
-    "transmon_T2_variation_full_period": 1.0055857264215904,
-    "fluxonium_2x_detuning_Phi0": 3.6112040916026605e-05,
-    "fluxonium_10x_detuning_Phi0": 0.000324969104774186,
-    "bias_window_ratio": 13845.797338419023,
+    "transmon_T2_variation_full_period": 1.0039511654631044,
+    "fluxonium_2x_detuning_Phi0": 0.00011061945526287813,
+    "fluxonium_10x_detuning_Phi0": 0.0009960991352342603,
+    "bias_window_ratio": 4520.000562394659,
     "method": "Brent root-finding on log T2(dPhi) - log(T2_sweet/k)"
   },
   "metrics": {
-    "raw_T2_ratio": 18.097284914948187,
+    "raw_T2_ratio": 8.362248491519518,
     "matched_frequency_T2_ratio": {
-      "0.5": 2.1554889350481976,
-      "1.0": 1.3619671660078851,
-      "2.0": 1.0688560728004721
+      "0.5": 0.8158545487079798,
+      "1.0": 0.6244160388683098,
+      "2.0": 0.622824013494436
     },
     "matched_frequency_gate_ratio": {
-      "0.5": 1708.6453046807803,
-      "1.0": 961.9506649624518,
-      "2.0": 624.8055973472166
+      "0.5": 646.7238227419506,
+      "1.0": 441.0219561776963,
+      "2.0": 364.0751450978798
     },
-    "gate_count_ratio_own_operating_points": 524.4799429983532,
+    "gate_count_ratio_own_operating_points": 242.34749205653304,
     "gate_pulse_bound_note": "N = T2 / T_gate with T_gate = 1/(pulse bandwidth). 'alpha' is the leakage bound used for the headline; 'f01' is the drive-period floor; 'both' takes the smaller bandwidth. They coincide for a transmon and differ by 24x for this fluxonium.",
     "gate_count_by_pulse_bound_own_operating_points": {
       "alpha": {
-        "fluxonium": 9782750.297528807,
-        "transmon": 18652.28676163032,
-        "ratio": 524.4799429983532
+        "fluxonium": 3193481.4692896693,
+        "transmon": 13177.282926223628,
+        "ratio": 242.34749205653304
       },
       "both": {
-        "fluxonium": 410561.57162448147,
-        "transmon": 18652.28676163032,
-        "ratio": 22.0113263789751
+        "fluxonium": 134023.73883716765,
+        "transmon": 13177.282926223628,
+        "ratio": 10.170817427806146
       },
       "f01": {
-        "fluxonium": 410561.57162448147,
-        "transmon": 307433.88759809703,
-        "ratio": 1.3354467031337856
+        "fluxonium": 134023.73883716765,
+        "transmon": 217192.84985059194,
+        "ratio": 0.617072518406399
       }
     },
     "matched_frequency_gate_ratio_by_pulse_bound": {
       "alpha": {
-        "0.5": 1708.6453046807803,
-        "1.0": 961.9506649624518,
-        "2.0": 624.8055973472166
+        "0.5": 646.7238227419506,
+        "1.0": 441.0219561776963,
+        "2.0": 364.0751450978798
       },
       "both": {
-        "0.5": 101.80197498008076,
-        "1.0": 133.61009572821484,
-        "2.0": 210.59087086947588
+        "0.5": 38.53214136452882,
+        "1.0": 61.25572540193276,
+        "2.0": 122.71161172950535
       },
       "f01": {
-        "0.5": 2.135677001747514,
-        "1.0": 1.3674096856959408,
-        "2.0": 1.0650395161752526
+        "0.5": 0.8083557136922946,
+        "1.0": 0.6269112506985917,
+        "2.0": 0.6206001003076773
       }
     },
     "gate_count_simulated": {
@@ -162,13 +163,13 @@
         ]
       },
       "N_gates": {
-        "transmon": 7803.050696367827,
-        "fluxonium": 376570.7510878758
+        "transmon": 5512.622019366692,
+        "fluxonium": 122927.77377537708
       },
-      "ratio": 48.259426439861834,
+      "ratio": 22.299329310718715,
       "ratio_bracket": [
-        36.19456982989637,
-        57.911311727834196
+        16.724496983039035,
+        26.759195172862462
       ],
       "caveat": "coarse 3-parameter calibration with a fixed Gaussian shape, so T_gate is an UPPER bound; optimal control would shorten both, not necessarily equally. The optimiser is not reliably converged at the shortest durations."
     }
@@ -178,23 +179,23 @@
       "f01_target": 0.5,
       "fx_f01": 0.49519925356947603,
       "tm_f01": 0.49979304494066135,
-      "fx_T2": 834.7505142450162,
-      "tm_T2": 387.2673622545647,
-      "T2_ratio": 2.1554889350481976,
+      "fx_T2": 265.7141688535075,
+      "tm_T2": 325.6881625214975,
+      "T2_ratio": 0.8158545487079798,
       "fx_alpha": 8.31142892520965,
       "tm_alpha": -0.010485027544131498,
-      "fx_N_alpha": 6937969.569429658,
-      "fx_N_both": 413367.8315708683,
-      "fx_N_f01": 413367.8315708683,
-      "tm_N_alpha": 4060.5089601822615,
-      "tm_N_both": 4060.5089601822615,
-      "tm_N_f01": 193553.53418734705,
-      "N_ratio_alpha": 1708.6453046807803,
-      "N_ratio_both": 101.80197498008076,
-      "N_ratio_f01": 2.135677001747514,
-      "fx_N": 6937969.569429658,
-      "tm_N": 4060.5089601822615,
-      "N_ratio": 1708.6453046807803,
+      "fx_N_alpha": 2208464.4288470834,
+      "fx_N_both": 131581.45807909063,
+      "fx_N_f01": 131581.45807909063,
+      "tm_N_alpha": 3414.849354835477,
+      "tm_N_both": 3414.849354835477,
+      "tm_N_f01": 162776.67844774819,
+      "N_ratio_alpha": 646.7238227419506,
+      "N_ratio_both": 38.53214136452882,
+      "N_ratio_f01": 0.8083557136922946,
+      "fx_N": 2208464.4288470834,
+      "tm_N": 3414.849354835477,
+      "N_ratio": 646.7238227419506,
       "n_thermal": 0.2530503391370289,
       "tm_EJ_EC": 325.12499999999994
     },
@@ -202,23 +203,23 @@
       "f01_target": 1.0,
       "fx_f01": 1.003893986704425,
       "tm_f01": 0.9998983204132514,
-      "fx_T2": 387.1529362716612,
-      "tm_T2": 284.2601098868339,
-      "T2_ratio": 1.3619671660078851,
+      "fx_T2": 129.96907184913377,
+      "tm_T2": 208.14499269539814,
+      "T2_ratio": 0.6244160388683098,
       "fx_alpha": 7.227720950267978,
       "tm_alpha": -0.01023328843971072,
-      "fx_N_alpha": 2798233.388448449,
-      "fx_N_both": 388660.50465808215,
-      "fx_N_f01": 388660.50465808215,
-      "tm_N_alpha": 2908.915696375836,
-      "tm_N_both": 2908.915696375836,
-      "tm_N_f01": 284231.2064363315,
-      "N_ratio_alpha": 961.9506649624518,
-      "N_ratio_both": 133.61009572821484,
-      "N_ratio_f01": 1.3674096856959408,
-      "fx_N": 2798233.388448449,
-      "tm_N": 2908.915696375836,
-      "N_ratio": 961.9506649624518,
+      "fx_N_alpha": 939380.1834908683,
+      "fx_N_both": 130475.16968690076,
+      "fx_N_f01": 130475.16968690076,
+      "tm_N_alpha": 2130.0077475334897,
+      "tm_N_both": 2130.0077475334897,
+      "tm_N_f01": 208123.8285985571,
+      "N_ratio_alpha": 441.0219561776963,
+      "N_ratio_both": 61.25572540193276,
+      "N_ratio_f01": 0.6269112506985917,
+      "fx_N": 939380.1834908683,
+      "tm_N": 2130.0077475334897,
+      "N_ratio": 441.0219561776963,
       "n_thermal": 0.04251672883564913,
       "tm_EJ_EC": 1275.125
     },
@@ -226,23 +227,23 @@
       "f01_target": 2.0,
       "fx_f01": 1.9928083815780422,
       "tm_f01": 1.9999495870600867,
-      "fx_T2": 168.0868943691737,
-      "tm_T2": 157.25867929886496,
-      "T2_ratio": 1.0688560728004721,
+      "fx_T2": 68.57988918277788,
+      "tm_T2": 110.1111834111877,
+      "T2_ratio": 0.622824013494436,
       "fx_alpha": 5.912496710373224,
       "tm_alpha": -0.010114518885757207,
-      "fx_N_alpha": 993813.2100145912,
-      "fx_N_both": 334964.9719323124,
-      "fx_N_f01": 334964.9719323124,
-      "tm_N_alpha": 1590.5958817176056,
-      "tm_N_both": 1590.5958817176056,
-      "tm_N_f01": 314509.4307253796,
-      "N_ratio_alpha": 624.8055973472166,
-      "N_ratio_both": 210.59087086947588,
-      "N_ratio_f01": 1.0650395161752526,
-      "fx_N": 993813.2100145912,
-      "tm_N": 1590.5958817176056,
-      "N_ratio": 624.8055973472166,
+      "fx_N_alpha": 405478.3691909344,
+      "fx_N_both": 136666.57797113305,
+      "fx_N_f01": 136666.57797113305,
+      "tm_N_alpha": 1113.7216441455337,
+      "tm_N_both": 1113.7216441455337,
+      "tm_N_f01": 220216.8157939023,
+      "N_ratio_alpha": 364.0751450978798,
+      "N_ratio_both": 122.71161172950535,
+      "N_ratio_f01": 0.6206001003076773,
+      "fx_N": 405478.3691909344,
+      "tm_N": 1113.7216441455337,
+      "N_ratio": 364.0751450978798,
       "n_thermal": 0.0016660059817544697,
       "tm_EJ_EC": 5050.124999999998
     }
@@ -278,307 +279,307 @@
       {
         "mode": "shared",
         "metric": "raw T2",
-        "median": 11.252081673621337,
-        "ci_lo": 10.156362020349349,
-        "ci_hi": 12.140363341926472,
-        "spread_p5": 3.5851132088171407,
-        "spread_p95": 21.07716842255994,
+        "median": 5.112139130493119,
+        "ci_lo": 4.910783509591006,
+        "ci_hi": 5.541016629955072,
+        "spread_p5": 3.636095441093178,
+        "spread_p95": 13.092409841153849,
         "win_fraction": 1.0
       },
       {
         "mode": "shared",
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.8579296228425282,
-        "ci_lo": 0.7785339129649782,
-        "ci_hi": 0.9375945511050529,
-        "spread_p5": 0.2702871244086734,
-        "spread_p95": 1.5776252642130357,
-        "win_fraction": 0.42
+        "median": 0.3703748193825445,
+        "ci_lo": 0.3551830312493174,
+        "ci_hi": 0.4042985715028031,
+        "spread_p5": 0.25404862108651716,
+        "spread_p95": 0.9876497461739305,
+        "win_fraction": 0.0475
       },
       {
         "mode": "shared",
         "metric": "gate count at matched f01",
-        "median": 605.9514441918474,
-        "ci_lo": 549.8746474686633,
-        "ci_hi": 662.2183885271837,
-        "spread_p5": 190.90245752239156,
-        "spread_p95": 1114.2689117973252,
+        "median": 261.59390085349816,
+        "ci_lo": 250.8640161239262,
+        "ci_hi": 285.55407898742186,
+        "spread_p5": 179.43328303815676,
+        "spread_p95": 697.5721249336702,
         "win_fraction": 1.0
       },
       {
         "mode": "shared",
         "metric": "gate count at own op. points",
-        "median": 326.09815132650954,
-        "ci_lo": 294.3429469413709,
-        "ci_hi": 351.84156648235654,
-        "spread_p5": 103.90066688124747,
-        "spread_p95": 610.8403633353847,
+        "median": 148.1556185008738,
+        "ci_lo": 142.32010311447965,
+        "ci_hi": 160.58497724326088,
+        "spread_p5": 105.37819007899407,
+        "spread_p95": 379.4329591135305,
         "win_fraction": 1.0
       },
       {
         "mode": "shared",
         "metric": "gate count, own op. pts, min(|a|,f01) bound",
-        "median": 13.685657452206426,
-        "ci_lo": 12.352957932837878,
-        "ci_hi": 14.766054749890282,
-        "spread_p5": 4.3604937047582935,
-        "spread_p95": 25.635692617647166,
+        "median": 6.217781475223914,
+        "ci_lo": 5.9728770980896,
+        "ci_hi": 6.739415668508801,
+        "spread_p5": 4.4225022634692,
+        "spread_p95": 15.924007797595532,
         "win_fraction": 1.0
       },
       {
         "mode": "shared",
         "metric": "gate count, own op. pts, drive-period bound",
-        "median": 0.8303209815754133,
-        "ci_lo": 0.7494649191661666,
-        "ci_hi": 0.895869644315007,
-        "spread_p5": 0.2645550223460106,
-        "spread_p95": 1.5553402189106107,
-        "win_fraction": 0.4025
+        "median": 0.3772383194420078,
+        "ci_lo": 0.36237975356569363,
+        "ci_hi": 0.4088863288200138,
+        "spread_p5": 0.26831713662621387,
+        "spread_p95": 0.9661236832273906,
+        "win_fraction": 0.04
       },
       {
         "mode": "shared",
         "metric": "gate count at matched f01, drive-period bound",
-        "median": 0.8613579719098359,
-        "ci_lo": 0.7816449910106777,
-        "ci_hi": 0.9413412470101825,
-        "spread_p5": 0.2713672113834086,
-        "spread_p95": 1.5839295693204933,
-        "win_fraction": 0.425
+        "median": 0.3718548640537813,
+        "ci_lo": 0.35660236843209536,
+        "ci_hi": 0.4059141779507224,
+        "spread_p5": 0.2550638178228963,
+        "spread_p95": 0.9915964662730726,
+        "win_fraction": 0.0475
       },
       {
         "mode": "independent",
         "metric": "raw T2",
-        "median": 9.738074992194367,
-        "ci_lo": 8.782435073924674,
-        "ci_hi": 11.45588026272116,
-        "spread_p5": 1.3920203463347698,
-        "spread_p95": 92.56834124789374,
-        "win_fraction": 0.9775
+        "median": 6.398160135203664,
+        "ci_lo": 5.994266050418411,
+        "ci_hi": 7.037533575772459,
+        "spread_p5": 1.2668344096484054,
+        "spread_p95": 27.683600267726607,
+        "win_fraction": 0.975
       },
       {
         "mode": "independent",
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.7431181696241029,
-        "ci_lo": 0.6595579666325971,
-        "ci_hi": 0.8852834902789422,
-        "spread_p5": 0.10306378991936355,
-        "spread_p95": 7.283932659881335,
-        "win_fraction": 0.4175
+        "median": 0.4660625022573588,
+        "ci_lo": 0.4271027153386279,
+        "ci_hi": 0.5068427019675306,
+        "spread_p5": 0.09463836513177293,
+        "spread_p95": 2.0498584686773094,
+        "win_fraction": 0.1925
       },
       {
         "mode": "independent",
         "metric": "gate count at matched f01",
-        "median": 524.8606833238791,
-        "ci_lo": 465.84252573665646,
-        "ci_hi": 625.2713453072909,
-        "spread_p5": 72.7934444536442,
-        "spread_p95": 5144.605568027331,
+        "median": 329.1776374276668,
+        "ci_lo": 301.66053285375835,
+        "ci_hi": 357.9804905415825,
+        "spread_p5": 66.84260864842405,
+        "spread_p95": 1447.804885636747,
         "win_fraction": 1.0
       },
       {
         "mode": "independent",
         "metric": "gate count at own op. points",
-        "median": 282.2205121278222,
-        "ci_lo": 254.5249781172458,
-        "ci_hi": 332.0044667156169,
-        "spread_p5": 40.34233617525483,
-        "spread_p95": 2682.7360330192605,
+        "median": 185.4259729443819,
+        "ci_lo": 173.7206620338724,
+        "ci_hi": 203.95574397026633,
+        "spread_p5": 36.714305050915996,
+        "spread_p95": 802.3022878096746,
         "win_fraction": 1.0
       },
       {
         "mode": "independent",
         "metric": "gate count, own op. pts, min(|a|,f01) bound",
-        "median": 11.84420469498583,
-        "ci_lo": 10.681881051374704,
-        "ci_hi": 13.933533157392763,
-        "spread_p5": 1.6930834825968863,
-        "spread_p95": 112.58882098301572,
-        "win_fraction": 0.9825
+        "median": 7.781940308879671,
+        "ci_lo": 7.290692888919874,
+        "ci_hi": 8.559596048099614,
+        "spread_p5": 1.540822603497544,
+        "spread_p95": 33.67094918943853,
+        "win_fraction": 0.9875
       },
       {
         "mode": "independent",
         "metric": "gate count, own op. pts, drive-period bound",
-        "median": 0.7185984087841699,
-        "ci_lo": 0.6480792019399342,
-        "ci_hi": 0.8453598205612477,
-        "spread_p5": 0.10272087724454333,
-        "spread_p95": 6.830863674581035,
-        "win_fraction": 0.4075
+        "median": 0.472137223834176,
+        "ci_lo": 0.4423328069574664,
+        "ci_hi": 0.5193182875844422,
+        "spread_p5": 0.09348307460109645,
+        "spread_p95": 2.0428463651954902,
+        "win_fraction": 0.205
       },
       {
         "mode": "independent",
         "metric": "gate count at matched f01, drive-period bound",
-        "median": 0.7460877237878689,
-        "ci_lo": 0.662193608157887,
-        "ci_hi": 0.888821147386695,
-        "spread_p5": 0.10347564030736218,
-        "spread_p95": 7.313039783677919,
-        "win_fraction": 0.4175
+        "median": 0.46792492185726375,
+        "ci_lo": 0.42880944880112826,
+        "ci_hi": 0.5088680822065351,
+        "spread_p5": 0.0950165469105487,
+        "spread_p95": 2.0580498519587467,
+        "win_fraction": 0.1925
       }
     ],
     "ci_convergence": [
       {
         "n": 25,
         "metric": "raw T2",
-        "median": 12.52551743956143,
-        "ci_lo": 6.378636940052798,
-        "ci_hi": 14.827984300337842,
-        "ci_width_rel": 0.6745707234096424
+        "median": 5.562854510933658,
+        "ci_lo": 4.0331849807415345,
+        "ci_hi": 6.596792215718085,
+        "ci_width_rel": 0.46084384014319296
       },
       {
         "n": 25,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.9579842455834653,
-        "ci_lo": 0.4818025395083303,
-        "ci_hi": 1.1374392307527514,
-        "ci_width_rel": 0.6843919346973208
+        "median": 0.40669131272540027,
+        "ci_lo": 0.28604264482771086,
+        "ci_hi": 0.48684612284529055,
+        "ci_width_rel": 0.49374912060922993
       },
       {
         "n": 50,
         "metric": "raw T2",
-        "median": 11.64802292954047,
-        "ci_lo": 7.561999834588541,
-        "ci_hi": 13.632276999565718,
-        "ci_width_rel": 0.52114227467585
+        "median": 5.11834182052537,
+        "ci_lo": 4.445596004320272,
+        "ci_hi": 6.039488151192245,
+        "ci_width_rel": 0.3114079134926491
       },
       {
         "n": 50,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.8844449444864821,
-        "ci_lo": 0.5928078598153803,
-        "ci_hi": 1.0330758667337405,
-        "ci_width_rel": 0.4977901786458674
+        "median": 0.37057343374893836,
+        "ci_lo": 0.31764965716368354,
+        "ci_hi": 0.4435978966729285,
+        "ci_width_rel": 0.33987390362843506
       },
       {
         "n": 60,
         "metric": "raw T2",
-        "median": 11.758635593872949,
-        "ci_lo": 7.799392595006514,
-        "ci_hi": 13.922236681152535,
-        "ci_width_rel": 0.5207104206321727
+        "median": 5.34657907933785,
+        "ci_lo": 4.47515459301421,
+        "ci_hi": 6.052773690165244,
+        "ci_width_rel": 0.29507074967764535
       },
       {
         "n": 60,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.9094082123785341,
-        "ci_lo": 0.5928316561194411,
-        "ci_hi": 1.0599720318078747,
-        "ci_width_rel": 0.5136751233713184
+        "median": 0.3891469273611744,
+        "ci_lo": 0.324646866756117,
+        "ci_hi": 0.44434686750113106,
+        "ci_width_rel": 0.3075959035747912
       },
       {
         "n": 100,
         "metric": "raw T2",
-        "median": 9.7336472797037,
-        "ci_lo": 7.342272363073746,
-        "ci_hi": 11.905832301536504,
-        "ci_width_rel": 0.4688437753419063
+        "median": 4.801717863908501,
+        "ci_lo": 4.263400691505083,
+        "ci_hi": 5.562854510933658,
+        "ci_width_rel": 0.2706226930148798
       },
       {
         "n": 100,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.7427548940622466,
-        "ci_lo": 0.5639678345375227,
-        "ci_hi": 0.9338982039749811,
-        "ci_width_rel": 0.49805174276839753
+        "median": 0.3509806819861547,
+        "ci_lo": 0.30305103809423634,
+        "ci_hi": 0.40669131272540027,
+        "ci_width_rel": 0.29528768946677325
       },
       {
         "n": 150,
         "metric": "raw T2",
-        "median": 10.64404214355923,
-        "ci_lo": 8.575195028775704,
-        "ci_hi": 12.490526668122385,
-        "ci_width_rel": 0.3678425532837513
+        "median": 5.006656659886064,
+        "ci_lo": 4.59819620165981,
+        "ci_hi": 5.7926326915460065,
+        "ci_width_rel": 0.23856968253009342
       },
       {
         "n": 150,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.824311853599164,
-        "ci_lo": 0.6771436535848112,
-        "ci_hi": 0.9710008584441934,
-        "ci_width_rel": 0.3564879039120009
+        "median": 0.3625551772059816,
+        "ci_lo": 0.3294072029621157,
+        "ci_hi": 0.4255128241983075,
+        "ci_width_rel": 0.26507860672912276
       },
       {
         "n": 200,
         "metric": "raw T2",
-        "median": 10.485699683358902,
-        "ci_lo": 8.739475052315026,
-        "ci_hi": 12.0783622045432,
-        "ci_width_rel": 0.31842292389196325
+        "median": 4.998851227175835,
+        "ci_lo": 4.612993759397636,
+        "ci_hi": 5.628479097543481,
+        "ci_width_rel": 0.20314374083094228
       },
       {
         "n": 200,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.8049574222095761,
-        "ci_lo": 0.6818003086845327,
-        "ci_hi": 0.9338982039749811,
-        "ci_width_rel": 0.31318165201638837
+        "median": 0.3623621881930168,
+        "ci_lo": 0.3308087717702869,
+        "ci_hi": 0.413157129064206,
+        "ci_width_rel": 0.22725427756290953
       },
       {
         "n": 300,
         "metric": "raw T2",
-        "median": 11.243158993128207,
-        "ci_lo": 9.947163635902143,
-        "ci_hi": 12.195120075504747,
-        "ci_width_rel": 0.19993993155985337
+        "median": 5.112139130493119,
+        "ci_lo": 4.808044736169421,
+        "ci_hi": 5.694499059888704,
+        "ci_width_rel": 0.17340183846556914
       },
       {
         "n": 300,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.8563980592914509,
-        "ci_lo": 0.7636636316109271,
-        "ci_hi": 0.9449805815898029,
-        "ci_width_rel": 0.21172041203466777
+        "median": 0.3703748193825445,
+        "ci_lo": 0.34924281616086694,
+        "ci_hi": 0.41866068677921514,
+        "ci_width_rel": 0.18742599924604866
       },
       {
         "n": 400,
         "metric": "raw T2",
-        "median": 11.252081673621337,
-        "ci_lo": 10.149189037629757,
-        "ci_hi": 12.151762926781602,
-        "ci_width_rel": 0.17797363610029174
+        "median": 5.112139130493119,
+        "ci_lo": 4.898322886232181,
+        "ci_hi": 5.544028360193394,
+        "ci_width_rel": 0.12630827477086443
       },
       {
         "n": 400,
         "metric": "T2 at matched f01 = 1 GHz",
-        "median": 0.8579296228425282,
-        "ci_lo": 0.775442818560895,
-        "ci_hi": 0.9384823066282029,
-        "ci_width_rel": 0.1900383011920239
+        "median": 0.3703748193825445,
+        "ci_lo": 0.35505894375417324,
+        "ci_hi": 0.4046760006111162,
+        "ci_width_rel": 0.1339644442882484
       }
     ]
   },
   "scaling_exponent": {
-    "superseded_value": -0.6752645832583489,
+    "superseded_value": -0.6649054248757361,
     "superseded_method": "np.linspace(0.001, 0.05, 60), first-order-only physics, single log-log fit",
     "why_wrong": "55 of 60 linearly spaced points lie above 5e-3, so the fit measures the far field; the exponent is not constant across the range",
     "windowed": [
       {
         "window": "1e-05 - 1e-04",
-        "k": -0.45292257724777185,
+        "k": -0.22287512513828725,
         "n_points": 16,
         "limited_by": "2*T1 ceiling"
       },
       {
         "window": "1e-04 - 1e-03",
-        "k": -0.8818451724053712,
+        "k": -0.7177410525384238,
         "n_points": 16,
         "limited_by": "first-order flux dephasing"
       },
       {
         "window": "1e-03 - 1e-02",
-        "k": -0.9556477022948434,
+        "k": -0.9291922018715109,
         "n_points": 16,
         "limited_by": "first-order flux dephasing"
       },
       {
         "window": "3e-03 - 3e-02",
-        "k": -0.7753458088667649,
+        "k": -0.7665247653485244,
         "n_points": 16,
         "limited_by": "mixed; f01 has risen"
       },
       {
         "window": "1e-02 - 5e-02",
-        "k": -0.4814868044077211,
+        "k": -0.4775316329708476,
         "n_points": 11,
         "limited_by": "mixed; f01 has risen"
       }
@@ -602,7 +603,8 @@
     "t_exp": 10000.0,
     "R_0": 50.0,
     "T": 0.015,
-    "M": 400.0
+    "M": 400.0,
+    "cc_convention": "fractional"
   },
   "noise_channels": {
     "transmon": [
@@ -620,20 +622,20 @@
   },
   "units": "frequencies GHz; coherence times microseconds (scqubits returns ns, x1e-3)",
   "corrections_to_earlier_version": [
-    "OPERATING POINTS REPLACED. The transmon was EJ=50, EC=1.0 (f01 = 18.9 GHz, |alpha| = 1 GHz), outside the Krantz 2019 design envelope on both axes and penalised 3.7x on T2 purely by its frequency. Now EJ=13.0, EC=0.26 (f01 = 4.92 GHz), notebook 02's operating point.",
+    "OPERATING POINTS REPLACED. The transmon was EJ=50, EC=1.0 (f01 = 18.9 GHz, |alpha| = 1 GHz), outside the Krantz 2019 design envelope on both axes and penalised 3.8x on T2 purely by its frequency. Now EJ=13.0, EC=0.26 (f01 = 4.92 GHz), notebook 02's operating point.",
     "OPERATING POINTS REPLACED. The fluxonium was EJ=15, EL=0.2, a grid-edge maximum at f01 = 75 MHz with n_th = 3.7 that notebook 03 Appendix A had already retired as 'not a design point'. Now the Manucharyan 2009 nominal design.",
     "BIAS ASYMMETRY REMOVED. The transmon was held at its worst-case charge bias (ng = 0.25) while the fluxonium was held at its best flux bias. Both are now at their own sweet spot and the bias sensitivity is reported as a result (section 2) rather than baked in.",
     "INLINE PHYSICS REMOVED. transmon_T2 and fluxonium_T2 were defined in this notebook without the second-order flux channel added in notebook 03. All physics now imported from src/coherence.py and asserted against the notebook 01/02 records.",
-    "HEADLINE SUPERSEDED. 'median 216x, 90% CI [52x, 371x], fluxonium wins 100%' combined both bad operating points with first-order-only physics and an unconverged N=60 interval. The corrected raw ratio is 18.1x; at matched frequency it is 1.07-2.16x.",
-    "SCALING EXPONENT SUPERSEDED. 'T2 ~ detuning^-0.68' came from linear sampling fitted on log-log axes; 55 of 60 points sat above 5e-3. The exponent is not constant: it runs -0.96 to -0.45 and reaches the theoretical -1 only where flux dephasing dominates.",
+    "HEADLINE SUPERSEDED. 'median 216x, 90% CI [52x, 371x], fluxonium wins 100%' combined both bad operating points with first-order-only physics and an unconverged N=60 interval. The corrected raw ratio is 8.4x; at matched frequency it is 0.62-0.82x.",
+    "SCALING EXPONENT SUPERSEDED. 'T2 ~ detuning^-0.68' came from linear sampling fitted on log-log axes; 55 of 60 points sat above 5e-3. The exponent is not constant: it runs -0.93 to -0.22 and reaches the theoretical -1 only where flux dephasing dominates.",
     "MONTE CARLO REBUILT. N raised 60 -> 400 per correlation mode, CI on the median now by bootstrap rather than raw percentiles, convergence of the interval demonstrated, and all metrics carried through instead of the raw ratio alone.",
-    "GATE-COUNT PULSE BOUND EXPOSED. The metric was reported only as N = T2*|alpha| (524x) while the text acknowledged that a 0.363 GHz qubit cannot be driven at its 8.7 GHz anharmonicity limit. Three bounds are now computed and carried through the Monte Carlo: 524x, 22.0x and 1.34x. The bound is worth 393x, comparable to the entire spread across metrics 1-3, so leaving it uncomputed concealed an uncertainty as large as the result.",
+    "GATE-COUNT PULSE BOUND EXPOSED. The metric was reported only as N = T2*|alpha| (242x) while the text acknowledged that a 0.363 GHz qubit cannot be driven at its 8.7 GHz anharmonicity limit. Three bounds are now computed and carried through the Monte Carlo: 242x, 10.2x and 0.62x. The bound is worth 393x, comparable to the entire spread across metrics 1-3, so leaving it uncomputed concealed an uncertainty as large as the result.",
     "KOCH CROSS-CHECK CORRECTED. Section 2 compared the peak-to-peak charge dispersion against Koch's maximum DERIVATIVE and called them consistent; they differ by pi (his Eq. 2.8) and the comparison could not fail. With the factor restored the ratio is 0.830, matching the asymptotic shortfall 01_validation.ipynb section 4 measures independently, and it is now asserted.",
     "FIGURES. Saved through src/plotting.save at dpi=300 with .pdf siblings; the previous versions were dpi=150 PNG only. The bias-sensitivity figure no longer uses a twin y-axis and plots the fluxonium against log detuning."
   ],
   "known_artifacts": [
     "The matched-frequency transmons require EJ/EC of 325-5050, far above real devices. The matched comparison is a control for the frequency confound, not a design proposal.",
-    "The gate-count metric N = 1e3 * T2[us] * (pulse bandwidth)[GHz] is this project's heuristic. Krantz 2019 supports the premise that anharmonicity bounds pulse length but does not state this formula. The bandwidth bound is NOT settled: |alpha| (leakage only) gives a fluxonium/transmon ratio of 524x at the operating points, min(|alpha|, f01) gives 22.0x and f01 (drive period) gives 1.34x. All three are computed; the |alpha| bound is generous to the fluxonium by 24x because its anharmonicity exceeds its own transition frequency.",
+    "The gate-count metric N = 1e3 * T2[us] * (pulse bandwidth)[GHz] is this project's heuristic. Krantz 2019 supports the premise that anharmonicity bounds pulse length but does not state this formula. The bandwidth bound is NOT settled: |alpha| (leakage only) gives a fluxonium/transmon ratio of 242x at the operating points, min(|alpha|, f01) gives 10.2x and f01 (drive period) gives 0.62x. All three are computed; the |alpha| bound is generous to the fluxonium by 24x because its anharmonicity exceeds its own transition frequency.",
     "Tphi_ng_us at ng=0 and Tphi_flux_us at flux=0.5 are divergent by symmetry in the first-order 1/f formula. They contribute zero rate and must never be plotted or quoted."
   ],
   "outputs": [

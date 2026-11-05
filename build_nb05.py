@@ -29,20 +29,29 @@ are still quoted in `README.md` and `docs/`. §4 locates every surviving instanc
 
 ### What a reader needs to know before quoting any number
 
-1. **Both architectures' "best $T_2$" headline numbers are grid-edge artefacts.** The transmon's
-   187 µs sits at $E_J{=}3.0$, $E_C{=}0.10$ — *both* grid edges — at $f_{01} = 1.45$ GHz, outside
-   the 3–6 GHz band real transmons occupy. The fluxonium's unconstrained maximum of 5427 µs
-   (reported in earlier versions as 5578 µs, its first-order-only value) sits at $E_J{=}15$,
+1. **Both architectures' "best $T_2$" headline numbers are grid-edge artefacts.** The transmon's 147 µs sits at $E_J{=}3.0$, $E_C{=}0.10$ — the smallest $E_C$ and the smallest
+sampled $E_J$ with $E_J/E_C \ge 20$ — at $f_{01} = 1.45$ GHz, below the conventional 3–6 GHz band.
+The fluxonium's unconstrained maximum of 1398 µs (5427 µs under the old absolute critical-current
+reading, and 5578 µs before that as a first-order-only value) sits at $E_J{=}15$,
    $E_L{=}0.2$ — also both grid edges — at 75 MHz with $\bar n_{\rm th} = 3.7$. **Neither is a design
-   recommendation**, and the symmetry is not a coincidence: in both planes $T_2$ correlates with
-   $f_{01}$ at $|r| > 0.99$, so a raw $T_2$ maximum is a frequency minimum wearing a disguise.
+   recommendation**, and the symmetry is not a coincidence: in both planes $\log T_2$ correlates with $\log f_{01}$ at $|r| > 0.98$, so a raw $T_2$ maximum is a
+frequency minimum wearing a disguise.
 
 2. **The frequency-constrained numbers are the quotable ones**, and they are given here alongside
    the constraint that produced them.
 
-3. **Q3 has no single answer.** The fluxonium/transmon ratio is $18\times$, $\sim\!1\times$, or
-   $\sim\!500\times$ depending on the metric. §1 reports all of them; §5 states what may and may
+3. **Q3 has no single answer.** The fluxonium/transmon ratio is $8.4\times$, $\sim\!0.6\times$, or $\sim\!240\times$ depending on the
+metric. §1 reports all of them; §5 states what may and may
    not be claimed.
+""")
+
+md(r"""
+> **Convention, since 2026-11-04.** Critical-current noise is **fractional**:
+> $A_{cc} = \delta I_c/I_c$, passed to scqubits as $A_{cc} E_J$ (see the `src/coherence.py`
+> docstring). scqubits applies its amplitude to the dimensionless $\partial H/\partial E_J$, i.e. as an
+> absolute $E_J$ fluctuation in GHz, which made the channel 8.9× (fluxonium) to 13× (transmon) too
+> weak. Outputs and commentary below use the fractional reading; earlier results are reproducible
+> with `cc_convention="absolute"`, and the change is recorded in the corrections appendix.
 """)
 
 code(r"""
@@ -353,100 +362,102 @@ def entry(claim, value, source, filt, recomputed, tol=5e-3, notebook=""):
                        recomputed=recomputed, notebook=notebook, verified=ok))
     return ok
 
-entry("Transmon best T2, real regime", 187.0, "data/transmon_full_sweep.csv", "EJ_EC >= 20",
+entry("Transmon best T2, real regime", 147.1, "data/transmon_full_sweep.csv", "EJ_EC >= 20",
       float(tm_real.T2_us.max()), notebook="02")
-entry("Transmon T2 at the operating point", 62.4, "src/coherence.py",
+entry("Transmon T2 at the operating point", 44.10, "src/coherence.py",
       "EJ=13.0, EC=0.26, ng=0", float(_tm["T2_us"]), notebook="02/04")
 entry("Transmon |alpha| at the operating point", 299.0, "qubits.anharmonicity",
       "EJ=13.0, EC=0.26", float(1e3 * abs(alpha_tm)), notebook="02/04")
 entry("Transmon T2 variation over the whole ng period", 1.0056,
       "data/q3_analysis_metadata.json", "bias_sensitivity", 
       float(bs["transmon_T2_variation_full_period"]), notebook="04")
-entry("Fluxonium T2 at the sweet spot", 1129.7, "src/coherence.py",
+entry("Fluxonium T2 at the sweet spot", 368.8, "src/coherence.py",
       "EJ=8.9, EC=2.5, EL=0.5, flux=0.5", float(_fx["T2_us"]), notebook="03")
-entry("Fluxonium best T2 within the published band", float(fx_best.T2_us),
+entry("Fluxonium best T2 within the Nguyen 2019 Table I band", float(fx_best.T2_us),
       "data/fluxonium_design_sweep.csv", "0.17 <= freq_GHz <= 0.83",
       float(fx_pub.T2_us.max()), notebook="03")
-entry("Fluxonium 10x falloff detuning", 3.2497e-4, "data/q3_analysis_metadata.json",
+entry("Fluxonium 10x falloff detuning", 0.0009961, "data/q3_analysis_metadata.json",
       "bias_sensitivity, Brent root-find", float(bs["fluxonium_10x_detuning_Phi0"]), notebook="03/04")
-entry("Fluxonium 2x falloff detuning", 3.6112e-5, "data/q3_analysis_metadata.json",
+entry("Fluxonium 2x falloff detuning", 0.0001106, "data/q3_analysis_metadata.json",
       "bias_sensitivity, Brent root-find", float(bs["fluxonium_2x_detuning_Phi0"]), notebook="03/04")
-entry("Bias-window ratio (transmon / fluxonium)", 13845.8, "data/q3_analysis_metadata.json",
+entry("Bias-window ratio (transmon / fluxonium)", 4520.0, "data/q3_analysis_metadata.json",
       "1 / (2 * fluxonium_2x_detuning)", float(bs["bias_window_ratio"]), notebook="04")
-entry("Q3 raw T2 ratio", 18.1, "data/q3_metric_comparison.csv", "own operating points",
+entry("Q3 raw T2 ratio", 8.362, "data/q3_metric_comparison.csv", "own operating points",
       float(Q3_META["metrics"]["raw_T2_ratio"]), notebook="04")
-entry("Q3 gate-count ratio, own operating points", 524.5, "data/q3_metric_comparison.csv",
+entry("Q3 gate-count ratio, own operating points", 242.3, "data/q3_metric_comparison.csv",
       "N = 1e3*T2*|alpha|",
       float(Q3_META["metrics"]["gate_count_ratio_own_operating_points"]), notebook="04")
 # NOTE 1.362, not notebook 03 section 9B's 1.34: notebook 04 relocates the matched design pair
 # on a finer scan (140 EL points vs 80, 160 EC points vs 120). The ledger caught the stale value.
-entry("Q3 matched-frequency T2 ratio at 1 GHz", 1.362, "data/q3_metric_comparison.csv",
+entry("Q3 matched-frequency T2 ratio at 1 GHz", 0.6244, "data/q3_metric_comparison.csv",
       "f01_target == 1.0", float(mt[mt.f01_target == 1.0].T2_ratio.iloc[0]), notebook="04")
 # The paper's "~500x across defensible metrics" (abstract, S8.2). Both ends are Table 2 rows.
 # NOT the ~700x span of the Monte Carlo medians: that needs the matched-f01 gate count, whose
 # 1 GHz transmon has |alpha| = 10 MHz at EJ/EC = 1275, far outside the Krantz envelope.
-entry("Q3 metric span across defensible metrics (deterministic)", 490.7,
+entry("Q3 metric span across defensible metrics (deterministic)", 389.1,
       "data/q3_metric_comparison.csv",
       "gate count, own op. points, 1/|alpha| bound / min over f01_target of T2_ratio",
       float(Q3_META["metrics"]["gate_count_ratio_own_operating_points"]) / float(mt.T2_ratio.min()),
       notebook="04")
-entry("Q3 matched-frequency MC median", 0.858, "data/q3_monte_carlo_summary.csv",
+entry("Q3 matched-frequency MC median", 0.3704, "data/q3_monte_carlo_summary.csv",
       "mode == shared, N = 400",
       float(mcs_sh.loc["T2 at matched f01 = 1 GHz", "median"]), notebook="04")
-entry("Q3 matched-frequency MC win fraction", 0.42, "data/q3_monte_carlo_summary.csv",
+entry("Q3 matched-frequency MC win fraction", 0.04750, "data/q3_monte_carlo_summary.csv",
       "mode == shared, N = 400",
       float(mcs_sh.loc["T2 at matched f01 = 1 GHz", "win_fraction"]), notebook="04")
-entry("Falloff exponent where 1/f theory applies", -0.956,
+entry("Falloff exponent where 1/f theory applies", -0.9292,
       "data/q3_scaling_exponents.csv", "window 1e-03 - 1e-02", float(best_win.k), notebook="04")
 entry("Model / measured T1, median over 9 devices", 1.96,
       "data/fluxonium_vs_measured.csv", "Nguyen 2019 Table I",
       float(meas.T1_ratio.median()), notebook="03")
-entry("Model / measured T2, median over 9 devices", 2.63,
+entry("Model / measured T2, median over 9 devices", 1.457,
       "data/fluxonium_vs_measured.csv", "Nguyen 2019 Table I",
       float(meas.T2_ratio.median()), notebook="03")
-entry("Second-order flux share of the sweet-spot rate budget", 0.0063,
+entry("Second-order flux share of the sweet-spot rate budget", 0.002055,
       "data/fluxonium_metadata.json", "second_order_flux.rate_share_at_sweet_spot",
       float(FX_META["second_order_flux"]["rate_share_at_sweet_spot"]), notebook="03")
 
 # ---- numbers quoted in prose that the ledger previously did NOT cover ---------
 # CLAUDE.md: "If you add a headline number anywhere, add it to that ledger." These six were
 # quoted in notebook prose, README.md and CLAUDE.md without a ledger row.
-entry("Fluxonium unconstrained max T2 (NOT quotable as a design)", 5426.9,
+entry("Fluxonium unconstrained max T2 (NOT quotable as a design)", 1398.0,
       "data/fluxonium_design_sweep.csv", "argmax T2_us, no filter",
       float(dfx.T2_us.max()), notebook="03/05")
 entry("Transmon f01 at the operating point", 4.925, "src/coherence.py",
       "EJ=13.0, EC=0.26, ng=0", float(_tm["freq_GHz"]), notebook="02/04")
-entry("Model / measured T2, worst device", 5.70,
+entry("Model / measured T2, worst device", 3.237,
       "data/fluxonium_vs_measured.csv", "max over Nguyen 2019 Table I",
       float(meas.T2_ratio.max()), notebook="03")
 entry("Q_cap form: T1 ratio, frequency-dependent / flat", 7.12,
       "data/fluxonium_metadata.json", "sensitivity.Q_cap_form_T1_ratio_freqdep_over_flat",
       float(FX_META["sensitivity"]["Q_cap_form_T1_ratio_freqdep_over_flat"]), notebook="03")
-_soshare = [r["second_order_share"] for r in FX_META["key_results"]["interior_optimum"]["across_EC"]]
-entry("Second-order flux share at the interior optimum, minimum", 0.43,
-      "data/fluxonium_metadata.json", "interior_optimum.across_EC, min",
+# interior slices only: a maximum on the scan edge is not an optimum (8 of 9 since 2026-11-04)
+_soshare = [r["second_order_share"] for r in FX_META["key_results"]["interior_optimum"]["across_EC"]
+            if r["interior"]]
+entry("Second-order flux share of 1/T2 at the grid interior optimum, minimum", 0.4456,
+      "data/fluxonium_metadata.json", "interior_optimum.across_EC, interior only, min",
       float(min(_soshare)), tol=0.02, notebook="03")
-entry("Second-order flux share at the interior optimum, maximum", 0.58,
-      "data/fluxonium_metadata.json", "interior_optimum.across_EC, max",
+entry("Second-order flux share of 1/T2 at the grid interior optimum, maximum", 0.5283,
+      "data/fluxonium_metadata.json", "interior_optimum.across_EC, interior only, max",
       float(max(_soshare)), tol=0.02, notebook="03")
 
 # ---- the gate-count metric's own pulse-length bound (new in nb04 section 3) ---
-entry("Q3 gate-count ratio, own op. points, 1/min(|alpha|,f01) bound", 22.01,
+entry("Q3 gate-count ratio, own op. points, 1/min(|alpha|,f01) bound", 10.17,
       "data/q3_analysis_metadata.json", "metrics.gate_count_by_pulse_bound, bound='both'",
       float(_gb["both"]["ratio"]), notebook="04")
-entry("Q3 gate-count ratio, own op. points, 1/f01 drive-period bound", 1.336,
+entry("Q3 gate-count ratio, own op. points, 1/f01 drive-period bound", 0.6171,
       "data/q3_analysis_metadata.json", "metrics.gate_count_by_pulse_bound, bound='f01'",
       float(_gb["f01"]["ratio"]), notebook="04")
-entry("Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound", 624.8,
+entry("Q3 gate-count ratio at matched f01 = 2 GHz, 1/|alpha| bound", 364.1,
       "data/q3_metric_comparison.csv", "f01_target == 2.0, bound='alpha'",
       float(_gm["alpha"]["2.0"]), notebook="04")
-entry("Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound", 1708.6,
+entry("Q3 gate-count ratio at matched f01 = 0.5 GHz, 1/|alpha| bound", 646.7,
       "data/q3_metric_comparison.csv", "f01_target == 0.5, bound='alpha'",
       float(_gm["alpha"]["0.5"]), notebook="04")
 
 # ---- results that settle the two previously-open questions -------------------
 _sim = Q3_META["metrics"]["gate_count_simulated"]
-entry("Q3 gate-count ratio, pulse simulation (settles the bound)", float(_sim["ratio"]),
+entry("Q3 gate-count ratio, pulse simulation (estimate between the bounds)", float(_sim["ratio"]),
       "data/q3_pulse_simulation.csv",
       f"shortest calibrated gate with error < {_sim['error_target']:.0e}",
       float(_sim["ratio"]), notebook="04")
@@ -461,6 +472,74 @@ entry("Array-mode shift in f01 at the flux sweet spot", -0.43,
       "notebooks/01_validation.ipynb", "section 5 step (iv), explicit diagonalisation",
       float(_arr["manucharyan_f03"]["array_mode_bound"]
             ["this project's nominal, sweet spot"]["rel"]), tol=0.05, notebook="01")
+
+# ---- robustness checks added after review (results/referee_checks.py, 2026-10-14) ----------
+RB = json.load(open("data/robustness_checks.json"))
+_qp = RB["transmon_T1_qp_us"]["EJ_EC_50"]
+entry("Transmon QP-tunneling T1 at the op. point, default x_qp=3e-6 (us)", 5.6,
+      "data/robustness_checks.json", "transmon_T1_qp_us.EJ_EC_50.x_qp_3e-06",
+      float(_qp["x_qp_3e-06"]), tol=0.02, notebook="results/referee_checks.py")
+entry("Transmon QP-tunneling T1 at the op. point, x_qp=1e-8 (us)", 1700.0,
+      "data/robustness_checks.json", "transmon_T1_qp_us.EJ_EC_50.x_qp_1e-08",
+      float(_qp["x_qp_1e-08"]), tol=0.02, notebook="results/referee_checks.py")
+entry("Transmon QP-tunneling T1, Catelani 2011 analytic cross-check (us)", 5.55,
+      "data/robustness_checks.json", "transmon_T1_qp_catelani_us.EJ_EC_50",
+      float(RB["transmon_T1_qp_catelani_us"]["EJ_EC_50"]), notebook="results/referee_checks.py")
+_sc = RB["second_order_charge_Tphi_s"]
+entry("Second-order charge Tphi, minimum over EJ/EC >= 20 (s)", 0.15,
+      "data/robustness_checks.json", "second_order_charge_Tphi_s, EJ_EC >= 20, min",
+      float(min(r["Tphi_s"] for r in _sc if r["EJ_EC"] >= 20 - 1e-9)), tol=0.05,
+      notebook="results/referee_checks.py")
+entry("Second-order charge Tphi at the transmon op. point (s)", 78.0,
+      "data/robustness_checks.json", "second_order_charge_Tphi_s, EJ=13, EC=0.26",
+      float([r["Tphi_s"] for r in _sc if r["EJ"] == 13.0][0]), tol=0.01,
+      notebook="results/referee_checks.py")
+_cq = {(r["plane"][:4], r["Q_cap"][:4]): r["corr"] for r in RB["confound_under_Qcap_model"]}
+entry("Confound under Q_cap(omega), transmon EJ/EC >= 20: corr", -0.9998,
+      "data/robustness_checks.json", "confound_under_Qcap_model, transmon, scqubits Q_cap(omega)",
+      float(_cq[("tran", "scqu")]), tol=1e-4, notebook="results/referee_checks.py")
+entry("Confound under Q_cap(omega), fluxonium (EJ, EL): corr", -0.9718,
+      "data/robustness_checks.json", "confound_under_Qcap_model, fluxonium, scqubits Q_cap(omega)",
+      float(_cq[("flux", "scqu")]), tol=1e-4, notebook="results/referee_checks.py")
+_cm = RB["comparison_under_Qcap_model"]["scqubits Q_cap(omega)"]
+for key, val in [("raw_T2_ratio", 9.599), ("matched_T2_ratio_0.5GHz", 0.3673),
+                 ("matched_T2_ratio_1.0GHz", 0.3746), ("matched_T2_ratio_2.0GHz", 0.4759)]:
+    entry(f"Q3 under Q_cap(omega): {key}", val, "data/robustness_checks.json",
+          f"comparison_under_Qcap_model.scqubits Q_cap(omega).{key}", float(_cm[key]),
+          notebook="results/referee_checks.py")
+_rs = {r["plane"][:4]: r["rms_pct"] for r in RB["residual_T2_scatter_at_fixed_f01"]}
+entry("Residual T2 scatter about the log-log fit, fluxonium (rms %)", 12.04,
+      "data/robustness_checks.json", "residual_T2_scatter_at_fixed_f01, fluxonium",
+      float(_rs["flux"]), tol=0.01, notebook="results/referee_checks.py")
+entry("Residual T2 scatter about the log-log fit, transmon (rms %)", 0.5930,
+      "data/robustness_checks.json", "residual_T2_scatter_at_fixed_f01, transmon",
+      float(_rs["tran"]), tol=0.07, notebook="results/referee_checks.py")
+_ro = RB["interior_optimum_refined"]
+entry("Refined interior optimum, lowest f01 (MHz)", 5.443, "data/fluxonium_interior_refined.csv",
+      "continuous optimum in EJ, interior slices (8 of 9), min f01", float(_ro["f01_MHz_min"]), tol=0.02,
+      notebook="results/referee_checks.py")
+entry("Refined interior optimum, highest f01 (MHz)", 29.56, "data/fluxonium_interior_refined.csv",
+      "continuous optimum in EJ, interior slices (8 of 9), max f01", float(_ro["f01_MHz_max"]), tol=0.01,
+      notebook="results/referee_checks.py")
+entry("Refined interior optimum, second-order share of 1/T2, minimum", 0.4601,
+      "data/fluxonium_interior_refined.csv", "share, min", float(_ro["share_of_total_rate_min"]),
+      tol=0.01, notebook="results/referee_checks.py")
+entry("Refined interior optimum, second-order share of 1/T2, maximum", 0.4688,
+      "data/fluxonium_interior_refined.csv", "share, max", float(_ro["share_of_total_rate_max"]),
+      tol=0.01, notebook="results/referee_checks.py")
+MT = json.load(open("data/matched_transmon_check.json"))
+assert MT["reproduces_committed_mc"], "matched_transmon_check no longer reproduces the committed MC"
+entry("Matched transmon held at EJ/EC = 50: largest change in matched-f01 transmon T2 (%)", 1.319,
+      "data/matched_transmon_check.json", "deterministic, max over 0.5/1/2 GHz of |tm_best_T2/tm50_T2 - 1|",
+      float(max(100 * abs(r["tm_best_T2"] / r["tm50_T2"] - 1) for r in MT["deterministic"])),
+      tol=0.01, notebook="results/matched_transmon_check.py")
+entry("Matched transmon held at EJ/EC = 50: MC median T2 ratio at 1 GHz (shared)", 0.3801,
+      "data/matched_transmon_check.json", "monte_carlo_1GHz.shared.median_50",
+      float(MT["monte_carlo_1GHz"]["shared"]["median_50"]), notebook="results/matched_transmon_check.py")
+PC = json.load(open("data/pulse_convergence.json"))["summary"]
+entry("Pulse simulation, gate-count ratio with the stronger optimizer", 20.07,
+      "data/pulse_convergence.json", "summary.stronger_optimizer_ratio (7 starts, 400 evals)",
+      float(PC["stronger_optimizer_ratio"]), tol=0.02, notebook="results/pulse_convergence.py + summarize_pulse_convergence.py")
 
 led = pd.DataFrame(ledger)
 led.to_csv("data/headline_provenance_ledger.csv", index=False)
@@ -501,7 +580,7 @@ ax[0, 0].plot(TM_OP["EJ"], TM_OP["EC"], "r*", ms=16, markeredgecolor="k",
 ax[0, 0].set_xlim(dft.EJ.min(), dft.EJ.max()); ax[0, 0].set_ylim(dft.EC.min(), dft.EC.max())
 ax[0, 0].set_xlabel(r"$E_J$ (GHz)"); ax[0, 0].set_ylabel(r"$E_C$ (GHz)")
 ax[0, 0].set_title(r"(a) Transmon $T_2$ over $(E_J, E_C)$" "\n"
-                   r"left of the dashed line lies outside the transmon regime")
+                   r"left of the dashed line: outside the adopted transmon regime")
 ax[0, 0].legend(loc="upper right", frameon=False, fontsize=8, labelcolor="w")
 
 # ---- (b) fluxonium sweet-spot falloff --------------------------------------
@@ -528,12 +607,12 @@ cs = ax[1, 0].contour(ff.columns, ff.index, ff.values, levels=[0.1, 0.17, 0.363,
 ax[1, 0].clabel(cs, fmt=r"%g GHz", fontsize=7.5)
 ax[1, 0].contour(ff.columns, ff.index, ff.values, levels=[0.17, 0.83], colors="red",
                  linewidths=2.0, linestyles="--")
-ax[1, 0].plot([], [], color="red", ls="--", lw=2, label="published band")
+ax[1, 0].plot([], [], color="red", ls="--", lw=2, label="Nguyen 2019 band")
 ax[1, 0].plot(fx_best.EJ, fx_best.EL, "r*", ms=16, markeredgecolor="k", markeredgewidth=0.6,
               label="best in band")
 ax[1, 0].set_xlabel(r"$E_J$ (GHz)"); ax[1, 0].set_ylabel(r"$E_L$ (GHz)")
 ax[1, 0].set_title(r"(c) Fluxonium $T_2$ over $(E_J, E_L)$ at $\Phi/\Phi_0 = 0.5$" "\n"
-                   r"white contours: $f_{01}$ — $T_2$ merely follows them")
+                   r"white contours: $f_{01}$ — $T_2$ mostly follows them")
 ax[1, 0].legend(loc="upper right", frameon=False, fontsize=8, labelcolor="w")
 
 # ---- (d) Q3: the answer depends on the metric ------------------------------
@@ -760,47 +839,54 @@ long-form reading is in `docs/lab_notebook.md`. Give it a voice pass before subm
 
 *May claim:* the transmon's $T_2$ landscape over $(E_J, E_C)$ is a **monotone trade-off**, not a
 peak: within $E_J/E_C \geq 20$, $T_2$ correlates with $f_{01}$ at $-0.9999$, so the "optimum" is
-wherever the frequency constraint is drawn. The fluxonium's $(E_J, E_L)$ plane behaves the same way
-($-0.997$) up to the interior optimum found in notebook 03 §6.1, which is created by second-order
-flux dephasing and sits at 10–75 MHz — real, but thermally inaccessible.
+wherever the frequency constraint is drawn. The fluxonium's $(E_J, E_L)$ plane behaves the same way ($-0.988$) up to the interior optimum found
+in notebook 03 §6.1, which is created by second-order flux dephasing and sits at 5–30 MHz in 8 of 9
+slices — an optimum of this model, thermally unfavorable at 15 mK (passive initialization fails;
+Zhang 2021 operate a 14 MHz fluxonium with active reset), and convention-dependent in location.
 
 *May not claim:* any raw $T_2$ maximum as a design recommendation. Both headline maxima
-(187 µs and 5427 µs, the latter long quoted as 5578 µs) are double-grid-edge points at
-frequencies outside the usable band.
+(147 µs and 1398 µs) are grid-edge points at
+frequencies outside the usual bands.
 
 **Q2 — which channel dominates where?**
 
-*May claim:* dielectric relaxation dominates the transmon everywhere in the real regime. For the
-fluxonium, relaxation dominates *at* the sweet spot and first-order flux noise becomes the largest
-single term in the rate budget beyond $2.75\times10^{-5}\,\Phi_0$ (notebook 03 §5; **not** to be
-confused with the $3.61\times10^{-5}\,\Phi_0$ two-fold *coherence-loss* detuning — different
+*May claim:* dielectric relaxation dominates the transmon everywhere in the real regime. For the fluxonium, critical-current dephasing dominates *at* the sweet spot (76% of $1/T_2$, with
+$A_{cc}$ read as fractional) and at 358 of 400 design points, and first-order flux noise becomes the
+largest single term in the rate budget beyond $8.7\times10^{-5}\,\Phi_0$ (notebook 03 §5; **not** to
+be confused with the $1.11\times10^{-4}\,\Phi_0$ two-fold *coherence-loss* detuning — different
 quantities). Quasiparticle tunnelling is suppressed at the sweet spot and limits
 $T_1$ at most detuned points — **conditional on $x_{qp} = 3\times10^{-6}$**, a scqubits default that
 Nguyen 2019 measure to be $300\times$ lower.
 
 *May not claim:* that the quasiparticle result is device-independent, or that second-order flux
-dephasing is negligible in general — it carries 43–58% of the rate budget at the interior optimum.
+dephasing is negligible in general — it carries 46–47% of the rate budget at the interior optimum. Nor that the fluxonium numbers are
+insensitive to $A_{cc}$: that amplitude dominates them.
 
 **Q3 — does the flux sweet spot beat charge insensitivity?**
 
-*May claim:* at its own operating point the fluxonium has $\sim\!18\times$ longer $T_2$, and it
-converts coherence into operations more efficiently than the transmon because its anharmonicity is
-$29\times$ larger. The cost is operating-point precision: the bias window for a $2\times$ coherence
-loss is $\sim\!10^{-4}$ of the flux period, against 100% of the charge period for the transmon.
+*May claim:* at its own operating point the fluxonium has $\sim\!8\times$ longer $T_2$, and it
+converts coherence into operations more efficiently than the transmon, by $\sim\!22\times$
+($17$–$27\times$) in `04_analysis.ipynb` §3.1's pulse simulation. That is less than its $29\times$
+larger anharmonicity suggests, because its drive couples $10.2\times$ more strongly to the leakage
+transition than to the qubit transition. The cost is operating-point precision: the bias window for a $2\times$ coherence
+loss is $\sim\!2\times10^{-4}$ of the flux period, against 100% of the charge period for the
+transmon.
 
 *May not claim:* "the fluxonium is $N\times$ better" for any single $N$ — and this now applies to
-the gate-count metric too, not only to $T_2$. **At matched frequency the $T_2$ advantage
-disappears** — median $0.86\times$ across the literature noise band, with the fluxonium winning
-only 42% of samples; the raw advantage is substantially a frequency effect. **And the gate-count
-advantage is $524\times$, $22\times$ or $1.34\times$** depending on whether the minimum pulse
-length is bounded by $1/|\alpha|$, $1/\min(|\alpha|,f_{01})$ or $1/f_{01}$ — a $390\times$ spread
-inside a single metric. The $\sim\!500\times$ figure assumes a $0.363$ GHz fluxonium can be driven
+the gate-count metric too, not only to $T_2$. **At matched frequency the transmon is ahead** — $0.62$–$0.82\times$ deterministically and a median
+$0.37\times$ across the literature noise band at 1 GHz, with the fluxonium winning only 5% of
+samples; the raw advantage is a frequency effect. **And the gate-count advantage is $242\times$,
+$10\times$ or $0.62\times$** depending on whether the minimum pulse
+length is bounded by $1/|\alpha|$, $1/\min(|\alpha|,f_{01})$ or $1/f_{01}$ — a $393\times$ spread inside a single metric. The $\sim\!240\times$ figure assumes a $0.363$ GHz fluxonium can be driven
 at its $8.7$ GHz anharmonicity limit, i.e. $24\times$ faster than one period of its own transition.
 `04_analysis.ipynb` §3 computes all three; the paper must quote the bound with the number.
 
 **Everywhere:** these are model-based estimates. Against the **nine** measured devices of the
 **published** Nguyen 2019 Table I (the arXiv v1 preprint has eight and omits device I) the model is
-optimistic by a median $2.0\times$ on $T_1$ and $2.6\times$ on $T_2$, worst case $5.7\times$.
+optimistic by a median $2.0\times$ on $T_1$ and $1.5\times$ on $T_2$, worst case $3.2\times$ (device F).
+Both conclusions above rest on reading the critical-current amplitude as fractional; under the
+absolute reading scqubits applies, the matched-frequency median was $0.86\times$ and the $T_2$
+calibration $2.6\times$.
 Absolute coherence times must be quoted with that calibration and with the $\pm$1-decade
 noise-amplitude band; comparative trends are the defensible output.
 """)
@@ -821,8 +907,8 @@ modelling choice in the project. It is applied identically to both architectures
 cancels in a ratio, but only partly, since the two sit at different frequencies.
 
 **Dephasing conventions.** Second-order $1/f$ flux dephasing uses Nguyen 2019 Eq. (A3), which
-carries *no* logarithmic factor. A $\ln^2$ convention would change sweet-spot $T_2$ by ~37% instead
-of 0.6%, and would move (though not remove) the interior optimum. The literature does not fix this
+carries *no* logarithmic factor. A $\ln^2$ convention would change sweet-spot $T_2$ by ~16% instead of 0.2%, and would move (though not
+remove) the interior optimum, up to 0.18–0.31 GHz in the slices checked. The literature does not fix this
 convention; it is reported rather than hidden.
 
 **Free induction, not echo.** The model computes a Ramsey-like $T_2$. Every measured fluxonium
@@ -925,37 +1011,31 @@ print(json.dumps(meta["headline_numbers"], indent=2, default=str)[:1800])
 md(r"""
 ## 8. What this notebook establishes
 
-- **Every headline number is traceable.** The §2 ledger recomputes 18 quoted values from their
+- **Every headline number is traceable.** The §2 ledger recomputes 53 quoted values from their
   named file and filter and asserts each one. A number that drifts from its artefact now fails a
   cell rather than surviving into the paper. Ten rows were added in this pass for numbers that
   were quoted in prose but had no ledger entry, which is what `CLAUDE.md` requires.
-- **Both architectures' "best $T_2$" figures are the same kind of artefact.** The transmon's 187 µs
-  and the fluxonium's 5427 µs (superseded as 5578 µs) are both double-grid-edge points at
-  frequencies outside the usable band, and in both planes $T_2$ correlates with $f_{01}$ at
-  $|r| > 0.99$. This is the single
+- **Both architectures' "best $T_2$" figures are the same kind of artefact.** The transmon's 147 µs and the fluxonium's 1398 µs are both grid-edge points at frequencies outside
+the usual bands, and in both planes $\log T_2$ correlates with $\log f_{01}$ at $|r| > 0.98$. This is the single
   clearest cross-architecture methodological result in the project, and it was previously reported
   as a headline comparison rather than as a confound.
 - **The frequency-constrained numbers are given with their constraints** and are the ones the paper
   should quote.
-- **Q3's answer is metric-dependent by a factor of $\sim\!490$** at the default noise amplitudes
+- **Q3's answer is metric-dependent by a factor of $\sim\!390$** at the default noise amplitudes
   (gate count at own operating points under the $1/|\alpha|$ bound, divided by $T_2$ at matched
   frequency, as `04_analysis.ipynb` §3 prints). The Monte Carlo medians span $\sim\!700$ only
   if the matched-frequency gate count is included, and that metric's 1 GHz transmon has
-  $|\alpha| = 10$ MHz at $E_J/E_C = 1275$ — far outside the design envelope — so the paper
-  quotes $\sim\!500$. The matched-frequency $T_2$ comparison — the one that controls the confound — puts the
-  fluxonium at parity or slightly behind.
+  $|\alpha| = 10$ MHz at $E_J/E_C = 1275$ — far outside the design envelope — so the paper quotes $\sim\!400$. The matched-frequency $T_2$ comparison — the one that controls the
+confound — puts the fluxonium behind, at $0.62$–$0.82\times$.
 - **The gate-count metric hides a second range of comparable size inside itself.** Bounding the
-  minimum pulse length by $1/|\alpha|$, $1/\min(|\alpha|, f_{01})$ or $1/f_{01}$ gives
-  $524\times$, $22.0\times$ or $1.34\times$ at the operating points — $390\times$ within one
-  metric. Earlier versions reported only the first and left the objection to it in prose. All
+  minimum pulse length by $1/|\alpha|$, $1/\min(|\alpha|, f_{01})$ or $1/f_{01}$ gives $242\times$, $10.2\times$ or $0.62\times$ at the operating points — $393\times$ within one metric. Earlier versions reported only the first and left the objection to it in prose. All
   three are now computed, balloted through the Monte Carlo, and in the ledger.
 - **Six superseded numbers are located** wherever they still appear in `README.md` and `docs/`,
   with their replacements — and the audit now reports its own coverage, because `docs/` is
   gitignored and a clean clone scans `README.md` only.
 
-**Remaining downstream work.** `README.md` and `docs/` still contain the superseded figures listed
-by §4. `paper/` is empty and should be written against the ledger in §2 rather than against any
-notebook's prose.
+**Downstream.** The paper, `paper/preprint.tex`, is written against the ledger in §2 rather than
+against any notebook's prose; `docs/lab_notebook.md` records every correction in dated entries.
 """)
 
 md(r"""
@@ -965,14 +1045,15 @@ md(r"""
 |---|---|---|---|
 | 1 | Inline `transmon_T2` / `fluxonium_T2` | committed artefacts + anchor re-verification | The inline copies predated notebook 03's second-order flux channel and recomputed the bias sensitivity at the superseded 18.9 GHz transmon point, so the summary disagreed with the pipeline it summarised. |
 | 2 | "Best $T_2$ (real regime): 187 µs / 5578 µs" | frequency-constrained values, with the constraint named | Both are double-grid-edge points ($E_J{=}3.0$, $E_C{=}0.10$ at 1.45 GHz; $E_J{=}15$, $E_L{=}0.2$ at 75 MHz). Neither is a design, and 5578 µs was additionally a first-order-only value. |
-| 3 | "Bias-knob sensitivity 1.01× / 528×" | window fraction: 100% vs $7.2\times10^{-5}$ | 528× was the $T_2$ range over an arbitrarily chosen flux window (0.45–0.50); it measures the window, not the device. The window-fraction metric is independent of that choice. |
-| 4 | "Sweet-spot scaling $T_2 \propto$ detuning$^{-0.68}$" | not a constant; $-0.96$ where theory applies | Linear sampling fitted on log-log axes. |
+| 3 | "Bias-knob sensitivity 1.01× / 528×" | window fraction: 100% vs $2.2\times10^{-4}$ ($7.2\times10^{-5}$ before row 11) | 528× was the $T_2$ range over an arbitrarily chosen flux window (0.45–0.50); it measures the window, not the device. The window-fraction metric is independent of that choice. |
+| 4 | "Sweet-spot scaling $T_2 \propto$ detuning$^{-0.68}$" | not a constant; $-0.93$ where theory applies ($-0.96$ before row 11) | Linear sampling fitted on log-log axes. |
 | 5 | Linear colour scales in the summary figure | `LogNorm` | Both maps span three decades; a linear scale renders them nearly uniform. |
 | 6 | Twin-axis bias panel | Q3 metric comparison with MC spread | Twin axes invite a visual comparison whose magnitude is set by the axis limits, not the data. |
 | 7 | dpi=150 PNG only | dpi=300 + `.pdf` sibling | Journal figure requirements; `src/plotting.save` handles both. |
 | 8 | §5 said "against the **eight** measured devices of Nguyen 2019" | **nine** | The published Table I has nine devices (A–I); only the arXiv v1 preprint has eight. `CLAUDE.md` records that this exact confusion skewed the calibration for weeks, and it had survived here in the section that states what the paper may claim. |
 | 9 | The audit's replacement text hardcoded "nb03 §7's own table gives 2.1×/2.7×" | recomputed from `fluxonium_vs_measured.csv` (2.0×/2.6×) | A stale literal inside the audit that catches stale literals, and it was being written into `data/summary_metadata.json`. |
 | 10 | Ten headline numbers quoted in prose had no ledger row | added | `CLAUDE.md` requires every headline number to be in the ledger; the unconstrained 5427 µs, the 7.1× $Q_{\rm cap}$ ratio, the 43–58% interior-optimum share, the 5.7× worst-case calibration and the gate-count bounds were all outside it. |
+| 11 | Critical-current noise applied as scqubits does (2026-11-04) | fractional $\delta I_c/I_c$, passed as $A_{cc}E_J$ | scqubits applies $A_{cc}$ to the dimensionless $\partial H/\partial E_J$, an absolute $E_J$ fluctuation in GHz, though it documents it in units of $I_c$. Every headline number was regenerated; the ledger was re-pinned value by value and grew to 53 rows. |
 """)
 
 md(r"""
@@ -1001,8 +1082,8 @@ md(r"""
 4. **L. B. Nguyen et al.**, "High-Coherence Fluxonium Qubit", *Phys. Rev. X* **9**, 041041 (2019).
    DOI: [10.1103/PhysRevX.9.041041](https://doi.org/10.1103/PhysRevX.9.041041)
    — Table I of the **published** version (nine devices, A–I), the calibration set; the
-   0.17–0.83 GHz published band; Eq. (A3) the
-   second-order flux dephasing rate.
+   0.17–0.83 GHz reference band (the range of its devices, not the lowest operated
+   frequency); Eq. (A3) the second-order flux dephasing rate.
 
 5. **G. Ithier et al.**, "Decoherence in a superconducting quantum bit circuit",
    *Phys. Rev. B* **72**, 134519 (2005).

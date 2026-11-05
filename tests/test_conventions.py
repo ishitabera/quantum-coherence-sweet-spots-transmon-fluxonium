@@ -172,3 +172,32 @@ def test_manucharyan_f03_is_strongly_hybridised_with_the_array_mode():
     # and the 0->2 transition is parity-forbidden at Phi = 0, so the digitized f02 is a
     # theory-curve reading rather than a measured peak
     assert abs(phi[0, 2]) < 1e-9
+
+
+# ------------------------------------------------------ critical-current noise convention
+def test_critical_current_noise_is_fractional():
+    """A_cc is dIc/Ic. scqubits applies its amplitude to the dimensionless operator
+    dH/dEJ, i.e. as an absolute EJ fluctuation in GHz, so the pipeline must pass
+    A_cc * EJ. The fractional rate is therefore EJ times the absolute one."""
+    import coherence as co
+    kw = dict(EJ=13.0, EC=0.26, ng=0.0, ncut=30)
+    frac = co.transmon_coherence(**kw)["Tphi_cc_us"]
+    absl = co.transmon_coherence(**kw, cc_convention="absolute")["Tphi_cc_us"]
+    assert absl / frac == pytest.approx(13.0, rel=1e-9)
+
+
+def test_critical_current_dephasing_depends_on_frequency_not_on_EJ_over_EC():
+    """Physics check the absolute reading fails. A fractional EJ fluctuation shifts f01 by
+    EJ*df01/dEJ, which for a transmon is ~(f01 + EC)/2 at any EJ/EC. Two transmons at the
+    same f01 must then have nearly the same Tphi_cc; under the absolute reading they
+    differ by ~sqrt of their EJ/EC ratio (5x for 1275 vs 50)."""
+    import coherence as co
+    f = 1.0
+    hi = dict(EJ=(f + 0.01) ** 2 / (8 * 0.01), EC=0.01, ncut=60)       # EJ/EC ~ 1275
+    ec = f / (np.sqrt(8 * 50) - 1); lo = dict(EJ=50 * ec, EC=ec, ncut=60)
+    t_hi = co.transmon_coherence(**hi)["Tphi_cc_us"]
+    t_lo = co.transmon_coherence(**lo)["Tphi_cc_us"]
+    assert t_hi / t_lo == pytest.approx(1.0, abs=0.05)
+    a_hi = co.transmon_coherence(**hi, cc_convention="absolute")["Tphi_cc_us"]
+    a_lo = co.transmon_coherence(**lo, cc_convention="absolute")["Tphi_cc_us"]
+    assert a_hi / a_lo > 4.0

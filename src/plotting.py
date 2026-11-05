@@ -12,12 +12,14 @@ from matplotlib.colors import LogNorm, ListedColormap
 mpl.rcParams.update({
     "savefig.dpi": 300,
     "figure.dpi": 110,
-    "font.size": 10,
-    "axes.labelsize": 10,
-    "axes.titlesize": 10.5,
-    "legend.fontsize": 9,
-    "xtick.labelsize": 9,
-    "ytick.labelsize": 9,
+    # Sizes raised 2026-11-04: the paper scales 11-in-wide figures to ~5.9 in, so 10 pt text
+    # printed at ~5 pt. These print at ~6-7 pt in the paper.
+    "font.size": 12,
+    "axes.labelsize": 12.5,
+    "axes.titlesize": 12,
+    "legend.fontsize": 10.5,
+    "xtick.labelsize": 11,
+    "ytick.labelsize": 11,
     "axes.spines.top": False,
     "axes.spines.right": False,
     "figure.autolayout": False,

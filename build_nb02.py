@@ -47,6 +47,15 @@ validated by `01_validation.ipynb`; this notebook does not reimplement it.
 """)
 
 # ========================================================================
+md(r"""
+> **Convention, since 2026-11-04.** Critical-current noise is **fractional**:
+> $A_{cc} = \delta I_c/I_c$, passed to scqubits as $A_{cc} E_J$ (see the `src/coherence.py`
+> docstring). scqubits applies its amplitude to the dimensionless $\partial H/\partial E_J$, i.e. as an
+> absolute $E_J$ fluctuation in GHz, which made the channel 8.9× (fluxonium) to 13× (transmon) too
+> weak. Outputs and commentary below use the fractional reading; earlier results are reproducible
+> with `cc_convention="absolute"`, and the change is recorded in the corrections appendix.
+""")
+
 code("""
 # --- project bootstrap: run from anywhere, keeps data/ and figures/ paths working ---
 import os, sys
@@ -65,8 +74,7 @@ md("""
 ## 0. Setup, provenance, and the link back to validation
 
 This notebook imports the same functions `01_validation.ipynb` tested. The assertion below is
-the load-bearing one: it reproduces the validated nominal point ($E_J{=}15$, $E_C{=}0.3$,
-$T_2 = 54.35$ µs) before any sweep runs. If `src/coherence.py` ever changes in a way that moves
+the load-bearing one: it reproduces the validated nominal point ($E_J{=}15$, $E_C{=}0.3$, $T_2 = 38.22$ µs) before any sweep runs. If `src/coherence.py` ever changes in a way that moves
 this number, this notebook stops rather than silently producing CSVs that disagree with the
 validation record.
 """)
@@ -101,7 +109,7 @@ for k, v in PROVENANCE.items():
     print(f"{k:20s} {v}")
 
 # --- link to 01_validation.ipynb -------------------------------------------------
-VALIDATED_T2_US = 54.35208346332045      # 01_validation.ipynb, section 6
+VALIDATED_T2_US = 38.2208528179222       # 01_validation.ipynb, section 6 (fractional A_cc, 2026-11-04; was 54.35208346332045)
 nominal = transmon_coherence(EJ=15.0, EC=0.3, ng=0.0, ncut=30)
 print(f"\nnominal point T2 = {nominal['T2_us']:.6f} us "
       f"(validation record {VALIDATED_T2_US:.6f} us)")
@@ -446,8 +454,9 @@ display(bandC.nlargest(5, "N_gates")[
 print("    NOTE: this optimum is interior to the grid, but it sits close to the EJ/EC = 20")
 print("    constraint. That is a physical result, not an artifact - anharmonicity falls as")
 print("    (8 EJ/EC)^-1/2, so the best design is the LEAST charge-insensitive one that still")
-print("    qualifies as a transmon. Koch reaches the same conclusion from pulse-duration")
-print("    arguments (Eq. 2.13). Confirm it on a finer grid before quoting it as the result:")
+print("    qualifies as a transmon. Koch's window, 20 <~ EJ/EC << 5e4, has the same lower edge;")
+print("    his pulse-duration argument (Eq. 2.13) sets only its upper end.")
+print("    Confirm it on a finer grid before quoting it as the result:")
 print(f"    current spacing is dEJ = {EJ_grid[1]-EJ_grid[0]:.2f} GHz, "
       f"dEC = {EC_grid[1]-EC_grid[0]:.2f} GHz.")
 
@@ -538,7 +547,7 @@ _rates25 = pd.DataFrame({"relaxation": 1 / (2 * df2.T1_us),
                          "crit-current": 1 / df2.Tphi_cc_us})
 charge_thresh = float(df2.EJ_EC[_rates25.idxmax(axis=1) == "charge"].max())
 print(f"\nthree candidate thresholds for the transmon regime:")
-print(f"   Koch 2007 (pulse-duration bound)             : EJ/EC >= 20")
+print(f"   Koch 2007 (lower edge of the transmon window): EJ/EC >= 20")
 print(f"   this work (charge-dominance crossover, sec 7): EJ/EC >= {charge_thresh:.1f}")
 print(f"   Krantz 2019 (engineering design practice)    : EJ/EC >= 50\n")
 
@@ -617,7 +626,7 @@ ax[1].set_ylabel(r"$T_2$ (µs)", color=_GREEN)
 ax2.set_ylabel(r"$|\alpha|$ (MHz), shaded = Krantz 100–300", color="#d95f0e", fontsize=9)
 ax[1].tick_params(axis="y", colors=_GREEN); ax2.tick_params(axis="y", colors="#d95f0e")
 ax[1].set_title(rf"(b) $T_2$ flat to {t2_spread:.0f}%, $|\alpha|$ down {a_factor:.0f}$\times$"
-                "\n" r"the cost of charge insensitivity is gate speed")
+                "\n" r"the cost of charge insensitivity is anharmonicity")
 for a in (ax[0], ax[1]):
     a.spines[["top"]].set_visible(False)
 fig.tight_layout()
@@ -851,7 +860,7 @@ md(r"""
 
 **Method and data quality.**
 
-- The pipeline reproduces `01_validation.ipynb`'s nominal point exactly ($T_2 = 54.352083$ µs),
+- The pipeline reproduces `01_validation.ipynb`'s nominal point exactly ($T_2 = 38.220853$ µs),
   asserted before any sweep runs, so these CSVs cannot silently drift from the validation record.
 - `ncut=30` is converged across the entire swept domain (worst corner error $\sim10^{-12}$ GHz).
 - 1600 coarse points (800 at each of $n_g = 0$ and $n_g = 0.25$) and 3445 fine points; no
@@ -860,9 +869,10 @@ md(r"""
 
 **Q2 — answered.** At a charge-sensitive bias ($n_g = 0.25$), charge noise dominates below
 $E_J/E_C \approx 25$ and relaxation above it. That crossover is measured from this project's own
-data and lands close to Koch's independently derived bound of 20 — the two arguments are
-unrelated (one is a noise-budget crossover, the other a pulse-duration requirement), so their
-agreement is a real corroboration. Critical-current noise never dominates anywhere in 1600
+data and lands close to the lower edge of Koch's transmon window, $20 \lesssim E_J/E_C \ll 5\times10^4$.
+The two are not independent — both reflect the suppression of charge dispersion, and Koch's
+pulse-duration argument sets only the upper end of the window — so the agreement is a
+consistency check, not a corroboration. Critical-current noise never dominates anywhere in 1600
 points at literature amplitudes.
 
 **Q1 — answered, but not in the form the question assumed.** There is **no interior optimum in
@@ -871,7 +881,7 @@ $E_J/E_C = 15$ to $60$, and the optimum tracks every one of them (max distance 0
 the signature of a constrained optimum sitting on its constraint. Concretely, at fixed
 frequency:
 
-- $T_2$ is **flat to 4.8%** (59.7 → 62.6 µs) over $E_J/E_C$ from 11.4 to 117.6;
+- $T_2$ is **flat to 3.2%** (42.6–44.0 µs) over $E_J/E_C$ from 11.4 to 117.6;
 - $|\alpha|$ falls by a **factor of 7.3**, from 1353 MHz to 185 MHz.
 
   *(Measured on an iso-frequency cut at $f_{01} = 5.00\pm0.05$ GHz. This has to be done at
@@ -880,14 +890,14 @@ frequency:
   at 4.5 GHz gives the same conclusion — $T_2$ flat to 5.5%, $|\alpha|$ down 10.8×.)*
 
 So charge insensitivity is not bought with coherence — it is bought almost entirely with
-**anharmonicity**, i.e. with gate speed. The correct claim is a **design trade-off, not a sweet
+**anharmonicity**, which tightens the leakage constraint on gate design. The correct claim is a **design trade-off, not a sweet
 spot**, and any quoted optimum is meaningful only together with the threshold it assumed.
 
 **The design envelope adopted is Krantz *et al.* (2019), §II A**: $E_J/E_C \ge 50$,
 $|\alpha| \in [100,300]$ MHz, $f_{01} \in [3,6]$ GHz. That gives the Q1 operating point
 
 $$E_J = 13.00\ \text{GHz},\quad E_C = 0.260\ \text{GHz},\quad E_J/E_C = 50.0,$$
-$$f_{01} = 4.92\ \text{GHz},\quad T_2 = 62.4\ \mu\text{s},\quad |\alpha| = 299\ \text{MHz},
+$$f_{01} = 4.92\ \text{GHz},\quad T_2 = 44.1\ \mu\text{s},\quad |\alpha| = 299\ \text{MHz},
 \quad N_{\rm gates} \approx 1.9\times10^{4}.$$
 
 **Why this envelope and not the alternatives.** Three candidate thresholds exist, and they
@@ -909,7 +919,7 @@ Between the two noise-independent bounds, Krantz's is adopted because it reflect
 actually built today rather than a 2007 theory bound, and because it is the more conservative.
 
 **The cost of that choice, stated plainly.** At Koch's $E_J/E_C \ge 20$ the metric would instead
-pick $|\alpha| = 728$ MHz and $N \approx 3.8\times10^4$ — **2.1× more gates**. But that
+pick $|\alpha| = 728$ MHz and $N \approx 2.7\times10^4$ — **2.1× more gates**. But that
 anharmonicity is 2.4× larger than anything Krantz reports being fabricated, so the higher number
 is not a design anyone can use.
 
@@ -927,8 +937,8 @@ is not a design anyone can use.
 `docs/lab_notebook.md` (Sep 3 entry). Give it a voice pass before submission.*
 
 **1. The Q1 finding, and why the threshold is the whole argument.** The transmon has **no coherence
-sweet spot in $(E_J, E_C)$**. At fixed frequency $T_2$ is flat to 4.8% across a tenfold range of
-$E_J/E_C$ while $|\alpha|$ falls 7.3×, so charge insensitivity is bought with **gate speed, not
+sweet spot in $(E_J, E_C)$**. At fixed frequency $T_2$ is flat to 3.2% across a tenfold range of
+$E_J/E_C$ while $|\alpha|$ falls 7.3×, so charge insensitivity is bought with **anharmonicity, not
 with coherence**. "Sweet spot" is the wrong word: a sweet spot is a stationary point of coherence
 with respect to a design parameter, and there is none here — only a monotone exchange terminated
 wherever the regime boundary is drawn.
@@ -952,8 +962,10 @@ $\Gamma \propto |\langle 0|\hat n|1\rangle|^2 S(\omega_{01})$. Since
 $|\langle 0|\hat n|1\rangle|^2 \propto \sqrt{E_J/E_C}$ and $S \propto E_C$, the rate goes as
 $E_C\sqrt{E_J/E_C} = \sqrt{E_J E_C} \propto \omega_{01}$ — **it depends on frequency alone, not on
 $E_J/E_C$ separately.** Holding $f_{01}$ fixed therefore holds $T_1$ fixed, and the iso-frequency
-cut confirms it: $T_1$ varies by only 3.1%. The same argument predicts $T_2 \propto 1/f_{01}$
-across the whole plane, and the measured exponent is $-0.965$ with correlation $-0.9995$. **This is
+cut confirms it: $T_1$ varies by only 3.1%. The same argument predicts $T_2 \propto 1/f_{01}$ across the transmon regime, and the measured
+exponent there ($E_J/E_C \ge 20$) is $-1.00$ with correlation $-0.9999$
+(`results/referee_checks.py`). Critical-current dephasing, read as a fractional $\delta I_c/I_c$,
+obeys the same law: its rate is set by $E_J\,\partial\omega_{01}/\partial E_J \approx \omega_{01}/2$. **This is
 also the origin of the frequency confound in §5** — the $-0.9999$ correlation is not an artefact of
 the grid, it is the dielectric scaling law.
 

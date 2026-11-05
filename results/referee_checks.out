@@ -1,0 +1,36 @@
+(a) validation, fluxonium flux=0.3: 161.43 us vs scqubits 161.43 us
+    transmon operating point, dielectric T1 = 32.3 us
+    transmon EJ/EC=50 (f01=4.925 GHz)  T1_qp  x_qp=3e-06: 5.63 us, x_qp=1e-07: 169 us, x_qp=1e-08: 1.69e+03 us
+    transmon EJ/EC=20 (f01=3.466 GHz)  T1_qp  x_qp=3e-06: 6.52 us, x_qp=1e-07: 196 us, x_qp=1e-08: 1.96e+03 us
+(b) EJ/EC=  50: second-order charge Tphi = 78.3 s
+(b) EJ/EC=  20: second-order charge Tphi = 0.461 s
+(b) EJ/EC=  20: second-order charge Tphi = 0.23 s
+(b) EJ/EC=  20: second-order charge Tphi = 0.154 s
+(c) transmon, EJ/EC >= 20  flat Q_cap=1e6         corr = -0.9999   max T2 at lowest f01: True
+(c) transmon, EJ/EC >= 20  scqubits Q_cap(omega)  corr = -0.9997   max T2 at lowest f01: True
+(c) fluxonium (EJ, EL)     flat Q_cap=1e6         corr = -0.9878   max T2 at lowest f01: True
+(c) fluxonium (EJ, EL)     scqubits Q_cap(omega)  corr = -0.9718   max T2 at lowest f01: True
+(d) coth(h f / 2 kB T) at 0.075 GHz, T = 15 mK: 8.37
+(d) coth(h f / 2 kB T) at 0.363 GHz, T = 15 mK: 1.91
+(d) coth(h f / 2 kB T) at 4.92 GHz, T = 15 mK: 1.00
+(e) Catelani 2011 analytic, EJ/EC=50, x_qp=3e-6: T1_qp = 5.55 us
+(e) Catelani 2011 analytic, EJ/EC=20, x_qp=3e-6: T1_qp = 6.38 us
+(f) transmon, EJ/EC >= 20  log-log slope -1.004; residual T2 scatter about the fit: rms 0.6%, worst 3%
+(f) fluxonium (EJ, EL)     log-log slope -0.785; residual T2 scatter about the fit: rms 12.0%, worst 39%
+(f) fluxonium designs with f01 in [0.17, 0.19] GHz: n=14, T2 max/min = 1.367
+(f) fluxonium designs with f01 in [0.3, 0.33] GHz: n=14, T2 max/min = 1.510
+(f) fluxonium designs with f01 in [0.5, 0.55] GHz: n=13, T2 max/min = 1.483
+(g) flat Q_cap=1e6         raw T2 ratio 8.4x, matched 0.5 GHz 0.82x, matched 1.0 GHz 0.62x, matched 2.0 GHz 0.62x
+(g) scqubits Q_cap(omega)  raw T2 ratio 9.6x, matched 0.5 GHz 0.37x, matched 1.0 GHz 0.37x, matched 2.0 GHz 0.48x
+(h) EC=1.5 EL=0.2: grid EJ= 17.5 T2=   6705 -> refined EJ= 17.37 T2=   6708 us  f01=  5.4 MHz  second-order share of 1/T2 = 46.9%
+(h) EC=1.5 EL=0.5: grid EJ= 15.0 T2=   2809 -> refined EJ= 15.15 T2=   2811 us  f01= 13.6 MHz  second-order share of 1/T2 = 46.4%
+(h) EC=1.5 EL=1.0: grid EJ= 15.0 T2=   1451 -> refined EJ= 14.91 T2=   1451 us  f01= 26.1 MHz  second-order share of 1/T2 = 46.0%
+(h) EC=2.5 EL=0.2: grid EJ= 32.5 T2=   6804 -> refined EJ= 31.69 T2=   6840 us  f01=  5.6 MHz  second-order share of 1/T2 = 46.8%
+(h) EC=2.5 EL=0.5: grid EJ= 27.5 T2=   2854 -> refined EJ= 26.58 T2=   2877 us  f01= 14.5 MHz  second-order share of 1/T2 = 46.4%
+(h) EC=2.5 EL=1.0: grid EJ= 25.0 T2=   1483 -> refined EJ= 24.59 T2=   1486 us  f01= 28.5 MHz  second-order share of 1/T2 = 46.1%
+(h) EC=3.5 EL=0.2: grid EJ= 45.0 T2=   6703 -> refined EJ= 44.99 T2=   6729 us  f01=  7.1 MHz  second-order share of 1/T2 = 36.2%
+(h) EC=3.5 EL=0.5: grid EJ= 40.0 T2=   2882 -> refined EJ= 39.22 T2=   2890 us  f01= 14.8 MHz  second-order share of 1/T2 = 46.4%
+(h) EC=3.5 EL=1.0: grid EJ= 35.0 T2=   1497 -> refined EJ= 35.21 T2=   1497 us  f01= 29.6 MHz  second-order share of 1/T2 = 46.1%
+(h) 8 of 9 slices have an interior optimum; edge-limited: [{'EC': 3.5, 'EL': 0.2}]
+(h) refined optima: f01 5.4-29.6 MHz, share 46-47%, T2 gain over grid 0.8% at most
+wrote data/robustness_checks.json and data/fluxonium_interior_refined.csv

@@ -1,0 +1,119 @@
+{
+ "transmon_T1_qp_us": {
+  "EJ_EC_50": {
+   "x_qp_3e-06": 5.633653100329493,
+   "x_qp_1e-07": 169.00959300988478,
+   "x_qp_1e-08": 1690.0959300988482
+  },
+  "EJ_EC_20": {
+   "x_qp_3e-06": 6.523906337085539,
+   "x_qp_1e-07": 195.71719011256616,
+   "x_qp_1e-08": 1957.1719011256619
+  }
+ },
+ "second_order_charge_Tphi_s": [
+  {
+   "EJ": 13.0,
+   "EC": 0.26,
+   "EJ_EC": 50.0,
+   "Tphi_s": 78.34854996708005
+  },
+  {
+   "EJ": 2.0,
+   "EC": 0.1,
+   "EJ_EC": 20.0,
+   "Tphi_s": 0.46082104011540465
+  },
+  {
+   "EJ": 4.0,
+   "EC": 0.2,
+   "EJ_EC": 20.0,
+   "Tphi_s": 0.23041052005770232
+  },
+  {
+   "EJ": 6.0,
+   "EC": 0.3,
+   "EJ_EC": 20.0,
+   "Tphi_s": 0.15360699691247198
+  }
+ ],
+ "confound_under_Qcap_model": [
+  {
+   "plane": "transmon, EJ/EC >= 20",
+   "Q_cap": "flat Q_cap=1e6",
+   "corr": -0.9999418129727595,
+   "max_at_lowest_f01": true
+  },
+  {
+   "plane": "transmon, EJ/EC >= 20",
+   "Q_cap": "scqubits Q_cap(omega)",
+   "corr": -0.9997149031041302,
+   "max_at_lowest_f01": true
+  },
+  {
+   "plane": "fluxonium (EJ, EL)",
+   "Q_cap": "flat Q_cap=1e6",
+   "corr": -0.9878103543740056,
+   "max_at_lowest_f01": true
+  },
+  {
+   "plane": "fluxonium (EJ, EL)",
+   "Q_cap": "scqubits Q_cap(omega)",
+   "corr": -0.9717897715697242,
+   "max_at_lowest_f01": true
+  }
+ ],
+ "transmon_T1_qp_catelani_us": {
+  "EJ_EC_50": 5.547052449644284,
+  "EJ_EC_20": 6.377036114792147
+ },
+ "residual_T2_scatter_at_fixed_f01": [
+  {
+   "plane": "transmon, EJ/EC >= 20",
+   "slope": -1.0043299187020311,
+   "rms_pct": 0.5929887757689656,
+   "worst_pct": 3.0476683830712448
+  },
+  {
+   "plane": "fluxonium (EJ, EL)",
+   "slope": -0.7854207117964044,
+   "rms_pct": 12.043230822244965,
+   "worst_pct": 39.11336633190685
+  }
+ ],
+ "comparison_under_Qcap_model": {
+  "flat Q_cap=1e6": {
+   "raw_T2_ratio": 8.362248491519518,
+   "matched_T2_ratio_0.5GHz": 0.8158545487079798,
+   "matched_T2_ratio_1.0GHz": 0.6244160388683098,
+   "matched_T2_ratio_2.0GHz": 0.622824013494436
+  },
+  "scqubits Q_cap(omega)": {
+   "raw_T2_ratio": 9.598933824095438,
+   "matched_T2_ratio_0.5GHz": 0.367330576282363,
+   "matched_T2_ratio_1.0GHz": 0.3746255905643653,
+   "matched_T2_ratio_2.0GHz": 0.4758623481034289
+  }
+ },
+ "interior_optimum_refined": {
+  "n_interior": 8,
+  "n_slices": 9,
+  "f01_MHz_min": 5.442564280855322,
+  "f01_MHz_max": 29.558551029843727,
+  "share_of_total_rate_min": 0.4601130686964435,
+  "share_of_total_rate_max": 0.4687919127943705,
+  "csv": "data/fluxonium_interior_refined.csv"
+ },
+ "_metadata": {
+  "generated": "2026-11-04",
+  "script": "results/referee_checks.py",
+  "git_revision": "96f42ce",
+  "scqubits_version": "4.3.1",
+  "noise_params": {
+   "T": 0.015,
+   "x_qp": 3e-06,
+   "Delta": 0.00034
+  },
+  "units": "times in us unless the key says _s; frequencies as named"
+ }
+}

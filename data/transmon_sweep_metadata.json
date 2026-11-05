@@ -2,7 +2,7 @@
   "notebook": "notebooks/02_transmon_sweep.ipynb",
   "purpose": "Q1 transmon coherence landscape over (EJ, EC); Q2 dominant noise channel",
   "provenance": {
-    "date": "2026-09-07T23:27:54",
+    "date": "2026-11-04T23:03:55",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "pandas": "3.0.3",
@@ -21,7 +21,7 @@
       "EJ": 15.0,
       "EC": 0.3,
       "ng": 0.0,
-      "T2_us": 54.35208346332045
+      "T2_us": 38.2208528179222
     }
   },
   "grid": {

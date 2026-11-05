@@ -34,6 +34,19 @@ ln(omega_low * t_exp) or its square, which changes the answer by 1-2 orders of
 magnitude. `tphi_flux_second_order` exposes this through `log_factor` so the
 convention dependence can be reported rather than hidden. The default
 (`log_factor="none"`) reproduces Nguyen Eq. (A3) exactly.
+
+CRITICAL-CURRENT NOISE IS FRACTIONAL HERE, NOT AS SCQUBITS APPLIES IT
+---------------------------------------------------------------------
+scqubits' `tphi_1_over_f_cc` passes the noise operator dH/dEJ = -cos(phi), which is
+DIMENSIONLESS, to its generic 1/f formula, rate = 2 pi A |<i|op|i> - <j|op|j>| ...
+So A is applied as an ABSOLUTE fluctuation of EJ in system units (GHz), although
+NOISE_PARAMS annotates A_cc as "Units of critical current I_c", and the literature
+amplitudes it stands for (~1e-7..1e-6) are FRACTIONAL, dIc/Ic. A fractional
+fluctuation of EJ = Ic Phi0 / 2 pi shifts the energy by EJ * dH/dEJ * (dIc/Ic), so
+this module passes A_noise = A_cc * EJ (EJ in GHz). The two differ by EJ/h in GHz:
+8.9x for the nominal fluxonium, 13x for the transmon operating point.
+Adopted 2026-11-04. Everything before that date used the absolute reading; pass
+cc_convention="absolute" to reproduce it.
 """
 import subprocess
 from pathlib import Path
@@ -47,8 +60,24 @@ from qubits import make_transmon, make_fluxonium
 
 NS_TO_US = 1e-3
 
-# Literature-range noise amplitudes used as defaults
+# Literature-range noise amplitudes used as defaults. A_cc is FRACTIONAL (dIc/Ic);
+# see the module docstring.
 DEFAULTS = dict(Q_cap=1e6, A_ng=1e-4, A_flux=1e-6, A_cc=1e-7)
+CC_CONVENTION = "fractional"          # or "absolute": scqubits' raw behaviour, pre-2026-11-04
+
+
+def cc_noise_amplitude(A_cc, EJ, cc_convention=None):
+    """The amplitude to hand scqubits' tphi_1_over_f_cc for a given A_cc.
+
+    "fractional" (default): A_cc is dIc/Ic, so the EJ fluctuation is A_cc * EJ (GHz).
+    "absolute": A_cc is used as scqubits applies it, an EJ fluctuation in GHz.
+    """
+    conv = CC_CONVENTION if cc_convention is None else cc_convention
+    if conv == "fractional":
+        return A_cc * EJ
+    if conv == "absolute":
+        return A_cc
+    raise ValueError(f"cc_convention must be 'fractional' or 'absolute', not {conv!r}")
 
 # Physical constants for thermal occupation
 H_PLANCK = 6.62607015e-34
@@ -111,7 +140,9 @@ def noise_param_snapshot():
     Delta, t_exp, omega_low and omega_high are scqubits defaults that are never
     named anywhere else and yet set the quasiparticle and 1/f results outright.
     """
-    return {k: float(v) for k, v in NOISE_PARAMS.items()}
+    snap = {k: float(v) for k, v in NOISE_PARAMS.items()}
+    snap["cc_convention"] = CC_CONVENTION
+    return snap
 
 
 def n_thermal(f_GHz, T=None):
@@ -193,7 +224,7 @@ def tphi_flux_second_order(d2f_dphi2, A_flux=1e-6, log_factor="none"):
 # transmon
 # --------------------------------------------------------------------------
 def transmon_coherence(EJ, EC, ng=0.0, ncut=30,
-                       Q_cap=1e6, A_ng=1e-4, A_cc=1e-7):
+                       Q_cap=1e6, A_ng=1e-4, A_cc=1e-7, cc_convention=None):
     """T1, per-channel Tphi and combined T2 for one transmon, in microseconds.
 
     Channels: t1_capacitive (dielectric), tphi_1_over_f_ng (charge),
@@ -204,7 +235,8 @@ def transmon_coherence(EJ, EC, ng=0.0, ncut=30,
     tm = make_transmon(EJ=EJ, EC=EC, ng=ng, ncut=ncut)
     T1      = safe(tm.t1_capacitive,    _ctx=ctx, i=1, j=0, Q_cap=Q_cap)
     Tphi_ng = safe(tm.tphi_1_over_f_ng, _ctx=ctx, A_noise=A_ng, i=0, j=1)
-    Tphi_cc = safe(tm.tphi_1_over_f_cc, _ctx=ctx, A_noise=A_cc, i=0, j=1)
+    Tphi_cc = safe(tm.tphi_1_over_f_cc, _ctx=ctx, i=0, j=1,
+                   A_noise=cc_noise_amplitude(A_cc, EJ, cc_convention))
     T2 = 1.0 / (1.0 / (2 * T1) + 1.0 / Tphi_ng + 1.0 / Tphi_cc)
     ev = tm.eigenvals(evals_count=2)
     return {"EJ": EJ, "EC": EC, "EJ_EC": EJ / EC, "ng": ng,
@@ -221,7 +253,7 @@ def transmon_coherence(EJ, EC, ng=0.0, ncut=30,
 def fluxonium_coherence(EJ=8.9, EC=2.5, EL=0.5, flux=0.5, cutoff=110,
                         Q_cap=1e6, A_flux=1e-6, A_cc=1e-7,
                         second_order_flux=True, log_factor="none",
-                        deriv_step=1e-4):
+                        deriv_step=1e-4, cc_convention=None):
     """T1, per-channel Tphi and combined T2 for one fluxonium, in microseconds.
 
     T1 channels: dielectric + quasiparticle tunneling.
@@ -238,7 +270,8 @@ def fluxonium_coherence(EJ=8.9, EC=2.5, EL=0.5, flux=0.5, cutoff=110,
     T1_qp   = safe(fx.t1_quasiparticle_tunneling,   _ctx=ctx, i=1, j=0)
     T1 = 1.0 / (1.0 / T1_diel + 1.0 / T1_qp)
     Tphi_flux = safe(fx.tphi_1_over_f_flux, _ctx=ctx, A_noise=A_flux, i=0, j=1)
-    Tphi_cc   = safe(fx.tphi_1_over_f_cc,   _ctx=ctx, A_noise=A_cc,   i=0, j=1)
+    Tphi_cc   = safe(fx.tphi_1_over_f_cc,   _ctx=ctx, i=0, j=1,
+                     A_noise=cc_noise_amplitude(A_cc, EJ, cc_convention))
 
     if second_order_flux:
         d2 = float(d2f01_dflux2(EJ, EC, EL, flux=flux, cutoff=cutoff, h=deriv_step))

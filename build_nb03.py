@@ -37,17 +37,17 @@ uncertainties that dominate them. Comparative trends are the defensible output.
    $1/f$ dephasing to first order only and returns a divergent time wherever
    $\partial\omega_{01}/\partial\lambda = 0$ — documented behaviour, not a bug
    (Groszkowski & Koch 2021, §5.1 fn. 4). §2 adds the second-order channel
-   (Nguyen 2019 Eq. A3). It turns out to contribute **0.63%** of the rate budget at the sweet
-   spot, so the previous first-order-only numbers were sound — but that is now a *measured*
+   (Nguyen 2019 Eq. A3). It turns out to contribute **0.2%** of the rate budget at the sweet spot, so the previous first-order-only numbers were sound — but that is now a *measured*
    bound rather than an assumption.
 
 2. **$T_2$ over the $(E_J, E_L)$ plane is very nearly a restatement of $f_{01}$**
-   (correlation $-0.997$, §6). As in notebook 02, a raw $T_2$ maximum over the design plane is
+   (correlation $-0.988$, §6). As in notebook 02, a raw $T_2$ maximum over the design plane is
    not a design recommendation.
 
 3. **Low-frequency fluxonia are thermally populated.** The unconstrained $T_2$ optimum sits at
-   $f_{01} \approx 75$ MHz, where $\bar n_{\rm th} \approx 3.7$ at 15 mK — the qubit is thermally
-   scrambled and below any published device. Frequency and thermal occupation are reported
+   $f_{01} \approx 75$ MHz, where $\bar n_{\rm th} \approx 3.7$ at 15 mK — passive thermal
+   initialization fails, and it is below every device in Nguyen 2019's Table I (though not below
+   every operated fluxonium: Zhang 2021 runs one at 14 MHz with active reset). Frequency and thermal occupation are reported
    alongside every optimum in §6.
 
 4. **The dielectric quality factor is a flat override.** Passing `Q_cap=1e6` replaces scqubits'
@@ -57,6 +57,15 @@ uncertainties that dominate them. Comparative trends are the defensible output.
 
 *A record of numbers corrected relative to earlier versions of this notebook is in Appendix A,
 and full references with DOIs are in Appendix B.*
+""")
+
+md(r"""
+> **Convention, since 2026-11-04.** Critical-current noise is **fractional**:
+> $A_{cc} = \delta I_c/I_c$, passed to scqubits as $A_{cc} E_J$ (see the `src/coherence.py`
+> docstring). scqubits applies its amplitude to the dimensionless $\partial H/\partial E_J$, i.e. as an
+> absolute $E_J$ fluctuation in GHz, which made the channel 8.9× (fluxonium) to 13× (transmon) too
+> weak. Outputs and commentary below use the fractional reading; earlier results are reproducible
+> with `cc_convention="absolute"`, and the change is recorded in the corrections appendix.
 """)
 
 code(r"""
@@ -135,7 +144,7 @@ print("   NOTE t_exp is in scqubits system units (ns) -> 1e4 ns = 10 us;")
 print("        omega_low = 2*pi*1 Hz expressed in GHz. Both enter every 1/f time below.")
 
 # ---- chain of custody to 01_validation.ipynb --------------------------------
-VALIDATED_T2_US = 1136.8688060132743      # 01_validation.ipynb, section 6
+VALIDATED_T2_US = 369.54270558880427      # 01_validation.ipynb, section 6 (fractional A_cc, 2026-11-04; was 1136.8688060132743)
 baseline = fluxonium_coherence(**FLUXONIUM_DEFAULTS, second_order_flux=False)
 rel = abs(baseline["T2_us"] - VALIDATED_T2_US) / VALIDATED_T2_US
 print(f"\nfirst-order-only nominal T2 = {baseline['T2_us']:.10f} us")
@@ -450,8 +459,9 @@ md(r"""
 At exactly $\Phi/\Phi_0 = 0.5$ the first-order flux channel is switched off by symmetry, so the
 informative question is how quickly flux noise takes over once detuned — which is why the
 decomposition is shown against log detuning. The second-order channel is now included in the
-comparison, so "relaxation dominates at the spot" is a statement about a complete rate budget
-rather than an artefact of a missing channel.
+comparison, so the finding that critical-current dephasing dominates at the spot (76% of $1/T_2$,
+with $A_{cc}$ read as fractional; see the `src/coherence.py` docstring) is a statement about a
+complete rate budget rather than an artefact of a missing channel.
 """)
 
 code(r"""
@@ -518,7 +528,9 @@ md(r"""
 Same discipline as notebook 02: overlay $f_{01}$ contours, use a log colour scale, and report
 whether the optimum is bracketed by the grid. Because fluxonium sweet-spot frequencies are
 *intrinsically* low, the thermal occupation $\bar n_{\rm th}$ is reported at every optimum, and
-the frequency range of published devices (Nguyen 2019, 0.17–0.83 GHz) is marked.
+the frequency range of the Nguyen 2019 Table I devices (0.17–0.83 GHz) is marked. That is a
+reference band, not the lowest frequency ever operated: Zhang 2021 (14 MHz) and Najera-Santos 2024
+(1.8 MHz) run far lower, with active initialization.
 
 **Scope note.** $E_C$ is held at 2.5 GHz throughout this plane, so this is a 2-D slice of the
 3-D design space $(E_J, E_C, E_L)$, not the full space. §6.2 tests whether the qualitative
@@ -557,10 +569,10 @@ def report(frame, label):
 
 b_all = report(design, "Unconstrained maximum:")
 pub = design[(design.freq_GHz >= 0.17) & (design.freq_GHz <= 0.83)]
-b_pub = report(pub, "Restricted to the published fluxonium band (Nguyen 2019, 0.17-0.83 GHz):")
+b_pub = report(pub, "Restricted to the Nguyen 2019 Table I band (0.17-0.83 GHz):")
 print(f"\n   the unconstrained optimum sits at f01 = {b_all.freq_GHz*1e3:.0f} MHz, "
-      f"{0.17/b_all.freq_GHz:.1f}x below the lowest published device,")
-print(f"   with n_th = {b_all.n_thermal:.1f} thermal quanta - the qubit is thermally scrambled. "
+      f"{0.17/b_all.freq_GHz:.1f}x below the lowest Nguyen 2019 Table I device,")
+print(f"   with n_th = {b_all.n_thermal:.1f} thermal quanta - passive initialization fails. "
       f"It is a grid corner, not a design.")
 
 pivot = design.pivot(index="EL", columns="EJ", values="T2_us")
@@ -683,7 +695,7 @@ if all_interior:
     print(">>> At every EL tested, T2 rises with EJ, turns over, and falls. At the turning point")
     print(f">>> the second-order channel carries "
           f"{100*min(r['second_order_share'] for r in opt_rows):.0f}-"
-          f"{100*max(r['second_order_share'] for r in opt_rows):.0f}% of the total dephasing rate -")
+          f"{100*max(r['second_order_share'] for r in opt_rows):.0f}% of the total rate 1/T2 -")
     print(">>> which is the signature of a genuine internal optimum: the channel that turns the")
     print(">>> curve over is comparable to everything else exactly at the turn.")
     print(">>> The first-order-only pipeline shows NO turnover over the same range, which is why")
@@ -702,17 +714,17 @@ print("\nBUT: is that optimum usable?")
 for r in opt_rows:
     print(f"   EL = {r['EL']}: optimum at f01 = {r['f01_GHz']*1e3:6.1f} MHz -> "
           f"n_th = {r['n_thermal']:5.1f}")
-print(f"   Every interior optimum sits far below the lowest published device (170 MHz) and is")
-print(f"   thermally scrambled. So the PHYSICAL optimum is real but INACCESSIBLE: thermal")
-print(f"   occupation binds long before it is reached.")
-print(f"   The earlier conclusion was therefore right in practice and wrong in principle.")
+print(f"   Every interior optimum sits below the lowest Nguyen 2019 Table I device (170 MHz),")
+print(f"   where passive thermal initialization fails. The optimum is real and thermally")
+print(f"   UNFAVORABLE at 15 mK, not impossible: Zhang 2021 operate a 14 MHz fluxonium with")
+print(f"   active reset. Using it is a question of initialization overhead, not modelled here.")
 
 print("\nOptimum under each candidate frequency floor (from the SS6 design grid):")
 floor_rows = []
-for f_min, label in [(0.17, "lowest published device, Nguyen 2019"),
+for f_min, label in [(0.17, "lowest device, Nguyen 2019 Table I"),
                      (0.22, "n_th = 1"),
                      (0.36, "nominal design, Manucharyan 2009"),
-                     (0.83, "highest published device, Nguyen 2019")]:
+                     (0.83, "highest device, Nguyen 2019 Table I")]:
     sub = design[design.freq_GHz >= f_min]
     if not len(sub):
         continue
@@ -787,8 +799,8 @@ if bool(ec_opt.interior.all()):
     print(f"   >>> because a larger EC deepens the well less for the same EJ.")
     print(f"   >>> But n_th at the optimum stays in the range "
           f"{ec_opt.n_thermal.min():.1f}-{ec_opt.n_thermal.max():.1f} throughout, so the")
-    print(f"   >>> optimum remains thermally inaccessible at every EC. The conclusion is robust")
-    print(f"   >>> in both directions: the optimum is real, and it is out of reach.")
+    print(f"   >>> optimum stays thermally unfavorable at every EC (passive initialization fails).")
+    print(f"   >>> The optimum is real at every EC; using it needs active initialization.")
 else:
     print("\n   >>> WARNING: the interior optimum is EC-dependent - SS6.1 cannot be generalised.")
 """)
@@ -816,12 +828,12 @@ ax[0].legend(frameon=False, fontsize=7.5, ncol=2)
 
 sc = ax[1].scatter(scan.freq_GHz * 1e3, scan.T2_us, c=100 * scan.second_order_rate_share,
                    cmap="magma_r", s=38, edgecolor="k", linewidth=0.3, vmin=0, vmax=100)
-fig.colorbar(sc, ax=ax[1], label="second-order share of dephasing rate (%)")
+fig.colorbar(sc, ax=ax[1], label=r"second-order share of total rate $1/T_2$ (%)")
 ax[1].axvspan(170, 830, color="0.85", zorder=0)
-ax[1].text(300, scan.T2_us.min() * 1.3, "published\nband", fontsize=8, ha="center", color="0.35")
+ax[1].text(300, scan.T2_us.min() * 1.3, "Nguyen 2019\nband", fontsize=8, ha="center", color="0.35")
 ax[1].set_xscale("log"); ax[1].set_yscale("log")
 ax[1].set_xlabel(r"$f_{01}$ (MHz)"); ax[1].set_ylabel(r"$T_2$ (µs)")
-ax[1].set_title("(b) The optimum sits far below any\npublished device, and is thermally scrambled")
+ax[1].set_title("(b) The optimum lies below the Nguyen 2019 band\nand is thermally unfavorable at 15 mK")
 fig.tight_layout()
 pl.save(fig, "figures/fluxonium_interior_optimum.png")
 plt.show()
@@ -864,7 +876,7 @@ falsifiable test of the model's absolute accuracy.
 > The `t1_*` methods return the **total** (excitation + relaxation) rate at that temperature, so
 > the mismatch enters the comparison directly. At the frequencies in Table I it is worth a factor
 > $\sim\!1.5$ in thermal occupation — $\bar n_{\rm th}(0.363\,{\rm GHz})$ is 0.46 at 15 mK
-> against 0.72 at 20 mK — which is small next to the 2.6× calibration gap below but is part of
+> against 0.72 at 20 mK — which is small next to the 1.5× calibration gap below but is part of
 > it, and it makes the model's $T_1$ the *optimistic* side of the comparison by construction.
 > The 15 mK value is retained so that every number in this project shares one temperature; the
 > mismatch is reported rather than tuned away.
@@ -1071,7 +1083,7 @@ factor of two, as a fraction of one bias period"* is directly comparable across 
 Comparing "µs lost per unit $n_g$" against "µs lost per unit $\Phi/\Phi_0$" would not be.
 
 **(B) Candidate fair comparisons.** Both design planes turned out to be frequency maps
-($-0.9999$ for the transmon, $-0.997$ for the fluxonium), so a raw $T_2$ ratio partly measures
+($-0.9999$ for the transmon, $-0.988$ for the fluxonium), so a raw $T_2$ ratio partly measures
 the frequency difference rather than the architecture. Three defensible comparisons are computed
 — raw, frequency-matched, and gate-count — and they do not agree with each other.
 
@@ -1185,11 +1197,11 @@ N_fx = gate_bounds["1/|alpha|  (leakage only)"]["fluxonium"]
 N_tm = gate_bounds["1/|alpha|  (leakage only)"]["transmon"]
 _gr = [v["ratio"] for v in gate_bounds.values()]
 print(f"\n    >>> The gate-count answer alone spans {max(_gr)/min(_gr):,.0f}x across defensible")
-print(f"    >>> pulse-length bounds ({min(_gr):.2f}x to {max(_gr):,.0f}x). The 524x figure assumes the")
+print(f"    >>> pulse-length bounds ({min(_gr):.2f}x to {max(_gr):,.0f}x). The {max(_gr):,.0f}x figure assumes the")
 print(f"    >>> fluxonium can be driven at its 8.7 GHz anharmonicity limit, which it cannot:")
 print(f"    >>> that is 24x faster than one period of its own 0.363 GHz transition.")
 print(f"\n    >>> The 'fluxonium advantage' is {nominal['T2_us']/tm_op['T2_us']:.0f}x, "
-      f"~1-2x, {min(_gr):.2f}x or {max(_gr):,.0f}x depending on the metric chosen.")
+      f"{min(_gr):.2f}x or {max(_gr):,.0f}x depending on the metric chosen (matched-frequency T2: see section 9B).")
 print(f"    >>> Quoting one without naming the metric AND the pulse bound is not a defensible")
 print(f"    >>> comparison. Notebook 04 section 3 carries all of them through the Monte Carlo.")
 
@@ -1197,7 +1209,9 @@ print(f"    >>> comparison. Notebook 04 section 3 carries all of them through th
 print("\n(C) REQUIRED FLUX STABILITY vs THE NOISE THE MODEL ITSELF ASSUMES")
 print(f"    requirement: |detuning| < {d10_fx:.3e} Phi0 (10x margin) "
       f"or {d2_fx:.3e} Phi0 (2x margin)")
-print("    For S(f) = A^2/f, sigma_Phi = A*sqrt(2 ln(f_hi/f_lo)).")
+print("    Two-sided S(omega) = 2 pi A^2/|omega| (the scqubits convention used for every dephasing rate),")
+print("    integrated over both frequency signs: sigma_Phi = A*sqrt(2 ln(f_hi/f_lo)). A one-sided A^2/f")
+print("    reading of the same A would drop the factor 2 under the root.")
 print(f"    CONVENTION NOTE: scqubits' own Tphi uses omega_low = {NOISE_PARAMS_SNAPSHOT['omega_low']:.3e} GHz")
 print(f"    (2*pi*1 Hz) and t_exp = {NOISE_PARAMS_SNAPSHOT['t_exp']:.0e} ns = "
       f"{NOISE_PARAMS_SNAPSHOT['t_exp']*1e-3:.0f} us, giving |ln(omega_low*t_exp)| = "
@@ -1241,10 +1255,10 @@ md(r"""
 figure they cite is reproduced in this notebook. Give them a voice pass before submission.*
 
 > **Forward reference.** This section sets Q3 up; `04_analysis.ipynb` answers it, and sharpens
-> point 2 considerably. The matched-frequency $T_2$ ratio quoted here as "$\sim$1–2×" is the
-> deterministic value at the default noise amplitudes; propagated across the literature band its
-> median is $0.86\times$ and the fluxonium wins only 42% of samples. The advantage does not merely
-> shrink under the frequency control — it reverses.*
+> point 2 considerably. The matched-frequency $T_2$ ratio quoted here as "$\sim$0.6–0.8×" is the
+> deterministic value at the default noise amplitudes; propagated across the literature band at
+> 1 GHz its median is $0.37\times$ and the fluxonium wins only 5% of samples. Under the frequency
+> control there is no advantage left: the transmon is ahead.*
 
 **1. What currency does each architecture pay in?**
 
@@ -1252,29 +1266,28 @@ The transmon and the fluxonium are both monotone trade-offs, but they are not pa
 coin, and the two currencies are only partly commensurable.
 
 The transmon pays in **anharmonicity, continuously and by design**. Notebook 02's iso-frequency
-cut shows $T_2$ flat to within ~5% while $|\alpha|$ falls 7.3× across the accessible $E_J/E_C$
+cut shows $T_2$ flat to within ~3% while $|\alpha|$ falls 7.3× across the accessible $E_J/E_C$
 range. Charge insensitivity is bought by raising $E_J/E_C$, and the cost is a spectrum that
 crowds toward harmonic. Crucially the cost is *paid once, at design time*, and the resulting
-device is then insensitive to its bias across the entire period ($T_2$ varies by 1.006× over all
-$n_g$, §9A).
+device is then insensitive to its bias across the entire period ($T_2$ varies by 1.004× over all $n_g$, §9A).
 
 The fluxonium pays in **operating-point precision, continuously and at run time**. Its
 anharmonicity is enormous — $|\alpha| \approx 8.7$ GHz against the transmon's 299 MHz — and its
 sweet-spot $T_2$ is far longer. But §9A shows the bias window for a 2× coherence loss is
-$\sim 7\times10^{-5}$ of the flux period, against the transmon's 100%. The fluxonium has not
+$\sim 2\times10^{-4}$ of the flux period, against the transmon's 100%. The fluxonium has not
 eliminated its bias sensitivity; it has concentrated all of it into a narrow neighbourhood of
 $\Phi_0/2$ and made the qubit excellent inside that neighbourhood.
 
 There is also a **third currency the raw comparison hides**: frequency. The fluxonium's coherence
-advantage is inseparable from its low $f_{01}$ (§6, correlation $-0.997$), and low $f_{01}$ means
+advantage is inseparable from its low $f_{01}$ (§6, correlation $-0.988$), and low $f_{01}$ means
 thermal occupation. At the nominal design $\bar n_{\rm th} = 0.46$; at the unconstrained grid
-optimum it is 3.7, and at the *physical* optimum found in §6.1 it is 4–32. The transmon at
+optimum it is 3.7, and at the *physical* optimum found in §6.1 it is 10–57. The transmon at
 4.92 GHz has $\bar n_{\rm th} \sim 10^{-7}$. So the fluxonium additionally pays in
 **initialisation cost and readout complexity** — a cost that does not appear anywhere in a $T_2$
 number.
 
 **And it pays a fourth cost that this notebook only found by adding the second-order channel.**
-§6.1 shows the fluxonium design plane has a genuine *interior* optimum, created by second-order
+§6.1 shows the fluxonium design plane has an *interior* optimum within this model, created by second-order
 flux dephasing: pushing $E_J$ up and $E_L$ down to buy coherence eventually backfires, because
 the same deep double well that lowers $f_{01}$ also raises $\partial^2 f_{01}/\partial\Phi^2$,
 and second-order flux dephasing scales with it. This is a **hard internal ceiling**, not an
@@ -1290,8 +1303,8 @@ incomparable quantities, and the paper should say so rather than pick a winner.*
 
 **2. What is the fair comparison?**
 
-§9B gives three defensible answers spanning more than two orders of magnitude (18×, ~1–2×, 524×)
-— and the gate-count answer is itself a *range*, not a number: 524×, 22× or **1.34×** depending on
+§9B gives three defensible answers spanning more than two orders of magnitude (8.4×, ~0.6–0.8×,
+242×) — and the gate-count answer is itself a *range*, not a number: 242×, 10× or **0.62×** depending on
 whether the minimum pulse length is bounded by $1/|\alpha|$, by $1/\min(|\alpha|, f_{01})$, or by
 $1/f_{01}$. The last bound matters here and nowhere else: for a transmon $|\alpha| \ll f_{01}$ and
 the three coincide, but the fluxonium's $|\alpha| = 8.7$ GHz is 24× its own $0.363$ GHz transition
@@ -1300,24 +1313,24 @@ The recommendation:
 
 - **Primary: the gate-count comparison at matched frequency, quoted with its pulse-length
   bound**, because it is the only one that controls for the frequency confound *and* accounts for
-  what coherence is actually spent on. It must never be quoted as a bare number: under the
-  leakage-only bound it is ~$10^3\times$, under the drive-period bound it is ~$1.3\times$, and the
+  what coherence is actually spent on. It must never be quoted as a bare number: under the leakage-only bound it is ~$400$–$650\times$, under the drive-period bound it is
+~$0.6$–$0.8\times$, and the
   honest reading is that the fluxonium's anharmonicity advantage is real but is only partly
   convertible into gate speed at a $0.363$ GHz transition frequency.
 - **Report the raw $T_2$ ratio as context**, explicitly labelled as confounded by frequency.
 - **Report the matched-frequency $T_2$ ratio as the headline negative result**, not merely as a
-  sensitivity bound. At the matched frequencies where both architectures are realizable the
-  advantage largely evaporates — and notebook 04 shows that once the noise-amplitude uncertainty is
-  propagated it inverts (median $0.86\times$, fluxonium wins 42%). This is the single most
+  sensitivity bound. At matched frequency there is no coherence advantage: the ratio is 0.62–0.82× deterministically,
+and notebook 04 shows that once the noise-amplitude uncertainty is propagated the transmon is
+ahead in 95% of samples (median $0.37\times$). This is the single most
   important negative result in this project.
 
 The claim the paper is entitled to make is therefore narrow: *at its own operating point, and
 conditional on flux bias held to $\lesssim 10^{-4}\,\Phi_0$, the fluxonium offers a gate-count
 advantage whose size depends on how short a pulse its low transition frequency actually permits;
-its raw coherence advantage is substantially a frequency effect, and at matched frequency it is
-small.* It is **not** entitled to a bare "the fluxonium is $N\times$ better" for any single $N$ —
-the raw ratio is 18×, the frequency-controlled ratio is ~1–2×, and the gate-count ratio is
-anywhere from 1.34× to 524× depending on the pulse-length bound. Which one is quoted decides
+its raw coherence advantage is a frequency effect, and at matched frequency it is absent in this
+model.* It is **not** entitled to a bare "the fluxonium is $N\times$ better" for any single $N$ —
+the raw ratio is 8.4×, the frequency-controlled ratio is ~0.6–0.8×, and the gate-count ratio is
+anywhere from 0.62× to 242× depending on the pulse-length bound. Which one is quoted decides
 the claim, and the bound must be quoted with it.
 
 **3. Is the required flux stability achievable?**
@@ -1366,7 +1379,7 @@ What this model does **not** include, in rough order of expected impact:
    directions, but the qubit is assumed to start in $|1\rangle$; at $\bar n_{\rm th} = 0.455$
    (nominal) and 3.7 (unconstrained optimum) the two-level treatment itself is strained.
 6. **Second-order dephasing uses a convention with no logarithmic factor** (Nguyen Eq. A3).
-   §2 shows a $\ln^2$ convention would change $T_2$ at the sweet spot by ~37% instead of 0.6%.
+   §2 shows a $\ln^2$ convention would change $T_2$ at the sweet spot by ~16% instead of 0.2%.
    This matters far more for §6.1 than for the nominal design: the interior optimum is *located*
    by this channel, so its position — though not its existence — is convention-dependent.
    Eq. (A3) is also derived for the neighbourhood of a sweet spot; applying it across the whole
@@ -1469,8 +1482,8 @@ meta = write_metadata(
              "across_EC": ec_opt.to_dict(orient="records"),
              "note": "Invisible to the first-order-only pipeline, which rises monotonically to "
                      "230195 us at EJ=40, EL=0.2. Every interior optimum is thermally "
-                     "inaccessible (n_th 4-32), so a frequency floor still sets any quotable "
-                     "design."},
+                     "unfavorable (n_th 4-32; passive initialization fails), so without active "
+                     "reset a frequency floor still sets any quotable design."},
          "model_vs_measured": {
              "source": "Nguyen et al., PRX 9, 041041 (2019), Table I (published version, 9 devices)",
              "T1_ratio_median": float(cmp.T1_ratio.median()),
@@ -1503,10 +1516,10 @@ meta = write_metadata(
          "CONCLUSION OVERTURNED: the earlier version reported no interior optimum over the "
          "(EJ, EL) plane and attributed the bound entirely to thermal occupation. That was an "
          "artefact of the missing second-order channel. With it, an interior optimum exists at "
-         "every (EC, EL) tested, carrying %.0f-%.0f%%%% of the dephasing rate at the turning point. "
+         "every (EC, EL) tested, carrying %.0f-%.0f%%%% of the total rate 1/T2 at the grid turning point. "
          % (100 * ec_opt.second_order_share.min(), 100 * ec_opt.second_order_share.max()) +
-         "The optimum is nevertheless thermally inaccessible, so the practical guidance is "
-         "unchanged.",
+         "The optimum is nevertheless thermally unfavorable at 15 mK (passive initialization "
+         "fails), so without active reset the practical guidance is unchanged.",
          "The extended scan now uses a Richardson-extrapolated second derivative. At the extreme "
          "corner of the extended scan (EJ=40, EL=0.2) the plain central difference at h=1e-4 is "
          "still ~4% from converged; at the interior optima themselves it is within 0.1%. The "
@@ -1521,8 +1534,8 @@ meta = write_metadata(
          "Basis convergence was previously verified only at flux=0.5; it is now verified across "
          "the swept flux range down to flux=0.30.",
          "The previously quoted design optimum (T2 = 5578 us at EJ=15, EL=0.2) sits on two grid "
-         "edges at f01 = 75 MHz with n_th ~ 3.7; it is thermally scrambled and below any "
-         "published device. Not a usable design point.",
+         "edges at f01 = 75 MHz with n_th ~ 3.7; passive initialization fails there and it is "
+         "below every Nguyen 2019 Table I device. Not a design point.",
      ],
      "known_artifacts": [
          "Tphi_flux (FIRST order) at flux=0.5 exceeds 1e14 us: the first-order 1/f formula with "
@@ -1564,35 +1577,37 @@ md(r"""
 - Reproduces the validated nominal point **exactly** through the first-order-only code path,
   preserving the chain of custody to `01_validation.ipynb`.
 - `cutoff=110` converged across the design grid **and** across the swept flux range (§1).
-- **Second-order $1/f$ flux dephasing is now computed rather than assumed away** (§2). *At the
-  nominal design* it contributes only 0.63% of the rate budget; $T_2$ moves from 1136.9 to
-  1129.7 µs. So the earlier first-order-only numbers **at the nominal design** were sound, and
-  that is now a computed bound rather than an assumption. The $\ln^2$ convention would instead
-  cost ~37%, so the convention is stated explicitly.
+- **Second-order $1/f$ flux dephasing is now computed rather than assumed away** (§2). *At the nominal design* it contributes only 0.2% of the rate budget; $T_2$ moves from 369.5 to
+368.8 µs. So the earlier first-order-only numbers **at the nominal design** were sound, and
+  that is now a computed bound rather than an assumption. The $\ln^2$ convention would instead cost ~16%, so the convention is stated explicitly.
 
 - **But the same channel overturns a headline conclusion elsewhere (§6.1).** Extended to large
-  $E_J$ and small $E_L$, the fluxonium design plane has a genuine **interior optimum**, created
-  by second-order flux dephasing — at the turning point that channel carries 44–58% of the total
-  dephasing rate. The first-order-only pipeline shows no turnover over the same range and reaches
-  230,195 µs, which is how the earlier version concluded there was "no interior optimum" and only
+  $E_J$ and small $E_L$, the fluxonium design plane has an **interior optimum** within this model, in 8 of the 9 slices
+(the ninth peaks at the $E_J = 45$ scan edge), created by second-order flux dephasing — at the grid
+turning point that channel carries 45–53% of the total rate $1/T_2$ (46–47% once the optimum is
+refined continuously; `results/referee_checks.py`). The first-order-only pipeline shows no turnover
+over the same range and reaches 33,435 µs at $E_J = 40$ (57,408 µs at the end of the scan), which is how the earlier version concluded there was "no interior optimum" and only
   a monotone trade-off bounded by thermal occupation. That conclusion was an artefact of a
   missing channel. **This is the single most consequential correction in this revision.**
   The optimum survives varying $E_C$ (§6.2), though it moves in $E_J$.
 
-- **The optimum is nevertheless out of reach.** Every interior optimum sits at
-  $f_{01} \approx 10$–75 MHz with $\bar n_{\rm th} = 4$–32 — thermally scrambled and far below
-  the lowest published device. So the earlier conclusion was *right in practice and wrong in
-  principle*: a frequency floor still determines any quotable design, but it is no longer true
-  that the physics itself imposes no limit.
+- **The optimum is nevertheless costly to use.** Every interior optimum sits at
+  $f_{01} \approx 5$–30 MHz with $\bar n_{\rm th} = 10$–57, where passive thermal initialization
+  fails, below every Nguyen 2019 Table I device. It is thermally unfavorable at 15 mK rather than
+  impossible: Zhang 2021 operate a 14 MHz fluxonium with active reset. Without that overhead a
+  frequency floor still determines any quotable design, but it is no longer true that the
+  physics itself imposes no limit.
 - **The sweet spot is far sharper than originally recorded.** $T_2$ falls 10× within
-  $\Delta\Phi/\Phi_0 = 3.25\times10^{-4}$, located by root-finding rather than read off a
-  grid (§4).
+  $\Delta\Phi/\Phi_0 = 9.96\times10^{-4}$, located by root-finding rather than read off a grid (§4).
 - The falloff exponent is **not** monotonic: it approaches the first-order $1/f$ prediction of
   $-1$ only in an intermediate window, flattening on both sides. Quoting one exponent over a wide
   range would be wrong.
 - **Q2, relaxation**: quasiparticle tunnelling is negligible only *at* the sweet spot; once
   detuned it limits $T_1$ at most flux points. **Conditional on $x_{qp}$** (§8).
-- The design plane is dominated by the frequency confound ($-0.997$), and this survives varying
+- **Q2, dephasing**: critical-current dephasing dominates at the sweet spot (76% of $1/T_2$) and at
+  358 of the 400 design-plane points, with $A_{cc}$ read as fractional. This makes $A_{cc}$, the
+  least constrained amplitude here, the dominant uncertainty for the fluxonium.
+- The design plane is dominated by the frequency confound ($-0.988$), and this survives varying
   $E_C$ (§6.2).
 - The second derivative $\partial^2 f_{01}/\partial\Phi^2$ is Richardson-extrapolated. At the
   extreme corner of the extended scan ($E_J{=}40$, $E_L{=}0.2$) a plain central difference at
@@ -1603,12 +1618,12 @@ md(r"""
 **Calibration and uncertainty — new.**
 
 - **§7 anchors the model against measurement for the first time.** Against the **nine** devices of
-  the published Nguyen 2019 Table I the model is optimistic by a median factor of **2.0× on $T_1$
-  and 2.6× on $T_2$**, worst case 5.7×. The gap is non-uniform, so it is not a single missing
-  constant — and it is *smallest where it matters most*: **device I, the device nearest this
-  notebook's nominal design in frequency (0.395 vs 0.363 GHz), is matched to 4% on $T_2$, and the
-  model is actually pessimistic on its $T_1$ (402 µs against 500 µs measured).** The optimism is
-  concentrated in devices further from that regime. *An earlier version described the gap as
+  the published Nguyen 2019 Table I the model is optimistic by a median factor of **2.0× on $T_1$ and 1.5× on $T_2$**, worst case 3.2× (device F;
+2.6× and 5.7× under the absolute critical-current reading used before 2026-11-04). The gap is
+non-uniform, so it is not a single missing constant: **device I, the device nearest this notebook's
+nominal design in frequency (0.395 vs 0.363 GHz), is the one device on which the model is
+pessimistic on both, $T_1$ (402 µs against 500 µs measured) and $T_2$ (291 µs against 510 µs).** The
+optimism is concentrated in devices further from that regime. *An earlier version described the gap as
   "roughly an order of magnitude", which overstated it by ~4×, and used the arXiv preprint's
   eight-device table, which omits device I entirely.*
 - **§8 propagates the noise-amplitude uncertainties.** Absolute $T_2$ does not survive; the
@@ -1630,17 +1645,18 @@ changelog. Append to `docs/lab_notebook.md`; do not retro-edit earlier entries.
 
 | # | Superseded claim | Corrected | Why it was wrong |
 |---|---|---|---|
-| 1 | "$T_2$ falls 10× by $\Delta\Phi = 0.0020$" | $3.25\times10^{-4}$ | 0.0020 *was the grid spacing*. A sweep with spacing $\delta$ cannot resolve a falloff inside $\delta$. |
-| 2 | "best $T_2$ = 5578 µs at $E_J{=}15$, $E_L{=}0.2$" | not a design point | Sits on two grid edges at $f_{01} = 75$ MHz with $\bar n_{\rm th} \approx 3.7$ — thermally scrambled, below any published device. |
-| 3 | Dephasing at the sweet spot ignored as a "first-order artifact" | second-order channel computed | The divergence is real but the physical channel is second order, not zero. Now bounded at 0.63% of the rate budget *at the nominal design*. |
-| 3b | "**No interior optimum**; $T_2$ rises monotonically with $E_J$ to 230,195 µs; the plane is a monotone trade-off bounded only by thermal occupation" | **an interior optimum exists**, created by second-order flux dephasing | The monotonicity was an artefact of the missing channel (§6.1). In the deep well $\partial^2 f_{01}/\partial\Phi^2$ grows by $\sim\!2.6\times10^3$ (293 → 768,014 GHz/$\Phi_0^2$ across the scan) and $\Gamma_2 \propto$ it. The optimum is real but thermally inaccessible, so practical guidance is unchanged. |
+| 1 | "$T_2$ falls 10× by $\Delta\Phi = 0.0020$" | $9.96\times10^{-4}$ ($3.25\times10^{-4}$ before row 11) | 0.0020 *was the grid spacing*. A sweep with spacing $\delta$ cannot resolve a falloff inside $\delta$. |
+| 2 | "best $T_2$ = 5578 µs at $E_J{=}15$, $E_L{=}0.2$" | not a design point | Sits on two grid edges at $f_{01} = 75$ MHz with $\bar n_{\rm th} \approx 3.7$ — passive initialization fails there, and it is below every Nguyen 2019 Table I device. |
+| 3 | Dephasing at the sweet spot ignored as a "first-order artifact" | second-order channel computed | The divergence is real but the physical channel is second order, not zero. Now bounded at 0.2% of the rate budget *at the nominal design* (0.63% before row 11). |
+| 3b | "**No interior optimum**; $T_2$ rises monotonically with $E_J$ to 230,195 µs; the plane is a monotone trade-off bounded only by thermal occupation" | **an interior optimum exists**, created by second-order flux dephasing | The monotonicity was an artefact of the missing channel (§6.1). In the deep well $\partial^2 f_{01}/\partial\Phi^2$ grows by $\sim\!2.6\times10^3$ (293 → 768,014 GHz/$\Phi_0^2$ across the scan) and $\Gamma_2 \propto$ it. The optimum is real but thermally unfavorable at 15 mK; without active reset, practical guidance is unchanged. |
 | 4 | Provenance = $Q_{\rm cap}$, $A_\Phi$, $A_{cc}$ | + full `NOISE_PARAMS` | $T$, $x_{qp}$, $\Delta$, $t_{\rm exp}$, $\omega_{\rm low}$ set the results and were unrecorded. |
 | 5 | Convergence verified at $\Phi/\Phi_0 = 0.5$ | verified to 0.30 | Convergence at a sweet spot does not imply convergence off it. |
 | 6 | $\sigma_\Phi$ computed with $t_{\rm meas} \in \{1\,\text{ms}, 1\,\text{s}, 1\,\text{h}\}$ | reconciled with $t_{\rm exp} = 10$ µs | The stability estimate used a different $1/f$ window than the dephasing times it was compared against. |
-| 7 | No comparison to measured coherence | §7 added | Absolute accuracy was unstated. Measured against Nguyen 2019's nine published devices it is optimistic by a median 2.0× on $T_1$ and 2.6× on $T_2$ (worst case 5.7×). |
-| 8 | "the model is optimistic by roughly an order of magnitude" | median 2.0× ($T_1$) / 2.6× ($T_2$) | The prose overstated the discrepancy by ~4× relative to §7's own computed table. Device C is matched to 3% on $T_2$. |
-| 9 | "$T_2$ falls 10× within $3.6\times10^{-4}$" (§13, §8, App. A) | $3.25\times10^{-4}$ | The prose quoted the upper end of the Brent bracket (`3.697e-04`) rather than the root itself. |
+| 7 | No comparison to measured coherence | §7 added | Absolute accuracy was unstated. Measured against Nguyen 2019's nine published devices it is optimistic by a median 2.0× on $T_1$ and 1.5× on $T_2$ (worst case 3.2×; 2.6× / 5.7× before row 11). |
+| 8 | "the model is optimistic by roughly an order of magnitude" | median 2.0× ($T_1$) / 1.5× ($T_2$) | The prose overstated the discrepancy by ~4× relative to §7's own computed table at the time (2.6× on $T_2$ before row 11). |
+| 9 | "$T_2$ falls 10× within $3.6\times10^{-4}$" (§13, §8, App. A) | $3.25\times10^{-4}$ at the time; $9.96\times10^{-4}$ after row 11 | The prose quoted the upper end of the Brent bracket (`3.697e-04`) rather than the root itself. |
 | 10 | Table I transcribed from the arXiv v1 preprint (8 devices, A–H) | **published** PRX 9, 041041 Table I (**9 devices, A–I**) | The preprint omits **device I** — the paper's headline device ($T_1 = 500$, $T_2 = 510$ µs) and the one closest in frequency to this project's nominal design. Verified value-by-value against the journal PDF 2026-09-07; A–H unchanged in every field used here. |
+| 11 | Critical-current noise $A_{cc} = 10^{-7}$ as scqubits applies it (2026-11-04) | **fractional**, $\delta I_c/I_c$: `src/coherence.py` passes $A_{cc}E_J$ | scqubits applies $A_{cc}$ to the dimensionless $\partial H/\partial E_J$, i.e. as an absolute $E_J$ fluctuation in GHz, although it documents it in units of $I_c$. The channel was $E_J/h$ in GHz times too weak (8.9× here). Nominal $T_2$ 1129.7 → 368.8 µs; critical-current dephasing now dominates at the sweet spot. |
 """)
 
 md(r"""

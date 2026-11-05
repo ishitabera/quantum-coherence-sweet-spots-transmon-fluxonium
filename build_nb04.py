@@ -41,12 +41,11 @@ uncertainties*, not a single winner.
 
 2. **The old fluxonium physics was first-order only.** This notebook previously defined
    `fluxonium_T2` inline without the second-order $1/f$ flux dephasing channel that notebook 03
-   added (Nguyen 2019 Eq. A3, published numbering). At the sweet spot that channel carries only 0.63% of the rate
-   budget, so the change is small *here* — but the inline duplicate could drift from `src/`
+   added (Nguyen 2019 Eq. A3, published numbering). At the sweet spot that channel carries only 0.2% of the rate budget, so the change is small *here* — but the inline duplicate could drift from `src/`
    silently, and it did. All physics is now imported.
 
 3. **There is no single answer to Q3.** §3 computes three defensible comparisons — raw $T_2$,
-   frequency-matched $T_2$, and gate count — and they disagree by a factor of $\sim 500$. Quoting
+   frequency-matched $T_2$, and gate count — and they disagree by a factor of $\sim 400$. Quoting
    one without naming the metric is not a defensible comparison.
 
 4. **The gate-count metric is this project's own heuristic, and the pulse-length bound inside it
@@ -54,11 +53,19 @@ uncertainties*, not a single winner.
    *not* write $N = T_2|\alpha|$. Worse, $|\alpha|$ is not the only bound: a drive cannot be much
    shorter than one period of the transition it drives, and for this fluxonium
    $|\alpha| = 8.7$ GHz is 24× its own $0.363$ GHz transition. §3 computes three bounds and §4
-   carries them all through the Monte Carlo. **The fluxonium's gate-count advantage is $524\times$,
-   $22\times$ or $1.34\times$ depending on which is used** — a spread comparable to the entire
+   carries them all through the Monte Carlo. **The fluxonium's gate-count advantage is $242\times$, $10\times$ or $0.62\times$ depending on which is used** — a spread comparable to the entire
    spread across metrics 1–3.
 
 *Corrections relative to earlier versions are in Appendix A; references with DOIs in Appendix B.*
+""")
+
+md(r"""
+> **Convention, since 2026-11-04.** Critical-current noise is **fractional**:
+> $A_{cc} = \delta I_c/I_c$, passed to scqubits as $A_{cc} E_J$ (see the `src/coherence.py`
+> docstring). scqubits applies its amplitude to the dimensionless $\partial H/\partial E_J$, i.e. as an
+> absolute $E_J$ fluctuation in GHz, which made the channel 8.9× (fluxonium) to 13× (transmon) too
+> weak. Outputs and commentary below use the fractional reading; earlier results are reproducible
+> with `cc_convention="absolute"`, and the change is recorded in the corrections appendix.
 """)
 
 code(r"""
@@ -131,8 +138,8 @@ for k, v in PROVENANCE.items():
         print(f"{k:22s} {v}")
 
 # ---- chain of custody: physics identity -------------------------------------
-VALIDATED_TRANSMON_T2 = 54.35208346332045     # 01/02, nominal EJ=15, EC=0.3, ng=0
-VALIDATED_FLUXONIUM_T2 = 1136.8688060132743   # 01 section 6, first-order-only pipeline
+VALIDATED_TRANSMON_T2 = 38.2208528179222      # 01/02, nominal EJ=15, EC=0.3, ng=0 (fractional A_cc, 2026-11-04; was 54.35208346332045)
+VALIDATED_FLUXONIUM_T2 = 369.54270558880427   # 01 section 6, first-order-only pipeline (fractional A_cc, 2026-11-04; was 1136.8688060132743)
 
 _tm_nom = transmon_coherence(**TRANSMON_DEFAULTS)
 _fx_nom = fluxonium_coherence(**FLUXONIUM_DEFAULTS, second_order_flux=False)
@@ -185,16 +192,15 @@ axis.
 
 **Fluxonium: $E_J{=}15$, $E_L{=}0.2$ GHz is a point notebook 03 already retired.** It was the raw
 $T_2$ maximum of the $(E_J, E_L)$ grid, but it sits on *two* grid edges at $f_{01} = 75$ MHz with
-$\bar n_{\rm th} = 3.7$ — thermally scrambled, and 2.3× below the lowest published device (Nguyen
-2019, 0.17 GHz). Notebook 03 Appendix A row 2 records it as "not a design point". **Replacement:**
+$\bar n_{\rm th} = 3.7$ — passive initialization fails there, and it is 2.3× below the lowest device
+in Nguyen 2019's Table I (0.17 GHz). Notebook 03 Appendix A row 2 records it as "not a design point". **Replacement:**
 the Manucharyan 2009 nominal design $E_J{=}8.9$, $E_C{=}2.5$, $E_L{=}0.5$ GHz, which is the design
 notebook 01 validated the spectrum against, plus the best design *within the published frequency
 band* as a second reference.
 
 **Bias asymmetry.** The old comparison additionally held the transmon at its worst charge bias
 ($n_g = 0.25$) while holding the fluxonium at its best flux bias ($\Phi/\Phi_0 = 0.5$). Below, both
-are evaluated at their own sweet spot, and §2 shows the choice is almost immaterial for the
-transmon (1.006× across the entire period) while being decisive for the fluxonium — which is itself
+are evaluated at their own sweet spot, and §2 shows the choice is almost immaterial for the transmon (1.004× across the entire period) while being decisive for the fluxonium — which is itself
 the answer to Q3 and should be *reported*, not silently baked into the operating points.
 """)
 
@@ -253,7 +259,7 @@ print(f"   T2 = {tm_old['T2_us']:.1f} us (superseded)  vs  {tm_op['T2_us']:.1f} 
 
 print(f"\nThe superseded fluxonium sits at f01 = {fx_old['freq_GHz']*1e3:.0f} MHz -> "
       f"n_th = {n_thermal(fx_old['freq_GHz']):.2f}")
-print(f"   Lowest published device (Nguyen 2019 device F): 170 MHz. "
+print(f"   Lowest device in Nguyen 2019 Table I (device F): 170 MHz. "
       f"This is {0.17/fx_old['freq_GHz']:.1f}x lower.")
 print(f"   Notebook 03 Appendix A row 2: 'not a design point'.")
 print(f"   Its T2 also changes with the second-order channel: "
@@ -468,8 +474,8 @@ Monte Carlo, because the choice between them is worth as much as the choice betw
 Metric 2 additionally requires a **gate count at matched frequency**, which notebook 03 §9B did not
 compute — it gave the gate-count ratio only at the two devices' own operating points. That gap is
 filled here. Note what the drive-period bound does to it: at matched $f_{01}$ both qubits have the
-same $f_{01}$ by construction, so $N = T_2 f_{01}$ and **the gate ratio becomes the $T_2$ ratio
-exactly** — including its 42% win rate. The matched-frequency gate-count advantage is an
+same $f_{01}$ by construction, so $N = T_2 f_{01}$ and **the gate ratio becomes the $T_2$ ratio** (up to the 0.4% mismatch in the matched frequencies) —
+including its 5% win rate. The matched-frequency gate-count advantage is an
 anharmonicity claim and nothing else.
 """)
 
@@ -605,10 +611,11 @@ for b in GATE_BOUNDS:
           f"ratio {nf/nt:9,.2f}x")
 _grr = [v["ratio"] for v in gate_raw.values()]
 print(f"\n   >>> The gate-count metric alone spans {max(_grr)/min(_grr):,.0f}x across its own")
-print(f"   >>> pulse-length bounds. The headline 524x assumes the fluxonium is driven at its")
+print(f"   >>> pulse-length bounds. The headline {gate_raw['alpha']['ratio']:,.0f}x assumes the fluxonium is driven at its")
 print(f"   >>> 8.7 GHz anharmonicity limit, i.e. {abs(alpha_fx)/fx_op['freq_GHz']:.0f}x faster than one period of its")
 print(f"   >>> own {1e3*fx_op['freq_GHz']:.0f} MHz transition. Under the drive-period bound the advantage is")
-print(f"   >>> {gate_raw['f01']['ratio']:.2f}x -- the transmon's higher frequency very nearly cancels the")
+print(f"   >>> {gate_raw['f01']['ratio']:.2f}x -- the transmon's higher frequency "
+      f"{'more than offsets' if gate_raw['f01']['ratio'] < 1 else 'very nearly cancels'} the")
 print(f"   >>> fluxonium's longer T2. THIS IS THE SINGLE LARGEST REMAINING UNCERTAINTY IN Q3.")
 
 assert not CHANNEL_FAILURES, f"noise channels failed silently: {CHANNEL_FAILURES[:3]}"
@@ -639,9 +646,9 @@ print("\nwrote data/q3_metric_comparison.csv")
 
 # =========================================================================
 md(r"""
-### 3.1 Settling the pulse bound by simulation
+### 3.1 Estimating the pulse bound by simulation
 
-The gate-count range above ($524\times$ / $22\times$ / $1.34\times$) is wide enough to make
+The gate-count range above ($242\times$ / $10\times$ / $0.62\times$) is wide enough to make
 the metric nearly uninformative, and the disagreement is not about noise — it is about how
 short a pulse each qubit tolerates. That is a question with a computable answer, so it is
 computed here rather than argued.
@@ -667,9 +674,10 @@ hardware. $T_{\rm gate}$ is then the shortest duration reaching a target error.
 story, but the drive couples to the leakage transition through a *matrix element*, and the
 fluxonium's is badly placed: at the sweet spot
 $|\langle 1|\hat n|2\rangle| / |\langle 0|\hat n|1\rangle| = 10.2$, against $1.37$ for the
-transmon. The drive is ten times better at causing leakage than at driving the qubit, so the
-effective figure of merit is $|\alpha|$ *divided by* that ratio. No hand-argument recovers
-this; the simulation does.
+transmon. The drive is ten times better at causing leakage than at driving the qubit. That ratio
+is an important factor that $|\alpha|$ alone misses, but leakage also depends on the pulse
+spectrum, detuning, drive strength and higher levels, so the two numbers cannot simply be
+combined by hand; the simulation does it.
 
 > **This is a coarse calibration, and the resulting $T_{\rm gate}$ is therefore an *upper
 > bound*.** Three parameters and a fixed Gaussian shape is far from optimal control — GRAPE
@@ -678,6 +686,12 @@ this; the simulation does.
 > estimate than either naive bound, not a final answer. The optimiser is also not reliably
 > converged at the shortest durations, which is visible as non-monotonicity in the error
 > curve and is reported rather than smoothed.
+>
+> **Convergence (`results/pulse_convergence.py`, `data/pulse_convergence.json`).** Recalibrating on
+> 8 or 10 levels changes no pass/fail verdict, and tighter ODE tolerances reproduce every error,
+> though a pulse calibrated on 6 levels does not carry over unchanged. A stronger optimiser (7
+> starts, 400 evaluations) shortens both gates, to 6.0 ns and 2.5 ns, and gives 43x, inside the
+> bracket. The fluxonium gate needs a Rabi frequency of ~0.35-0.40 GHz, comparable to its f01.
 """)
 
 # ========================================================================
@@ -795,9 +809,10 @@ print(f"\n>>> SIMULATED gate-count ratio = {sim_ratio:,.0f}x  "
 print(f">>> versus the three analytic bounds: "
       f"{gate_raw['alpha']['ratio']:,.0f}x (1/|alpha|), "
       f"{gate_raw['both']['ratio']:.1f}x (1/min), {gate_raw['f01']['ratio']:.2f}x (1/f01)")
-print(">>> The simulation lands between the min-bound and the leakage-only bound, and rules")
-print(">>> BOTH naive extremes out. The fluxonium does convert coherence into operations more")
-print(">>> efficiently -- by tens, not by ~500x and not by ~1x.")
+print(">>> Within this model the simulation lands between the min-bound and the leakage-only")
+print(">>> bound; it does not rule either naive estimate out, since both are heuristics. The")
+print(f">>> fluxonium converts coherence into operations more efficiently -- by ~{sim_ratio:,.0f}x here,")
+print(f">>> not {gate_raw['alpha']['ratio']:,.0f}x and not {gate_raw['f01']['ratio']:.2f}x.")
 print(f">>> Mechanism: its anharmonicity is {abs(alpha_fx)/abs(alpha_tm):.0f}x larger, but its drive couples")
 print(f">>> {gates[gates.architecture=='fluxonium'].leak_drive_ratio.iloc[0]/gates[gates.architecture=='transmon'].leak_drive_ratio.iloc[0]:.1f}x more strongly to the leakage transition, which eats most of that.")
 
@@ -844,7 +859,7 @@ for i, v in enumerate(vals):
     ax[1].annotate(f"{v:,.0f}x" if v >= 10 else f"{v:.2f}x", xy=(i, v),
                    xytext=(0, 4), textcoords="offset points", ha="center", fontsize=8)
 ax[1].set_ylabel("gate-count ratio, fluxonium / transmon")
-ax[1].set_title("(b) The pulse bound spans 393$\\times$;\nsimulation rules out both extremes")
+ax[1].set_title("(b) The heuristic estimates span 393$\\times$;\nthe simulated ratio lies between them")
 fig.tight_layout()
 pl.save(fig, "figures/q3_pulse_bound.png")
 plt.show()
@@ -1203,75 +1218,65 @@ md(r"""
 *Drafted with Claude from the quantities computed above, at the author's request; mirrored in
 `docs/lab_notebook.md` (Sep 7 entry). Give it a voice pass before submission.*
 
-**The fluxonium's advantage is real, metric-dependent, and conditional on holding the bias.**
+*Revised 2026-11-04 for the fractional critical-current convention (see `src/coherence.py`); every
+number below is from the outputs above.*
 
-1. **At its own operating point the fluxonium has substantially longer $T_2$** — $18\times$ at the
-   nominal designs, robust across the noise band in 100% of Monte Carlo samples. But this number is
-   confounded: the fluxonium sits at 0.363 GHz and the transmon at 4.92 GHz, and dielectric loss
-   scales with frequency.
+**The fluxonium's raw coherence advantage is a frequency effect; what survives is gate efficiency,
+conditional on holding the bias.**
 
-2. **Most of the raw advantage is frequency, not architecture.** The two devices differ in
-   frequency by $4.925/0.363 = 13.6\times$, and $\log 13.55/\log 18.10 = 0.90$: **about 90% of the
-   log-advantage is the frequency difference.** *(This decomposition is an identity, not an
-   independent check — writing $18.1 = 13.6 \times 1.33$ defines the residual rather than
-   measuring it. The independent measurement is the matched-frequency scan in §3, which gives
-   $1.07$–$2.16\times$ and is quoted below.)* The decomposition is nonetheless not a coincidence of
-   these two designs: dielectric loss dominates both architectures and its rate goes as
-   $\omega_{01}$, so $T_2 \propto 1/f_{01}$ in both — measured as $f_{01}^{-0.965}$ (transmon,
-   $r = -0.9995$) and $-0.997$ (fluxonium). Since the flux sweet spot *is* a frequency minimum,
-   the fluxonium is structurally advantaged on any raw $T_2$ comparison, and reporting one
-   uncontrolled credits the architecture with what the frequency did.
+1. **At its own operating point the fluxonium has longer $T_2$** — $8.4\times$ at the nominal
+   designs, robust across the noise band in 100% of Monte Carlo samples. But this number is
+   confounded: the fluxonium sits at 0.363 GHz and the transmon at 4.92 GHz.
 
-3. **Control for frequency and the $T_2$ advantage does not merely shrink — it disappears.** At
-   matched $f_{01}$ the deterministic ratio at the default noise amplitudes is $1.07$–$2.16\times$;
-   but propagated across the literature noise band the median is **$0.86\times$** and the fluxonium
-   wins in only **42%** of Monte Carlo samples. At matched frequency the transmon is more often the
-   better device. **This is the single most important negative result in the project**, and it is
-   stronger than the deterministic calculation alone suggests: the raw $T_2$ advantage is
-   substantially a *frequency* effect, not an architectural one, and what survives the frequency
-   control does not survive the noise-amplitude uncertainty.
+2. **The raw advantage is more than accounted for by frequency.** The two devices differ in
+   frequency by $4.925/0.363 = 13.6\times$; under $T_2 \propto 1/f_{01}$ that alone would give
+   $\log 13.55/\log 8.36 = 1.23$, i.e. **123% of the log-advantage.** *(A scaling estimate, not an
+   independent check. The independent measurement is the matched-frequency scan in §3, which gives
+   $0.62$–$0.82\times$.)* The transmon follows the law closely, $T_2 \propto f_{01}^{-1.00}$ with
+   $r = -0.9999$ over $E_J/E_C \ge 20$; the fluxonium less so, $f_{01}^{-0.79}$ with $r = -0.988$,
+   because critical-current dephasing, the thermal factor and the matrix elements break a simple
+   dielectric law. Since the flux sweet spot *is* a frequency minimum, the fluxonium is structurally
+   advantaged on any raw $T_2$ comparison.
 
-4. **The gate-count advantage survives the frequency control and the noise-amplitude
-   uncertainty — but only under the leakage-only pulse bound, and that bound is the weakest
-   assumption in the project.** Under $T_{\rm gate} \sim 1/|\alpha|$ it is $625$–$1709\times$
-   deterministic, median $606\times$ across the noise band, winning 100% of samples, because the
-   fluxonium keeps its enormous anharmonicity at every frequency while a transmon can only reach
-   low $f_{01}$ by shrinking $E_C$ — that is, by giving up the very anharmonicity that sets its
-   gate speed.
+3. **Control for frequency and the transmon is ahead.** At matched $f_{01}$ the deterministic ratio
+   is $0.62$–$0.82\times$ at 0.5, 1 and 2 GHz; across the literature noise band at 1 GHz (shared
+   draws) the median is **$0.37\times$** and the fluxonium wins only **5%** of samples (19% with
+   independent draws). Under the frequency-dependent $Q_{\rm cap}$ default it is $0.37$–$0.48\times$
+   (`results/referee_checks.py`), and holding the matched transmons at $E_J/E_C = 50$ instead moves
+   the median only to $0.38\times$ (`results/matched_transmon_check.py`). **This is the single most
+   important negative result in the project.** Its main caveat is the critical-current amplitude,
+   which dominates the fluxonium's rate budget: under the absolute reading scqubits applies by
+   default, the matched ratios were $1.07$–$2.16\times$ and the median $0.86\times$.
 
-   **Under the drive-period bound $T_{\rm gate} \sim 1/f_{01}$ the same comparison gives
-   $1.34\times$ at the operating points and collapses onto the $T_2$ ratio at matched frequency —
-   42% win rate.** The two bounds differ by $390\times$ at the operating points, which is
-   comparable to the entire spread across metrics 1–3, and the truth is somewhere between them:
-   the anharmonicity bound is right that a fluxonium tolerates a much broader pulse, and the
-   drive-period bound is right that a 0.363 GHz transition cannot be driven in 0.12 ns. **So the
-   defensible claim is that the fluxonium converts coherence into operations more efficiently
-   than a transmon, by a factor this model cannot pin down better than $1.3$–$500\times$** —
-   and pinning it down requires a real pulse simulation, which is outside this project's scope.
-   Reporting $524\times$ alone would repeat exactly the error §1 corrects: quoting the end of a
-   range as though it were the answer.
+4. **The gate-count advantage survives the frequency control and the noise band only under the
+   leakage-only pulse bound.** Under $T_{\rm gate} \sim 1/|\alpha|$ it is $364$–$647\times$
+   deterministic at matched frequency, median $262\times$, winning 100% of samples, because the
+   fluxonium keeps its enormous anharmonicity while a transmon reaches low $f_{01}$ only by
+   shrinking $E_C$. **Under the drive-period bound $T_{\rm gate} \sim 1/f_{01}$ it is $0.62\times$
+   at the operating points and collapses onto the $T_2$ ratio at matched frequency (5% win rate).**
+   The two bounds differ by $393\times$. §3.1's lab-frame pulse simulation estimates the answer at
+   **$22\times$ (bracket $17$–$27\times$; $20\times$ with a stronger optimizer)**, between them within
+   this model. Reporting $242\times$ alone would quote the end of a range as though it were the
+   answer.
 
-5. **The cost is bias precision, and it is enormous.** The transmon's $T_2$ varies $1.006\times$
-   across its *entire* charge-bias period — it has no knob to hold. The fluxonium loses a factor of
-   2 within $\pm 3.6\times10^{-5}\,\Phi_0$, a window $\sim 10^{-4}$ of its bias period. The
-   fluxonium has not eliminated bias sensitivity; it has concentrated all of it into a narrow
-   neighbourhood of $\Phi_0/2$ and made the qubit excellent inside that neighbourhood.
+5. **The cost is bias precision.** The transmon's $T_2$ varies $1.004\times$ across its *entire*
+   charge-bias period — it has no knob to hold. The fluxonium loses a factor of 2 within
+   $\pm 1.1\times10^{-4}\,\Phi_0$, a window $\sim 2\times10^{-4}$ of its bias period.
 
 6. **Notebook 03 §9C showed the intrinsic $1/f$ flux noise does not by itself drive the qubit off
    the spot** — even at Nguyen's measured $A_\Phi = 1.8\,\mu\Phi_0$ over an hour, the RMS wander
-   leaves a $24\times$ margin to the 10× detuning. The binding constraint is therefore
-   **systematic** — bias-line calibration drift, thermal cycling, crosstalk — not stochastic. For a
-   single qubit that is manageable; for a lattice in which every fluxonium needs its own flux line
-   held to $10^{-4}\,\Phi_0$ indefinitely and simultaneously, it is an engineering burden that
-   scales with qubit count in a way the transmon's does not.
+   leaves a $73\times$ margin to the 10× detuning. The binding constraint is therefore
+   **systematic** — bias-line calibration drift, thermal cycling, crosstalk. For a lattice in which
+   every fluxonium needs its own flux line held to $10^{-4}\,\Phi_0$ that plausibly grows with
+   qubit count, though a single-qubit model cannot show it.
 
 **What the paper may claim:** *at its own operating point, and conditional on flux bias held to
 $\lesssim 10^{-4}\,\Phi_0$, the fluxonium converts coherence into operations more efficiently than
-a transmon; the size of that advantage depends on the assumed pulse-length bound and this model
-constrains it only to $1.3$–$500\times$. Its raw coherence advantage ($\sim 18\times$) is
-substantially a frequency effect: at matched frequency the median $T_2$ ratio across the
-literature noise band is $0.86\times$, i.e. consistent with parity or slightly favouring the
-transmon.*
+a transmon, by $\sim 22\times$ ($17$–$27\times$) in a coarse lab-frame pulse simulation, between the
+$0.62\times$ and $242\times$ of the analytic pulse bounds. Its raw coherence advantage ($\sim 8\times$)
+is a frequency effect: at matched frequency the transmon is ahead, with a median $T_2$ ratio of
+$0.37\times$ across the literature noise band. Both conclusions rest on reading the critical-current
+noise amplitude as fractional, and that amplitude dominates the fluxonium's decoherence.*
 
 **What it may not claim:** "the fluxonium is 216× better." That number came from comparing a
 worst-case-biased 18.9 GHz transmon against a thermally scrambled 75 MHz fluxonium, using
@@ -1290,10 +1295,10 @@ Inherited from the upstream notebooks, plus those specific to this comparison.
    populated ($\bar n_{\rm th} = 0.25$) and neither is a usable qubit.
 2. **The gate-count metric is a heuristic, not a literature formula, and its pulse-length bound
    is unresolved** (see §3). $N = T_2|\alpha|$ assumes leakage is the only constraint; bounding
-   instead by the drive period, $N = T_2 f_{01}$, changes the fluxonium/transmon ratio from
-   $524\times$ to $1.34\times$. Both are computed and both are reported. Settling it needs a real
-   pulse simulation with DRAG and a specified control chain — leakage, RWA corrections and
-   hardware bandwidth all enter — which is outside this project's scope. The metric also ignores
+   instead by the drive period, $N = T_2 f_{01}$, changes the fluxonium/transmon ratio from $242\times$ to $0.62\times$. Both are computed and both are reported. §3.1's lab-frame
+   simulation with DRAG estimates $22\times$ between them; a full control-chain simulation —
+   hardware bandwidth, flux drive, decoherence during the gate — remains outside this project's
+   scope. The metric also ignores
    readout time entirely.
 3. **Free-induction $T_2$, not echo.** Every measured fluxonium $T_2$ in the literature is Hahn
    echo, which suppresses precisely the low-frequency $1/f$ noise this model is built from.
@@ -1491,25 +1496,25 @@ records before any analysis runs.
 
 | Metric | Deterministic (default amplitudes) | Monte Carlo median [5–95%] | Fluxonium wins |
 |---|---|---|---|
-| Raw $T_2$, own operating points | $18.1\times$ | $11.3\times$ $[3.6, 21.1]$ | **100%** |
-| $T_2$ at matched $f_{01}$ | $1.07$–$2.16\times$ | $\mathbf{0.86\times}$ $[0.27, 1.58]$ | **42%** |
-| Gate count, matched $f_{01}$, $1/\lvert\alpha\rvert$ bound | $625$–$1709\times$ | $606\times$ $[191, 1114]$ | **100%** |
-| Gate count, own op. points, $1/\lvert\alpha\rvert$ bound | $524\times$ | $326\times$ $[104, 611]$ | **100%** |
-| Gate count, own op. points, $1/\min(\lvert\alpha\rvert,f_{01})$ | $22.0\times$ | see §4 | **100%** |
-| **Gate count, own op. points, $1/f_{01}$ bound** | $\mathbf{1.34\times}$ | see §4 | see §4 |
-| **Gate count, matched $f_{01}$, $1/f_{01}$ bound** | $\mathbf{1.07}$–$\mathbf{2.16\times}$ | $\mathbf{0.86\times}$ | **42%** |
-| Bias window for a $2\times$ loss | $10^{-4}$ of the period vs 100% | — | — |
+| Raw $T_2$, own operating points | $8.4\times$ | $5.1\times$ $[3.6, 13.1]$ | **100%** |
+| $T_2$ at matched $f_{01}$ | $0.62$–$0.82\times$ | $\mathbf{0.37\times}$ $[0.25, 0.99]$ | **5%** |
+| Gate count, matched $f_{01}$, $1/\lvert\alpha\rvert$ bound | $364$–$647\times$ | $262\times$ $[179, 698]$ | **100%** |
+| Gate count, own op. points, $1/\lvert\alpha\rvert$ bound | $242\times$ | $148\times$ $[105, 379]$ | **100%** |
+| Gate count, own op. points, $1/\min(\lvert\alpha\rvert,f_{01})$ | $10.2\times$ | see §4 | **100%** |
+| **Gate count, own op. points, $1/f_{01}$ bound** | $\mathbf{0.62\times}$ | see §4 | see §4 |
+| **Gate count, matched $f_{01}$, $1/f_{01}$ bound** | $\mathbf{0.62}$–$\mathbf{0.81\times}$ | $\mathbf{0.37\times}$ | **5%** |
+| Bias window for a $2\times$ loss | $2\times10^{-4}$ of the period vs 100% | — | — |
 
 *(The last two rows are the same physics as the $T_2$ rows: under the drive-period bound at matched
 frequency, $N = T_2 f_{01}$ with $f_{01}$ equal on both sides, so the gate ratio **is** the $T_2$
 ratio. The gate-count advantage is entirely an anharmonicity claim.)*
 
-The fluxonium's raw coherence advantage is **substantially a frequency effect** — and the part that
-remains after controlling for frequency does not survive the noise-amplitude uncertainty. Its
-durable advantage is **anharmonicity per unit coherence**, and its cost is **operating-point
-precision**. How much that anharmonicity is worth in gates depends on a pulse-length bound this
-model does not settle: $1.3\times$ to $524\times$ at the operating points. That range is now
-reported in full rather than represented by its upper end.
+The fluxonium's raw coherence advantage is **a frequency effect** — at matched frequency the
+transmon is ahead. Its durable advantage is **converting coherence into operations more
+efficiently**, and its cost is **operating-point precision**. How much that is worth in gates depends
+on the pulse-length bound: $0.62\times$ to $242\times$ analytically at the operating points, and
+$22\times$ ($17$–$27\times$) in §3.1's simulation. The range is reported in full rather than
+represented by its upper end.
 
 **Downstream work this affects.** `05_summary.ipynb` consumes the metrics written here;
 `README.md` and `docs/` quote the superseded 216×, 528×, 5578 µs and $-0.68$ figures and must be
@@ -1527,13 +1532,14 @@ changelog. Append to `docs/lab_notebook.md`; do not retro-edit earlier entries.
 | 1 | Transmon comparison point $E_J{=}50$, $E_C{=}1.0$ | $E_J{=}13.0$, $E_C{=}0.26$ | The old point is an 18.9 GHz qubit with $\lvert\alpha\rvert = 1$ GHz — outside Krantz 2019 §II A's 3–6 GHz and 100–300 MHz envelope on both axes. Dielectric $T_1$ falls with frequency, so it was penalised $\sim3.7\times$ on $T_2$ for no physical reason. |
 | 2 | Fluxonium comparison point $E_J{=}15$, $E_L{=}0.2$ | Manucharyan 2009 nominal | A grid-edge maximum at $f_{01} = 75$ MHz, $\bar n_{\rm th} = 3.7$ — thermally scrambled and $2.3\times$ below the lowest published device. Notebook 03 Appendix A row 2 had already retired it. |
 | 3 | Transmon at $n_g{=}0.25$ vs fluxonium at $\Phi{=}0.5$ | both at their own sweet spot | Worst-case bias for one architecture against best-case for the other. Bias sensitivity is now *reported* (§2), which is what Q3 actually asks. |
-| 4 | "Fluxonium/transmon median $216\times$, 90% CI $[52\times, 371\times]$, wins 100%" | raw $18\times$; $1.0$–$2.1\times$ at matched frequency | Combined corrections 1–3 with first-order-only physics and an $N=60$ interval that had not converged. |
-| 5 | "$T_2 \propto$ detuning$^{-0.68}$" | no single exponent; $-1$ where theory applies | Fitted on `linspace(0.001, 0.05, 60)`, so 55 of 60 points sat in the far field. First-order $1/f$ theory predicts $-1$, and log-spaced sampling recovers $-0.96$ in the window where flux dephasing dominates. |
+| 4 | "Fluxonium/transmon median $216\times$, 90% CI $[52\times, 371\times]$, wins 100%" | raw $8.4\times$; $0.62$–$0.82\times$ at matched frequency ($18\times$ and $1.1$–$2.2\times$ before row 11) | Combined corrections 1–3 with first-order-only physics and an $N=60$ interval that had not converged. |
+| 5 | "$T_2 \propto$ detuning$^{-0.68}$" | no single exponent; $-1$ where theory applies | Fitted on `linspace(0.001, 0.05, 60)`, so 55 of 60 points sat in the far field. First-order $1/f$ theory predicts $-1$, and log-spaced sampling recovers $-0.93$ in the window where flux dephasing dominates ($-0.96$ before row 11). |
 | 6 | Inline `transmon_T2` / `fluxonium_T2` | imported from `src/coherence.py` | The inline fluxonium copy predated notebook 03's second-order flux channel and had silently diverged from the pipeline that produced the committed CSVs. |
 | 7 | 90% CI from raw percentiles at $N=60$ | bootstrap CI at $N=400$, convergence shown | An $N=60$ percentile interval on a median has no stated uncertainty; the trace in §4 shows it had not settled. |
 | 8 | Figures at dpi=150, PNG only, twin-axis bias plot | dpi=300 + `.pdf`, separate panels, log detuning axis | Journal figure requirements, and a twin-axis overlay invites comparison of two curves whose relative height is set by the axis limits. |
-| 9 | Gate count reported only as $N = T_2\lvert\alpha\rvert$ ($524\times$), with the objection to it left in prose | three pulse-length bounds computed and carried through the Monte Carlo; $524\times$, $22.0\times$, $1.34\times$ | The notebook already said a 0.363 GHz qubit cannot be driven at its 8.7 GHz anharmonicity limit, then quoted the number that assumes it can. The bound is worth $390\times$ — comparable to the entire spread across metrics 1–3 — so leaving it uncomputed hid an uncertainty as large as the result. |
+| 9 | Gate count reported only as $N = T_2\lvert\alpha\rvert$ ($524\times$), with the objection to it left in prose | three pulse-length bounds computed and carried through the Monte Carlo; $242\times$, $10.2\times$, $0.62\times$ ($524\times$, $22.0\times$, $1.34\times$ before row 11) | The notebook already said a 0.363 GHz qubit cannot be driven at its 8.7 GHz anharmonicity limit, then quoted the number that assumes it can. The bound is worth $390\times$ — comparable to the entire spread across metrics 1–3 — so leaving it uncomputed hid an uncertainty as large as the result. |
 | 10 | Koch cross-check compared peak-to-peak dispersion ($3.96\times10^{-5}E_C$) against Koch's $\max\lvert\partial E_{01}/\partial n_g\rvert = 1.5\times10^{-4}E_C$ and called them "consistent" | compare $\pi\epsilon_1$ per Koch Eq. (2.8); ratio $0.83$ | The two are different quantities differing by $\pi$, so the check could not fail and proved nothing. With the factor restored it reproduces the same $0.83$ asymptotic shortfall that `01_validation.ipynb` §4 measures independently, and it is now asserted. |
+| 11 | Critical-current noise $A_{cc} = 10^{-7}$ as scqubits applies it (2026-11-04) | **fractional**, $\delta I_c/I_c$: `src/coherence.py` passes $A_{cc}E_J$ | scqubits applies $A_{cc}$ to the dimensionless $\partial H/\partial E_J$, an absolute $E_J$ fluctuation in GHz, although it documents it in units of $I_c$. The channel was 8.9× (fluxonium) to 13× (transmon) too weak, and gave equal-frequency transmons a spurious $\sqrt{E_J/E_C}$ dependence. Raw ratio $18.1 \to 8.4\times$; matched median $0.86 \to 0.37\times$; simulated gate ratio $48 \to 22\times$. |
 """)
 
 md(r"""

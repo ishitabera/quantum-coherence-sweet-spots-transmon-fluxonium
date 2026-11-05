@@ -5,7 +5,7 @@ submission.
 
 | file | role |
 |---|---|
-| `preprint.tex` → `preprint.pdf` | **the live source.** Single column, 16 pages. |
+| `preprint.tex` → `preprint.pdf` | **the live source.** Single column, 21 pages. |
 | `main.tex` → `main.pdf` | the earlier IEEE TQE version, **frozen**. Not maintained, and not the source of truth. |
 
 Both use `refs.bib` and `figures/`. Edit `preprint.tex` only.
@@ -37,6 +37,10 @@ For the arXiv upload, run `python make_arxiv.py` and follow `ARXIV.md`.
   `\upmu`, not `\mu`, for unit prefixes such as `\upmu\Phi_0`.
 - Clean build: 0 overfull boxes, 0 unresolved citations or cross-references. Two underfull boxes
   in the reference list come from long DOIs and are cosmetic.
+- **Float placement.** With `[t]` only and LaTeX's default limits, the tall summary figure could
+  not be placed early, and because floats keep their order every later figure queued behind it: all
+  five landed after the references. Floats are now `[tbp]` with relaxed `\topfraction`,
+  `\textfraction` and `\floatpagefraction`.
 - Figures are copied into `paper/figures/` so the directory is self-contained. After re-running
   the notebooks, regenerate them with `cp ../figures/*.pdf figures/`.
 
@@ -56,7 +60,7 @@ verifying. The workflow is:
 behavior, analog, Acknowledgments. Reference titles keep their published spelling (e.g. Papič
 *et al.*, "…optimisation of transmon-qubit design parameters").
 
-**The arXiv abstract is capped at 1920 characters** and is currently at 1919. Any word added to
+**The arXiv abstract is capped at 1920 characters** and is currently at 1914. Any word added to
 the abstract has to be paid for with a cut. `ARXIV.md` holds the form version.
 
 Do not copy numbers out of notebook prose — prose drifts, the ledger does not. The
@@ -87,17 +91,37 @@ from the ledger.
 5. **Endorsement.** First-time `quant-ph` submitters usually need one. See `ARXIV.md`.
 6. *Optional:* archive a tagged release on Zenodo and cite its DOI next to the GitHub link.
 
+### Revision of 2026-11-04
+
+An external review was checked point by point against the paper, the data, the code and the cited
+papers (Koch's text, Crossref, the scqubits source and paper). Its valid points were applied; one
+(the Hahn-echo direction) was rejected with reasons. While checking it, critical-current noise was
+found to be applied by scqubits as an absolute E_J fluctuation; the project now reads A_cc as
+fractional and every number was regenerated. See §3.1 of the paper and the dated entry in
+`docs/lab_notebook.md`.
+
+A second external review the same day was also checked point by point. Applied: the Bénâtre DOI
+(the old one returned 404; now `10.1103/gjks-ctvm`), charge-noise units ($A_{n_g}$ acts in units of
+$2e$), explicit $1/f$ spectrum and cutoff conventions, the critical-current perturbation and the
+measured-amplitude range (Koch 2007 uses the same fractional $\bar A = A/I_c$; $10^{-7}$ is the
+optimistic end), the convention dependence of the interior optimum's location, exact Monte Carlo
+ranges and seed, and ~30 wording qualifications. "Perspective:" was restored to the McRae title: the arXiv version and the NIST record carry it,
+though Crossref's metadata does not.
+
 ### Limits stated in the paper itself, not hidden here
 
 - **Novelty is argued, not proven.** §2.1 locates the two closest works — McRae *et al.* on
   experimental reproducibility of coherence comparisons, and Lange *et al.* on controlled
   transmon/fluxonium comparison for cross-talk rather than coherence — and §2.2 claims only
   "we are not aware of", stating the survey's incompleteness in the body text.
-- **The 48× gate-count result rests on a coarse calibration.** Three parameters over a fixed
+- **The 22× gate-count result rests on a coarse calibration.** Three parameters over a fixed
   Gaussian; durations are upper bounds; the optimiser is not converged at the shortest
   durations. §8.4 and §12 name GRAPE/CRAB as the next step.
 - **Frequency matching is necessary but not sufficient** as a control: geometry and surface
   participation also set dielectric loss, and a Hamiltonian-level model does not capture
   them. Stated in §2.3, "A limitation of the present comparison".
+- **The critical-current amplitude dominates the fluxonium.** It carries 76% of the nominal
+  fluxonium's decoherence rate, and its convention changes the matched-frequency ratio by ~3×
+  (§3.1, §7).
 - **Model-based throughout.** No new measurement; the calibration set is nine devices from
   one 2019 paper, and §9 notes the field has since moved past them.

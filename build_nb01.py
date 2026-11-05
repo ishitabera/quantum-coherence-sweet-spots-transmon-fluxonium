@@ -43,6 +43,15 @@ a bug would show.
 """)
 
 # ========================================================================
+md(r"""
+> **Convention, since 2026-11-04.** Critical-current noise is **fractional**:
+> $A_{cc} = \delta I_c/I_c$, passed to scqubits as $A_{cc} E_J$ (see the `src/coherence.py`
+> docstring). scqubits applies its amplitude to the dimensionless $\partial H/\partial E_J$, i.e. as an
+> absolute $E_J$ fluctuation in GHz, which made the channel 8.9× (fluxonium) to 13× (transmon) too
+> weak. Outputs and commentary below use the fractional reading; earlier results are reproducible
+> with `cc_convention="absolute"`, and the change is recorded in the corrections appendix.
+""")
+
 code("""
 # --- project bootstrap: run from anywhere, keeps data/ and figures/ paths working ---
 import os, sys
@@ -827,11 +836,13 @@ check("6 pipeline", "fluxonium T2 <= 2*T1",
 
 # Strict inequality: the critical-current channel is finite AT the sweet spot, so a pipeline
 # reporting exactly T2 = 2*T1 has silently dropped a channel (safe() returned inf).
+# References re-pinned 2026-11-04 for FRACTIONAL critical-current noise (A_cc*EJ, see
+# src/coherence.py); under the earlier absolute reading they were 1.031 and 1.357.
 check("6 pipeline", "transmon T2 strictly below 2*T1 (crit-current channel alive)",
-      2 * tm_res["T1_us"] / tm_res["T2_us"], reference=1.031, tol_rel=0.02, units="-",
+      2 * tm_res["T1_us"] / tm_res["T2_us"], reference=1.466, tol_rel=0.02, units="-",
       note=f"Tphi_cc = {tm_res['Tphi_cc_us']:.0f} us")
 check("6 pipeline", "fluxonium T2 strictly below 2*T1 (crit-current channel alive)",
-      2 * fx_res["T1_us"] / fx_res["T2_us"], reference=1.357, tol_rel=0.02, units="-",
+      2 * fx_res["T1_us"] / fx_res["T2_us"], reference=4.182, tol_rel=0.02, units="-",
       note=f"Tphi_cc = {fx_res['Tphi_cc_us']:.0f} us")
 
 # Units guard: a 1000x error is the most likely bug in this project.
@@ -1182,8 +1193,7 @@ is at the floor of what this comparison can resolve, and no tighter claim should
 
 > **What this costs downstream.** The fluxonium's headline $T_2$ scales roughly as $1/f_{01}$
 > (notebook 03 §6), so the 9.5% spread in $f_{01}(\Phi_0/2)$ across the paper's own fits is a
-> ~9.5% band on every absolute fluxonium coherence number in this project — small next to the
-> 2.6× calibration gap of §9.3 and the ±1-decade noise-amplitude band, but it is not zero, and
+> ~9.5% band on every absolute fluxonium coherence number in this project — small next to the > 1.5× calibration gap of §9.3 and the ±1-decade noise-amplitude band, but it is not zero, and
 > "validated to 0.012%" overstated it by three orders of magnitude.
 >
 > **What the array mode means for the rest of the project — now bounded.** The
@@ -1215,14 +1225,14 @@ so the rows below are order-of-magnitude comparisons, not same-parameter ones.
 |---|---|---|---|---|---|
 | $\omega_{01}/2\pi$ at sweet spot | $0.363$ GHz | $0.17$–$0.83$ GHz | Table I | **within range** | different params |
 | $T_1$ at sweet spot | $771$ µs | $70$–$270$ µs | Table I | model $3$–$11\times$ optimistic | different params |
-| $T_2$ at sweet spot | $1130$ µs | $90$–$350$ µs | Table I | model $3$–$13\times$ optimistic | different params |
+| $T_2$ at sweet spot | $369$ µs | $90$–$350$ µs | Table I | model $1$–$4\times$ optimistic | different params |
 | **$T_2$ off sweet spot** | **$T_\phi^{\rm flux}=4.55$ µs** at $\Phi/\Phi_0{=}0.49$ | **$3$–$6$ µs** away from sweet spot | Sec. II, Fig. 4a | **agrees** | different params; mechanism and scale match |
 | $T_1$ vs $T_2$ ordering | $T_2 < 2T_1$ (§6) | "typical situation is $T_1 < T_2 < 2T_1$" | Sec. II | consistent | — |
 | Dielectric loss | $Q_{\rm cap}=10^{6}$ | $\tan\delta_C = (2.0$–$3.6)\times10^{-6}$ at 6 GHz $\Rightarrow Q = 2.8$–$5.0\times10^{5}$ | Table I, Sec. III | ours $2$–$3.6\times$ optimistic | assumed vs measured |
 | $1/f$ flux noise | $A_{\rm flux}=10^{-6}$ | $2\times10^{-6}\,(h/2e)/\sqrt{\rm Hz}$ at 1 Hz | Sec. II | ours $2\times$ optimistic | assumed vs measured |
 
 > **Reconciliation with `03_fluxonium_sweep.ipynb` §7 — read this before quoting a calibration
-> factor.** The $3$–$11\times$ above and notebook 03's $2.0\times$ / $2.6\times$ are **different
+> factor.** The $3$–$11\times$ above and notebook 03's $2.0\times$ / $1.5\times$ are **different
 > comparisons**, not a contradiction:
 >
 > - *Here (§9.3):* our **nominal design** ($E_J{=}8.9$, $E_C{=}2.5$, $E_L{=}0.5$) is compared
@@ -1231,9 +1241,9 @@ so the rows below are order-of-magnitude comparisons, not same-parameter ones.
 >   is a ratio of our one number to the ends of their range.
 > - *Notebook 03 §7:* the model is run **at each of the nine devices' own parameters** and
 >   compared device by device. That is the like-for-like test, and it gives a median
->   $2.0\times$ on $T_1$ and $2.6\times$ on $T_2$ (worst case $5.7\times$). Device I — the one
->   nearest this project's nominal design in frequency (0.395 vs 0.363 GHz) — is matched to 4% on
->   $T_2$, with the model *pessimistic* on its $T_1$.
+>   $2.0\times$ on $T_1$ and $1.5\times$ on $T_2$ (worst case $3.2\times$, device F). Device I — the one
+>   nearest this project's nominal design in frequency (0.395 vs 0.363 GHz) — is the one device on
+>   which the model is *pessimistic* on both $T_1$ ($0.80\times$) and $T_2$ ($0.57\times$).
 >
 > **The like-for-like figure is the one to quote in the paper.** The wider range here reflects
 > the design-regime mismatch, not additional model error.
@@ -1321,21 +1331,18 @@ is $\sim\!10^{-4} E_C$, the slice is necessarily flat. Measured downstream: the 
 dispersion at the §9.6 operating point ($E_J{=}13.0$, $E_C{=}0.26$, $E_J/E_C = 50$) is
 $1.03\times10^{-5}$ GHz — not to be confused with §9.1's level dispersion
 $\epsilon_1 = 1.17\times10^{-5}$ GHz, which is a different quantity at a different design
-($E_J{=}15$, $E_C{=}0.3$), and $T_2$ varies by $1.006\times$ across
-the *entire* $n_g$ period (`04_analysis.ipynb` §2). **The transmon's bias robustness is not a
+($E_J{=}15$, $E_C{=}0.3$), and $T_2$ varies by $1.004\times$ across the *entire* $n_g$ period (`04_analysis.ipynb` §2). **The transmon's bias robustness is not a
 separate fact about it — it is the charge dispersion, restated.**
 
 **2. What the 886 GHz/$\Phi_0^2$ curvature demands of a real experiment.** At the sweet spot the
 first derivative vanishes, so the leading frequency error is quadratic:
-$\delta f_{01} \approx \tfrac12 (\partial^2 f_{01}/\partial\Phi^2)\,\delta\Phi^2$. That gives
-0.58 kHz at $\delta\Phi = 3.6\times10^{-5}\Phi_0$, **47 kHz** at $3.25\times10^{-4}\Phi_0$, and
-443 kHz at one milli-$\Phi_0$. The useful way to state the requirement is comparative: the
+$\delta f_{01} \approx \tfrac12 (\partial^2 f_{01}/\partial\Phi^2)\,\delta\Phi^2$. That gives 5.4 kHz at the twofold-loss detuning $\delta\Phi = 1.1\times10^{-4}\Phi_0$ and **440 kHz** at
+the tenfold-loss detuning $1.0\times10^{-3}\Phi_0$ (`04_analysis.ipynb` §2). The useful way to state the requirement is comparative: the
 transmon's frequency wanders by only 10.3 kHz across its *whole* charge period, and the fluxonium
 covers that same 10 kHz within $\sim\!1.5\times10^{-4}\,\Phi_0$ — **0.015% of its bias period.**
 So "the sweet spot is flat" is true only in the sense that the *first* derivative vanishes; the
 curvature is large enough that sub-milli-$\Phi_0$ stability is a hard requirement, and
-`03_fluxonium_sweep.ipynb` §4 confirms it independently by measuring the $10\times$ coherence loss
-at $3.25\times10^{-4}\,\Phi_0$.
+`03_fluxonium_sweep.ipynb` §4 confirms it independently by measuring the $10\times$ coherence loss at $1.0\times10^{-3}\,\Phi_0$.
 
 **3. Narrow-and-deep versus broad-and-shallow is a question about whether you can close a loop.**
 A narrow, deep sweet spot is preferable whenever the bias can be actively held — a single device

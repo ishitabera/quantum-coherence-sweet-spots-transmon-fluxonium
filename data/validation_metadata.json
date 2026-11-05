@@ -2,7 +2,7 @@
   "notebook": "notebooks/01_validation.ipynb",
   "purpose": "Week-1 pipeline validation prior to production sweeps",
   "provenance": {
-    "date": "2026-09-07T23:27:38",
+    "date": "2026-11-04T22:46:31",
     "python": "3.11.15",
     "numpy": "2.2.6",
     "scqubits": "4.3.1",

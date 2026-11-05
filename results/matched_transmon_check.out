@@ -1,0 +1,27 @@
+{'f01_target': 0.5, 'fx_EL': 0.7842, 'fx_T2': np.float64(265.7142), 'tm_best_EJ_EC': 325.125, 'tm_best_f01': np.float64(0.4998), 'tm_best_T2': np.float64(325.6882), 'ratio_best': np.float64(0.8159), 'tm50_EC': 0.0263, 'tm50_f01': np.float64(0.4985), 'tm50_T2': np.float64(323.4035), 'ratio_50': np.float64(0.8216)}
+{'f01_target': 1.0, 'fx_EL': 1.577, 'fx_T2': np.float64(129.9691), 'tm_best_EJ_EC': 1275.125, 'tm_best_f01': np.float64(0.9999), 'tm_best_T2': np.float64(208.145), 'ratio_best': np.float64(0.6244), 'tm50_EC': 0.0526, 'tm50_f01': np.float64(0.9969), 'tm50_T2': np.float64(205.8014), 'ratio_50': np.float64(0.6315)}
+{'f01_target': 2.0, 'fx_EL': 2.6619, 'fx_T2': np.float64(68.5799), 'tm_best_EJ_EC': 5050.125, 'tm_best_f01': np.float64(1.9999), 'tm_best_T2': np.float64(110.1112), 'ratio_best': np.float64(0.6228), 'tm50_EC': 0.1053, 'tm50_f01': np.float64(1.9939), 'tm50_T2': np.float64(108.6776), 'ratio_50': np.float64(0.631)}
+  shared: 100/400
+  shared: 200/400
+  shared: 300/400
+  shared: 400/400
+  independent: 100/400
+  independent: 200/400
+  independent: 300/400
+  independent: 400/400
+{
+  "independent": {
+    "median_best": 0.4660625022573588,
+    "win_best": 0.1925,
+    "median_50": 0.4791255821808823,
+    "win_50": 0.1975
+  },
+  "shared": {
+    "median_best": 0.3703748193825445,
+    "win_best": 0.0475,
+    "median_50": 0.38006631167801297,
+    "win_50": 0.0475
+  }
+}
+reproduces committed MC: True
+wrote data/matched_transmon_check.json

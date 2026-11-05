@@ -22,34 +22,52 @@ REL = 1e-9
 
 
 # ---------------------------------------------------------------- validated anchors
+# Since 2026-11-04 critical-current noise is FRACTIONAL (A_cc = dIc/Ic; see the
+# coherence.py docstring). The anchors below are the current pipeline's. The
+# pre-2026-11-04 anchors, which every result before that date was built on, are kept
+# under cc_convention="absolute" so the old numbers stay reproducible to the digit.
 def test_transmon_nominal_matches_the_validation_record():
     """01_validation.ipynb section 6. Notebooks 02 and 04 assert against this too."""
     assert co.transmon_coherence(**TRANSMON_DEFAULTS)["T2_us"] == pytest.approx(
-        54.35208346332045, rel=REL)
+        38.2208528179222, rel=REL)
 
 
 def test_fluxonium_nominal_first_order_only_matches_the_validation_record():
     """The chain of custody to 01_validation.ipynb runs through the first-order-only
     path, because notebook 01 predates the second-order flux channel."""
     r = co.fluxonium_coherence(**FLUXONIUM_DEFAULTS, second_order_flux=False)
-    assert r["T2_us"] == pytest.approx(1136.8688060132743, rel=REL)
+    assert r["T2_us"] == pytest.approx(369.54270558880427, rel=REL)
 
 
 def test_fluxonium_nominal_with_second_order_matches_the_committed_pipeline():
-    """03_fluxonium_sweep.ipynb section 2: adding the second-order channel moves T2
-    from 1136.87 to 1129.71 us, i.e. it carries 0.63% of the rate budget."""
+    """03_fluxonium_sweep.ipynb section 2: the second-order channel carries ~0.2% of
+    the rate budget at the nominal sweet spot (0.63% before critical-current noise
+    was made fractional, because the total rate was then 3x smaller)."""
     r = co.fluxonium_coherence(**FLUXONIUM_DEFAULTS)
-    assert r["T2_us"] == pytest.approx(1129.7123, rel=1e-6)
+    assert r["T2_us"] == pytest.approx(368.78332, rel=1e-6)
     share = (1 / r["Tphi_flux2_us"]) / (1 / r["T2_us"])
-    assert share == pytest.approx(0.0063, abs=5e-4)
+    assert share == pytest.approx(0.00205, abs=2e-4)
 
 
 def test_operating_points_reproduce_notebook_02_and_04():
     tm = co.transmon_coherence(EJ=13.0, EC=0.26, ng=0.0, ncut=30)
     assert tm["freq_GHz"] == pytest.approx(4.925, abs=5e-3)
-    assert tm["T2_us"] == pytest.approx(62.4244, rel=1e-5)
+    assert tm["T2_us"] == pytest.approx(44.10098, rel=1e-5)
     fx = co.fluxonium_coherence(**FLUXONIUM_DEFAULTS)
     assert fx["freq_GHz"] == pytest.approx(0.3634, abs=5e-4)
+
+
+def test_pre_2026_11_04_anchors_reproduce_under_the_absolute_convention():
+    """Chain of custody: every result before the convention change is recoverable."""
+    a = dict(cc_convention="absolute")
+    assert co.transmon_coherence(**TRANSMON_DEFAULTS, **a)["T2_us"] == pytest.approx(
+        54.35208346332045, rel=REL)
+    assert co.fluxonium_coherence(**FLUXONIUM_DEFAULTS, second_order_flux=False, **a)[
+        "T2_us"] == pytest.approx(1136.8688060132743, rel=REL)
+    assert co.fluxonium_coherence(**FLUXONIUM_DEFAULTS, **a)["T2_us"] == pytest.approx(
+        1129.7123, rel=1e-6)
+    assert co.transmon_coherence(EJ=13.0, EC=0.26, ng=0.0, ncut=30, **a)[
+        "T2_us"] == pytest.approx(62.4244, rel=1e-5)
 
 
 def test_sweet_spot_flux_curvature():
@@ -181,9 +199,12 @@ def test_gate_count_pulse_bound_changes_the_q3_answer_by_two_orders_of_magnitude
     ratios = {b: (N(fx["T2_us"], a_fx, fx["freq_GHz"], b)
                   / N(tm["T2_us"], a_tm, tm["freq_GHz"], b))
               for b in ("alpha", "both", "f01")}
-    assert ratios["alpha"] == pytest.approx(524.5, rel=1e-3)
-    assert ratios["both"] == pytest.approx(22.01, rel=1e-3)
-    assert ratios["f01"] == pytest.approx(1.335, rel=1e-3)
+    # fractional critical-current noise (2026-11-04); absolute-convention values were
+    # 524.5 / 22.01 / 1.335. The ratio between bounds is unchanged, because it does not
+    # depend on T2.
+    assert ratios["alpha"] == pytest.approx(242.35, rel=1e-3)
+    assert ratios["both"] == pytest.approx(10.171, rel=1e-3)
+    assert ratios["f01"] == pytest.approx(0.6171, rel=1e-3)
     # the bound is worth as much as the entire spread across metrics 1-3
     assert ratios["alpha"] / ratios["f01"] > 300
     # and for a transmon the bounds coincide, which is why this was easy to miss
