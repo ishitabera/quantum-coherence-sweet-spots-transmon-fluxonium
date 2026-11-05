@@ -1,5 +1,9 @@
 # Coherence Sweet Spots Across Superconducting Qubit Architectures
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23988521.svg)](https://doi.org/10.5281/zenodo.23988521)
+
+The version used for the preprint is release **v1.0**, archived at Zenodo: [doi:10.5281/zenodo.23988521](https://doi.org/10.5281/zenodo.23988521) (all versions: [10.5281/zenodo.23988520](https://doi.org/10.5281/zenodo.23988520)).
+
 A parameter-sensitivity study of the **transmon** and **fluxonium** under realistic noise
 channels, using [scqubits](https://scqubits.readthedocs.io). All results are model-based
 estimates computed on a laptop; the value is in relative trends across parameters and

@@ -25,7 +25,7 @@ preview is the real test. Read every page of it before you confirm.
 | Cross-list | `cond-mat.supr-con` |
 | Title | Coherence sweet spots are frequency minima in disguise: Metric sensitivity in transmon and fluxonium design spaces |
 | Authors | Ishita Bera |
-| Comments | 21 pages, 5 figures, 3 tables. Code and data: https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium |
+| Comments | 21 pages, 5 figures, 3 tables. Code and data: https://github.com/ishitabera/quantum-coherence-sweet-spots-transmon-fluxonium (archived: doi:10.5281/zenodo.23988521) |
 | Report-no / Journal-ref / DOI | leave blank |
 
 ### Abstract (1914 / 1920 characters)
