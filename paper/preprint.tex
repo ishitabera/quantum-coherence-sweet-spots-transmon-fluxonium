@@ -282,12 +282,11 @@ relaxation rate, the sum of the downward rate and the thermally activated upward
 coordinate $\lambda$, the \texttt{scqubits} convention, which Nguyen \emph{et al.}\ also use for
 Eq.~\eqref{eq:secondorder}; we use the package's default cutoffs and measurement time, and the first-order dephasing rate depends
 explicitly only on the infrared cutoff $\omega_{\rm low}=2\pi\times\SI{1}{\hertz}$ and the measurement time
-$t_{\rm exp}=\SI{10}{\micro\second}$. $A_\Phi$ is in units of $\Phi_0$. $A_{n_g}$ is
-applied as a fluctuation of $n_g$, which counts offset charge in units of the Cooper-pair charge
-$2e$; \texttt{scqubits} annotates it as in units of $e$, and if $10^{-4}e$ is meant literally the
-charge-dephasing rates here are $2\times$ too large. That matters only at charge-sensitive bias: it
-would move the crossover of Section~\ref{sec:channels} within the range we already report there, and
-leaves every $n_g=0$ result unchanged. Critical-current noise is where we depart from the package. \texttt{scqubits} documents $A_{\rm cc}$ in units of
+$t_{\rm exp}=\SI{10}{\micro\second}$. $A_\Phi$ is in units of $\Phi_0$. $A_{n_g}=10^{-4}$ is defined as an amplitude in the dimensionless coordinate $n_g$, which counts
+offset charge in units of the Cooper-pair charge $2e$; it corresponds to $2\times10^{-4}e$. This is
+Koch \emph{et al.}'s convention: their worked example uses $A=10^{-4}$ with $\partial E_{01}/\partial n_g$
+in Eq.~(5.9)~\cite{koch2007}, and Section~\ref{sec:validation} reproduces it. It is also what
+\texttt{scqubits} computes, although the package labels the default as in units of $e$. Critical-current noise is where we depart from the package. \texttt{scqubits} documents $A_{\rm cc}$ in units of
 the critical current, but applies it to the dimensionless operator $\partial H/\partial E_J=-\cos\varphi$,
 so the amplitude acts as an absolute fluctuation of $E_J$ in GHz. We read $A_{\rm cc}$ as the fractional fluctuation $\epsilon_I=\delta I_c/I_c$, as the literature
 amplitudes it stands for are: since $E_J=\hbar I_c/2e$, the perturbation is
@@ -304,9 +303,10 @@ fluxonium/transmon ratio $18.1\times$ rather than $8.4\times$, the matched-frequ
 $2.6\times$ optimistic on $T_2$ rather than $1.5\times$. Critical-current dephasing carries a median 76\% of the fluxonium's total decoherence rate over its design plane, so its amplitude is the dominant uncertainty for that architecture. Koch \emph{et al.}\ use the same fractional amplitude, $\bar A=A/I_c$, independent of
 $E_J$~\cite{koch2007}. The convention and the value are separate questions. Measured $1/f$
 critical-current noise in Al/AlOx and Nb-based junctions~\cite{vanharlingen2004,eroms2006,nugroho2013},
-extrapolated to 15--20\,mK and junction areas of 0.01--0.1\,$\upmu$m$^2$, gives
-$A\approx1.4\times10^{-7}$--$1.4\times10^{-6}$ per $\sqrt{\rm Hz}$ at 1\,Hz, clustering near
-$2$--$6\times10^{-7}$; the temperature scaling below ${\sim}0.3$\,K is not measured, and the
+extrapolated to 15--20\,mK and junction areas of 0.01--0.1\,$\upmu$m$^2$, gives $\sqrt{S_{\delta I_c/I_c}(1\,{\rm Hz})}\approx1.4\times10^{-7}$--$1.4\times10^{-6}\,{\rm Hz}^{-1/2}$,
+clustering near $2$--$6\times10^{-7}\,{\rm Hz}^{-1/2}$. For a $1/f$ spectrum this square root at 1\,Hz is
+the dimensionless coefficient $A_{\rm cc}$ of our convention, up to the factor $\sqrt2$ between one-
+and two-sided spectra, which the measurements do not specify; the temperature scaling below ${\sim}0.3$\,K is not measured, and the
 extrapolations disagree by about $2.5\times$. Our baseline $A_{\rm cc}=10^{-7}$ therefore lies near the optimistic end of the range extrapolated from
 published measurements, Koch \emph{et al.}\ use $10^{-6}$, and the Monte Carlo range of
 Section~\ref{sec:q3}, $10^{-7}$--$10^{-6}$, spans the extrapolations. The adopted amplitude is a literature-motivated modeling assumption, not a
@@ -702,8 +702,8 @@ Bias window, $2\times$ loss     & \multicolumn{3}{c}{$\ge4.5\times10^{3}$ wider 
 \end{table}
 
 Two ranges are visible, and they are of comparable size. \emph{Across} metric definitions---a spread, not an uncertainty on one physical quantity---the answer
-spans roughly $400\times$ ($242\times$ against $0.62\times$, Table~\ref{tab:q3}). \emph{Within} the gate-count metric alone it spans $393\times$,
-depending on what bounds the minimum pulse length. The $|\alpha|$ bound---leakage to
+spans roughly $400\times$ ($242\times$ against $0.62\times$, Table~\ref{tab:q3}). \emph{Within} the gate-count proxy alone it spans $393\times$, depending on the heuristic
+pulse-duration estimate used. The $|\alpha|$ bound---leakage to
 $|2\rangle$ only---is the textbook choice, but for a fluxonium at half flux
 $|\alpha| = \SI{8.7}{\giga\hertz}$ is $24\times$ the transition frequency it would drive, so
 that bound licenses a pulse $24\times$ shorter than one period of the transition itself. The
